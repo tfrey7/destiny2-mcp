@@ -14,6 +14,19 @@ interface RequestOptions {
   auth?: boolean;
 }
 
+// Carries Bungie's machine-readable ErrorStatus (e.g. "DestinyNoRoomInDestination") so callers can
+// branch on a specific failure instead of pattern-matching the human message.
+export class BungieError extends Error {
+  constructor(
+    readonly errorStatus: string,
+    readonly errorCode: number,
+    message: string,
+  ) {
+    super(`[destiny2-mcp] Bungie error ${errorStatus}: ${message}`);
+    this.name = "BungieError";
+  }
+}
+
 export async function bungieFetch<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const { method = "GET", body, auth = true } = options;
 
@@ -33,7 +46,7 @@ export async function bungieFetch<T>(path: string, options: RequestOptions = {})
 
   const envelope = (await response.json()) as BungieEnvelope<T>;
   if (envelope.ErrorCode !== 1) {
-    throw new Error(`[destiny2-mcp] Bungie error ${envelope.ErrorStatus}: ${envelope.Message}`);
+    throw new BungieError(envelope.ErrorStatus, envelope.ErrorCode, envelope.Message);
   }
   return envelope.Response;
 }
