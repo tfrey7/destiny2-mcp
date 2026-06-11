@@ -15,7 +15,28 @@ interface ManifestMeta {
 interface Definition {
   displayProperties?: { name?: string };
   name?: string;
+  itemTypeDisplayName?: string;
+  defaultDamageType?: number;
+  talentGrid?: { hudDamageType?: number };
+  inventory?: { tierTypeName?: string; bucketTypeHash?: number };
 }
+
+export interface ItemMeta {
+  name: string;
+  rarity: string;
+  type: string;
+  element?: string;
+  bucketHash: number;
+}
+
+const DAMAGE_TYPE: Record<number, string> = {
+  1: "Kinetic",
+  2: "Arc",
+  3: "Solar",
+  4: "Void",
+  6: "Stasis",
+  7: "Strand",
+};
 
 let metaPromise: Promise<{ versionDir: string; paths: Record<string, string> }> | null = null;
 
@@ -31,6 +52,25 @@ function meta() {
 
 function nameFrom(definition: Definition | undefined): string | undefined {
   return definition?.displayProperties?.name ?? definition?.name;
+}
+
+function metaFrom(definition: Definition): ItemMeta | undefined {
+  const name = nameFrom(definition);
+  if (!name) return undefined;
+
+  // Weapons carry their element in defaultDamageType; subclasses leave it 0 and use talentGrid.hudDamageType.
+  const element =
+    DAMAGE_TYPE[definition.defaultDamageType ?? 0] ??
+    DAMAGE_TYPE[definition.talentGrid?.hudDamageType ?? 0] ??
+    (name.includes("Prismatic") ? "Prismatic" : undefined);
+
+  return {
+    name,
+    rarity: definition.inventory?.tierTypeName ?? "Basic",
+    type: definition.itemTypeDisplayName ?? "",
+    element,
+    bucketHash: definition.inventory?.bucketTypeHash ?? 0,
+  };
 }
 
 // Stream the table instead of buffering it — DestinyInventoryItemDefinition is ~190MB
@@ -50,6 +90,21 @@ async function streamNames(remotePath: string): Promise<Record<string, string>> 
   return names;
 }
 
+async function streamItemMeta(remotePath: string): Promise<Record<string, ItemMeta>> {
+  const response = await fetch(`https://www.bungie.net${remotePath}`);
+  if (!response.ok || !response.body) {
+    throw new Error(`[destiny2-mcp] Failed to download manifest table (${response.status})`);
+  }
+
+  const pipeline = chain([Readable.fromWeb(response.body as never), parser(), streamObject()]);
+  const result: Record<string, ItemMeta> = {};
+  for await (const { key, value } of pipeline as AsyncIterable<{ key: string; value: Definition }>) {
+    const item = metaFrom(value);
+    if (item) result[key] = item;
+  }
+  return result;
+}
+
 async function loadIndex(file: string, remotePath: string): Promise<Map<number, string>> {
   const { versionDir } = await meta();
   const localPath = join(versionDir, file);
@@ -64,15 +119,36 @@ async function loadIndex(file: string, remotePath: string): Promise<Map<number, 
   }
 }
 
-let itemIndex: Promise<Map<number, string>> | null = null;
+async function loadItemMeta(remotePath: string): Promise<Map<number, ItemMeta>> {
+  const { versionDir } = await meta();
+  const localPath = join(versionDir, "item-meta.json");
+  try {
+    const stored = JSON.parse(await readFile(localPath, "utf8")) as Record<string, ItemMeta>;
+    return new Map(Object.entries(stored).map(([hash, value]) => [Number(hash), value]));
+  } catch {
+    const data = await streamItemMeta(remotePath);
+    await mkdir(versionDir, { recursive: true });
+    await writeFile(localPath, JSON.stringify(data));
+    return new Map(Object.entries(data).map(([hash, value]) => [Number(hash), value]));
+  }
+}
+
+let itemIndex: Promise<Map<number, ItemMeta>> | null = null;
 let loadoutIndex: Promise<Map<number, string>> | null = null;
 
-export async function itemName(hash: number): Promise<string> {
+function itemMetaMap() {
   if (!itemIndex) {
-    itemIndex = meta().then(({ paths }) => loadIndex("item-names.json", paths.DestinyInventoryItemDefinition));
+    itemIndex = meta().then(({ paths }) => loadItemMeta(paths.DestinyInventoryItemDefinition));
   }
-  const names = await itemIndex;
-  return names.get(hash >>> 0) ?? `Unknown item ${hash >>> 0}`;
+  return itemIndex;
+}
+
+export async function itemName(hash: number): Promise<string> {
+  return (await itemMetaMap()).get(hash >>> 0)?.name ?? `Unknown item ${hash >>> 0}`;
+}
+
+export async function itemMeta(hash: number): Promise<ItemMeta | undefined> {
+  return (await itemMetaMap()).get(hash >>> 0);
 }
 
 export async function loadoutName(hash: number): Promise<string> {

@@ -1,6 +1,6 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { itemName, loadoutName } from "../bungie/manifest.js";
+import { itemMeta, itemName, loadoutName, type ItemMeta } from "../bungie/manifest.js";
 import {
   ClassType,
   Component,
@@ -8,9 +8,14 @@ import {
   type DestinyItem,
   type ProfileResponse,
 } from "../bungie/profile.js";
+import { renderLoadoutCard } from "../format/loadout/index.js";
 
 function json(value: unknown) {
   return { content: [{ type: "text" as const, text: JSON.stringify(value, null, 2) }] };
+}
+
+function text(value: string) {
+  return { content: [{ type: "text" as const, text: value }] };
 }
 
 function instanceMap(profile: ProfileResponse): Map<string, number> {
@@ -94,6 +99,46 @@ export function registerReadTools(server: McpServer): void {
         })),
       );
       return json(result);
+    },
+  );
+
+  server.registerTool(
+    "show_loadout",
+    {
+      description:
+        "Render a saved loadout as a visual card with rarity-colored item names and element icons. Defaults to the first character; pass a loadoutIndex (from list_loadouts) to choose a slot.",
+      inputSchema: { loadoutIndex: z.number(), characterId: z.string().optional() },
+    },
+    async ({ loadoutIndex, characterId }) => {
+      const profile = await getProfile([
+        Component.Characters,
+        Component.CharacterEquipment,
+        Component.CharacterInventories,
+        Component.ProfileInventories,
+        Component.CharacterLoadouts,
+      ]);
+
+      const hashByInstance = instanceMap(profile);
+      const loadoutData = profile.characterLoadouts?.data ?? {};
+      const id = characterId ?? Object.keys(loadoutData)[0];
+      const loadout = loadoutData[id]?.loadouts[loadoutIndex];
+      if (!loadout) return json({ error: `No loadout at index ${loadoutIndex} for character ${id}` });
+
+      const items = (
+        await Promise.all(
+          loadout.items
+            .filter((item) => hashByInstance.has(item.itemInstanceId))
+            .map((item) => itemMeta(hashByInstance.get(item.itemInstanceId)!)),
+        )
+      ).filter((item): item is ItemMeta => item !== undefined);
+
+      const card = renderLoadoutCard({
+        title: (await loadoutName(loadout.nameHash)).toUpperCase(),
+        className: ClassType[profile.characters?.data?.[id]?.classType ?? -1] ?? "Unknown",
+        slot: loadoutIndex,
+        items,
+      });
+      return text(card);
     },
   );
 
