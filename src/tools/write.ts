@@ -1,7 +1,14 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { bungieFetch } from "../bungie/client.js";
-import { getPrimaryMembership } from "../bungie/profile.js";
+import { BungieError, bungieFetch } from "../bungie/client.js";
+import { itemName } from "../bungie/manifest.js";
+import {
+  Component,
+  getPrimaryMembership,
+  getProfile,
+  type DestinyItem,
+  type ProfileResponse,
+} from "../bungie/profile.js";
 
 function ok(message: string, response: unknown) {
   return {
@@ -13,6 +20,116 @@ async function action(path: string, body: Record<string, unknown>): Promise<unkn
   const { membershipType } = await getPrimaryMembership();
   return bungieFetch(path, { method: "POST", body: { ...body, membershipType } });
 }
+
+function transfer(
+  characterId: string,
+  itemId: string,
+  itemReferenceHash: number,
+  transferToVault: boolean,
+): Promise<unknown> {
+  return action("/Destiny2/Actions/Items/TransferItem/", {
+    characterId,
+    itemId,
+    itemReferenceHash,
+    transferToVault,
+    stackSize: 1,
+  });
+}
+
+interface Location {
+  item: DestinyItem;
+  // The character holding the item, or undefined when it sits in the vault.
+  characterId?: string;
+}
+
+// Find an instanced item anywhere it can live — equipped, in a character's inventory, or the vault —
+// so the server can derive its definition hash and current home without the client supplying either.
+function locate(profile: ProfileResponse, itemId: string): Location | undefined {
+  const find = (items?: DestinyItem[]) => items?.find((item) => item.itemInstanceId === itemId);
+
+  for (const [characterId, bucket] of Object.entries(profile.characterEquipment?.data ?? {})) {
+    const item = find(bucket.items);
+    if (item) {
+      return { item, characterId };
+    }
+  }
+  for (const [characterId, bucket] of Object.entries(profile.characterInventories?.data ?? {})) {
+    const item = find(bucket.items);
+    if (item) {
+      return { item, characterId };
+    }
+  }
+  const vaultItem = find(profile.profileInventory?.data?.items);
+  return vaultItem ? { item: vaultItem } : undefined;
+}
+
+// A non-equipped copy of the same item already sitting in the character's inventory. Copies share a
+// definition hash and therefore a bucket, so one of these is exactly what occupies a full destination.
+function inventoryDuplicate(
+  profile: ProfileResponse,
+  characterId: string,
+  itemHash: number,
+  excludeItemId: string,
+): DestinyItem | undefined {
+  const items = profile.characterInventories?.data?.[characterId]?.items ?? [];
+  return items.find((item) => item.itemHash === itemHash && item.itemInstanceId !== excludeItemId);
+}
+
+// Bring an instanced item onto a character so it can be equipped, returning a note describing any
+// transfer performed (empty when the item was already there). Pulls from the vault unconditionally;
+// when the destination bucket is full it only evicts a *duplicate of the same item*, matching the
+// hand-orchestrated policy — anything else fails clearly so the caller decides what to drop.
+async function ensureOnCharacter(
+  profile: ProfileResponse,
+  characterId: string,
+  itemId: string,
+): Promise<string> {
+  const location = locate(profile, itemId);
+  if (!location) {
+    throw new Error(
+      `[destiny2-mcp] No item with instance id ${itemId} found in any inventory, equipment, or the vault.`,
+    );
+  }
+
+  if (location.characterId === characterId) {
+    return "";
+  }
+
+  const itemHash = location.item.itemHash;
+  const name = await itemName(itemHash);
+
+  // On another character: the API only transfers character↔vault, so push it to the vault first.
+  if (location.characterId) {
+    await transfer(location.characterId, itemId, itemHash, true);
+  }
+
+  try {
+    await transfer(characterId, itemId, itemHash, false);
+    return `Pulled ${name} to the character. `;
+  } catch (error) {
+    if (!(error instanceof BungieError) || error.errorStatus !== "DestinyNoRoomInDestination") {
+      throw error;
+    }
+
+    const duplicate = inventoryDuplicate(profile, characterId, itemHash, itemId);
+    if (!duplicate?.itemInstanceId) {
+      throw new Error(
+        `[destiny2-mcp] The destination bucket for ${name} is full and holds no duplicate to evict. ` +
+          `Pass an item to move to the vault first, then retry the equip.`,
+      );
+    }
+
+    await transfer(characterId, duplicate.itemInstanceId, itemHash, true);
+    await transfer(characterId, itemId, itemHash, false);
+    return `Pulled ${name} to the character, evicting a duplicate to the vault for room. `;
+  }
+}
+
+const TRANSFER_COMPONENTS = [
+  Component.CharacterEquipment,
+  Component.CharacterInventories,
+  Component.ProfileInventories,
+];
 
 export function registerWriteTools(server: McpServer): void {
   server.registerTool(
@@ -88,15 +205,17 @@ export function registerWriteTools(server: McpServer): void {
     "equip_item",
     {
       description:
-        "Equip a single item on a character by its item instance id (from list_inventory / get_equipped). The item must already be in that character's inventory: an item in the vault, or on a different character, must first be moved with transfer_item or the equip fails.",
+        "Equip a single item on a character by its item instance id (from list_inventory / get_equipped). The item is moved onto the character automatically if it sits in the vault or on another character, so no transfer_item call is needed first. If the destination bucket is full, a duplicate of the same item is bumped to the vault to make room; otherwise the equip fails asking you to name an item to move.",
       inputSchema: {
         characterId: z.string(),
         itemId: z.string(),
       },
     },
     async ({ characterId, itemId }) => {
+      const profile = await getProfile(TRANSFER_COMPONENTS);
+      const note = await ensureOnCharacter(profile, characterId, itemId);
       const response = await action("/Destiny2/Actions/Items/EquipItem/", { characterId, itemId });
-      return ok(`Equipped item ${itemId} on character ${characterId}.`, response);
+      return ok(`${note}Equipped item ${itemId} on character ${characterId}.`, response);
     },
   );
 
@@ -104,18 +223,27 @@ export function registerWriteTools(server: McpServer): void {
     "equip_items",
     {
       description:
-        "Equip several items on a character at once by their item instance ids. Every item must already be in that character's inventory: pull anything sitting in the vault or on another character with transfer_item first, or the equip fails.",
+        "Equip several items on a character at once by their item instance ids. Each item is moved onto the character automatically if it sits in the vault or on another character, so no transfer_item calls are needed first. A full destination bucket is cleared by bumping a duplicate of the same item to the vault; otherwise the equip fails asking you to name an item to move.",
       inputSchema: {
         characterId: z.string(),
         itemIds: z.array(z.string()).min(1),
       },
     },
     async ({ characterId, itemIds }) => {
+      const profile = await getProfile(TRANSFER_COMPONENTS);
+      // Each requested item targets a distinct equip slot, so their buckets don't overlap and the
+      // single profile snapshot stays accurate across the pulls.
+      const notes = await Promise.all(
+        itemIds.map((itemId) => ensureOnCharacter(profile, characterId, itemId)),
+      );
       const response = await action("/Destiny2/Actions/Items/EquipItems/", {
         characterId,
         itemIds,
       });
-      return ok(`Equipped ${itemIds.length} item(s) on character ${characterId}.`, response);
+      return ok(
+        `${notes.join("")}Equipped ${itemIds.length} item(s) on character ${characterId}.`,
+        response,
+      );
     },
   );
 
