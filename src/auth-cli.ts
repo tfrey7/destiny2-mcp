@@ -6,7 +6,8 @@ import { AUTHORIZE_URL, CALLBACK_PORT, credentials, REDIRECT_URI } from "./confi
 import { exchangeCode } from "./bungie/auth.js";
 
 function openBrowser(url: string): void {
-  const opener = process.platform === "darwin" ? "open" : process.platform === "win32" ? "start" : "xdg-open";
+  const opener =
+    process.platform === "darwin" ? "open" : process.platform === "win32" ? "start" : "xdg-open";
   exec(`${opener} "${url}"`);
 }
 
@@ -31,7 +32,9 @@ async function main(): Promise<void> {
 
       const code = url.searchParams.get("code");
       if (url.searchParams.get("state") !== state || !code) {
-        response.writeHead(400).end(reply("<h2>Auth failed.</h2><p>State mismatch or missing code.</p>"));
+        response
+          .writeHead(400)
+          .end(reply("<h2>Auth failed.</h2><p>State mismatch or missing code.</p>"));
         server.close();
         reject(new Error("[destiny2-mcp] State mismatch or missing authorization code."));
         return;
@@ -40,12 +43,18 @@ async function main(): Promise<void> {
       exchangeCode(code)
         .then(() => {
           response.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-          response.end(reply("<h2>Authenticated ✨</h2><p>You can close this tab and return to the terminal.</p>"));
+          response.end(
+            reply(
+              "<h2>Authenticated ✨</h2><p>You can close this tab and return to the terminal.</p>",
+            ),
+          );
           server.close();
           resolve();
         })
         .catch((error) => {
-          response.writeHead(500).end(reply(`<h2>Token exchange failed.</h2><pre>${String(error)}</pre>`));
+          response
+            .writeHead(500)
+            .end(reply(`<h2>Token exchange failed.</h2><pre>${String(error)}</pre>`));
           server.close();
           reject(error);
         });
@@ -55,8 +64,12 @@ async function main(): Promise<void> {
       console.log("[destiny2-mcp] Opening browser to log in to Bungie...");
       console.log(`[destiny2-mcp] If it doesn't open, visit:\n${authorizeUrl}`);
       if (!tls.trusted) {
-        console.log("[destiny2-mcp] Your browser will warn about a self-signed certificate — that is expected; proceed.");
-        console.log("[destiny2-mcp] To remove that warning, install mkcert (https://github.com/FiloSottile/mkcert) and run `mkcert -install`.");
+        console.log(
+          "[destiny2-mcp] Your browser will warn about a self-signed certificate — that is expected; proceed.",
+        );
+        console.log(
+          "[destiny2-mcp] To remove that warning, install mkcert (https://github.com/FiloSottile/mkcert) and run `mkcert -install`.",
+        );
       }
       openBrowser(authorizeUrl);
     });

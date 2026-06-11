@@ -18,8 +18,12 @@ export async function bungieFetch<T>(path: string, options: RequestOptions = {})
   const { method = "GET", body, auth = true } = options;
 
   const headers: Record<string, string> = { "X-API-Key": requireEnv("BUNGIE_API_KEY") };
-  if (auth) headers.Authorization = `Bearer ${await getAccessToken()}`;
-  if (body !== undefined) headers["Content-Type"] = "application/json";
+  if (auth) {
+    headers.Authorization = `Bearer ${await getAccessToken()}`;
+  }
+  if (body !== undefined) {
+    headers["Content-Type"] = "application/json";
+  }
 
   const response = await fetch(`${BUNGIE_BASE}${path}`, {
     method,

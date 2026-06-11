@@ -22,9 +22,9 @@ function cardAndJson(card: string, value: unknown) {
 
 /** Render a community build's gear (weapons, armor, and subclass) as a loadout card. */
 async function buildCard(build: BuildRecipe): Promise<string> {
-  const items = (await Promise.all(build.loadout.equipped.map((item) => itemMeta(item.hash)))).filter(
-    (meta): meta is ItemMeta => meta !== undefined,
-  );
+  const items = (
+    await Promise.all(build.loadout.equipped.map((item) => itemMeta(item.hash)))
+  ).filter((meta): meta is ItemMeta => meta !== undefined);
   return renderLoadoutCard({
     title: build.loadout.name.toUpperCase(),
     className: build.className,
@@ -58,7 +58,9 @@ export function registerBuildTools(server: McpServer): void {
     },
     async ({ className, subclass }) => {
       const { builds, scrapedAt } = await loadBuilds();
-      const filtered = builds.filter((b) => matches(b.className, className) && matches(b.subclass, subclass));
+      const filtered = builds.filter(
+        (b) => matches(b.className, className) && matches(b.subclass, subclass),
+      );
 
       const cards = await Promise.all(filtered.map(buildCard));
       const index = filtered.map((build) => ({
@@ -82,7 +84,9 @@ export function registerBuildTools(server: McpServer): void {
     async ({ shareId }) => {
       const { builds } = await loadBuilds();
       const build = builds.find((b) => b.shareId === shareId);
-      if (!build) return json({ error: `No build with shareId ${shareId}. Use find_builds to list them.` });
+      if (!build) {
+        return json({ error: `No build with shareId ${shareId}. Use find_builds to list them.` });
+      }
 
       const profile = await getProfile([
         Component.CharacterEquipment,
@@ -113,7 +117,12 @@ export function registerBuildTools(server: McpServer): void {
       const nameHash = build.loadout.parameters?.inGameIdentifiers?.nameHash;
 
       return cardAndJson(await buildCard(build), {
-        build: { name: build.loadout.name, class: build.className, subclass: build.subclass, dimLink: build.dimLink },
+        build: {
+          name: build.loadout.name,
+          class: build.className,
+          subclass: build.subclass,
+          dimLink: build.dimLink,
+        },
         suggestedLoadoutName: nameHash ? await loadoutName(nameHash) : undefined,
         equip: gear.filter((item) => item.owned),
         missing: gear.filter((item) => !item.owned).map((item) => item.name),

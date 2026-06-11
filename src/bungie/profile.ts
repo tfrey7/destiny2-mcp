@@ -95,17 +95,28 @@ interface MembershipsResponse {
 let cachedMembership: Membership | null = null;
 
 export async function getPrimaryMembership(): Promise<Membership> {
-  if (cachedMembership) return cachedMembership;
+  if (cachedMembership) {
+    return cachedMembership;
+  }
 
   const data = await bungieFetch<MembershipsResponse>("/User/GetMembershipsForCurrentUser/");
   const memberships = data.destinyMemberships;
 
   let chosen = memberships.find((m) => m.membershipId === data.primaryMembershipId);
-  if (!chosen) chosen = memberships.find((m) => m.crossSaveOverride === m.membershipType);
-  if (!chosen) chosen = memberships[0];
-  if (!chosen) throw new Error("[destiny2-mcp] No Destiny membership found on this account.");
+  if (!chosen) {
+    chosen = memberships.find((m) => m.crossSaveOverride === m.membershipType);
+  }
+  if (!chosen) {
+    chosen = memberships[0];
+  }
+  if (!chosen) {
+    throw new Error("[destiny2-mcp] No Destiny membership found on this account.");
+  }
 
-  cachedMembership = { membershipType: chosen.membershipType, destinyMembershipId: chosen.membershipId };
+  cachedMembership = {
+    membershipType: chosen.membershipType,
+    destinyMembershipId: chosen.membershipId,
+  };
   return cachedMembership;
 }
 

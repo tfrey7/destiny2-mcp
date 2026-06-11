@@ -1,4 +1,11 @@
-import { BUCKET, CLASS_ITEM_BUCKET, ELEMENT, RARITY_COLOR, WIDE_GLYPHS, type Section } from "./data.js";
+import {
+  BUCKET,
+  CLASS_ITEM_BUCKET,
+  ELEMENT,
+  RARITY_COLOR,
+  WIDE_GLYPHS,
+  type Section,
+} from "./data.js";
 
 type Rgb = [number, number, number];
 
@@ -28,7 +35,9 @@ const ANSI = /\x1b\[[0-9;]*m/g;
 
 function displayWidth(text: string): number {
   let width = 0;
-  for (const ch of text.replace(ANSI, "")) width += WIDE_GLYPHS.has(ch) ? 2 : 1;
+  for (const ch of text.replace(ANSI, "")) {
+    width += WIDE_GLYPHS.has(ch) ? 2 : 1;
+  }
   return width;
 }
 
@@ -37,10 +46,14 @@ function pad(text: string, width: number): string {
 }
 
 function truncate(text: string, max: number): string {
-  if (displayWidth(text) <= max) return text;
+  if (displayWidth(text) <= max) {
+    return text;
+  }
   let out = "";
   for (const ch of text) {
-    if (displayWidth(out + ch + "…") > max) break;
+    if (displayWidth(out + ch + "…") > max) {
+      break;
+    }
     out += ch;
   }
   return out + "…";
@@ -56,7 +69,9 @@ function dim(text: string): string {
 
 function elementTag(element: string | undefined): string {
   const entry = element ? ELEMENT[element] : undefined;
-  if (!entry || !element) return "";
+  if (!entry || !element) {
+    return "";
+  }
   return `${entry.icon} ${rgb(element, entry.color)}`;
 }
 
@@ -94,7 +109,9 @@ export function renderLoadoutCard(card: LoadoutCard): string {
   if (weapons.length > 0) {
     lines.push(boxLine(dim("WEAPONS")));
     for (const item of weapons) {
-      lines.push(boxLine(row(item.name, rarityColor(item.rarity), item.type, elementTag(item.element))));
+      lines.push(
+        boxLine(row(item.name, rarityColor(item.rarity), item.type, elementTag(item.element))),
+      );
     }
     lines.push(boxLine(""));
   }
@@ -102,7 +119,9 @@ export function renderLoadoutCard(card: LoadoutCard): string {
   lines.push(boxLine(dim("ARMOR")));
   const armor = inSection(card.items, "ARMOR");
   for (const item of armor) {
-    lines.push(boxLine(row(item.name, rarityColor(item.rarity), BUCKET[item.bucketHash].label, "")));
+    lines.push(
+      boxLine(row(item.name, rarityColor(item.rarity), BUCKET[item.bucketHash].label, "")),
+    );
   }
   if (!armor.some((item) => item.bucketHash === CLASS_ITEM_BUCKET)) {
     lines.push(boxLine(row("—", rarityColor("Basic"), "Class item", dim("(empty)"))));
@@ -110,9 +129,13 @@ export function renderLoadoutCard(card: LoadoutCard): string {
 
   const subclass = inSection(card.items, "SUBCLASS")[0];
   if (subclass) {
-    const color = subclass.element ? (ELEMENT[subclass.element]?.color ?? rarityColor("Basic")) : rarityColor("Basic");
+    const color = subclass.element
+      ? (ELEMENT[subclass.element]?.color ?? rarityColor("Basic"))
+      : rarityColor("Basic");
     lines.push(boxLine(""), boxLine(dim("SUBCLASS")));
-    lines.push(boxLine(row(subclass.name, color, subclass.element ?? "", elementTag(subclass.element))));
+    lines.push(
+      boxLine(row(subclass.name, color, subclass.element ?? "", elementTag(subclass.element))),
+    );
   }
 
   lines.push("╰" + "─".repeat(BOX_WIDTH + 2) + "╯");

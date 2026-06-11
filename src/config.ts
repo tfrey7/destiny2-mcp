@@ -22,7 +22,9 @@ export const BUILDS_FILE = join(packageRoot, "data", "builds.json");
 
 export function requireEnv(name: string): string {
   const value = process.env[name];
-  if (!value) throw new Error(`[destiny2-mcp] Missing required env var ${name}`);
+  if (!value) {
+    throw new Error(`[destiny2-mcp] Missing required env var ${name}`);
+  }
   return value;
 }
 

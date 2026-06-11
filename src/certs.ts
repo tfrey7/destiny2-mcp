@@ -28,10 +28,18 @@ function mkcertCert(): Cert {
   const certPath = join(CERT_DIR, "127.0.0.1.pem");
 
   if (!existsSync(keyPath) || !existsSync(certPath)) {
-    execFileSync("mkcert", ["-key-file", keyPath, "-cert-file", certPath, "127.0.0.1", "localhost"], { stdio: "ignore" });
+    execFileSync(
+      "mkcert",
+      ["-key-file", keyPath, "-cert-file", certPath, "127.0.0.1", "localhost"],
+      { stdio: "ignore" },
+    );
   }
 
-  return { key: readFileSync(keyPath, "utf8"), cert: readFileSync(certPath, "utf8"), trusted: true };
+  return {
+    key: readFileSync(keyPath, "utf8"),
+    cert: readFileSync(certPath, "utf8"),
+    trusted: true,
+  };
 }
 
 // Fallback for hosts without mkcert: a throwaway cert no one trusts, so the browser warns.

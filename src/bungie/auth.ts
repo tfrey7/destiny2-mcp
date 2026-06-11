@@ -57,7 +57,9 @@ async function postToken(params: Record<string, string>): Promise<TokenResponse>
   });
 
   if (!response.ok) {
-    throw new Error(`[destiny2-mcp] Token request failed (${response.status}): ${await response.text()}`);
+    throw new Error(
+      `[destiny2-mcp] Token request failed (${response.status}): ${await response.text()}`,
+    );
   }
   return (await response.json()) as TokenResponse;
 }
@@ -82,7 +84,9 @@ export async function getAccessToken(): Promise<string> {
     throw new Error("[destiny2-mcp] Session expired. Run `npm run auth` to log in again.");
   }
 
-  const refreshed = toStored(await postToken({ grant_type: "refresh_token", refresh_token: tokens.refreshToken }));
+  const refreshed = toStored(
+    await postToken({ grant_type: "refresh_token", refresh_token: tokens.refreshToken }),
+  );
   await writeTokens(refreshed);
   return refreshed.accessToken;
 }

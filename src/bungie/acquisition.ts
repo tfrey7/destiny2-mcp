@@ -18,19 +18,25 @@ export async function ownedCollectibles(): Promise<Set<number>> {
 
   const owned = new Set<number>();
   for (const [hash, { state }] of Object.entries(collectibles)) {
-    if ((state & NOT_ACQUIRED) === 0) owned.add(Number(hash));
+    if ((state & NOT_ACQUIRED) === 0) {
+      owned.add(Number(hash));
+    }
   }
   return owned;
 }
 
 export async function acquisitionFor(itemHash: number, owned?: Set<number>): Promise<Acquisition> {
   const info = await itemInfo(itemHash);
-  if (!info) return { name: `Unknown item ${itemHash >>> 0}` };
+  if (!info) {
+    return { name: `Unknown item ${itemHash >>> 0}` };
+  }
 
   const acquisition: Acquisition = { name: info.name, tier: info.tier, itemType: info.itemType };
   if (info.collectibleHash) {
     acquisition.source = await collectibleSource(info.collectibleHash);
-    if (owned) acquisition.owned = owned.has(info.collectibleHash);
+    if (owned) {
+      acquisition.owned = owned.has(info.collectibleHash);
+    }
   }
   return acquisition;
 }

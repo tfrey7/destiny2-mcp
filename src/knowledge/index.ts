@@ -22,14 +22,18 @@ export function registerKnowledgeTools(server: McpServer): void {
       },
     },
     async ({ topic }) => {
-      if (!topic) return { content: [{ type: "text" as const, text: render(buildKnowledge) }] };
+      if (!topic) {
+        return { content: [{ type: "text" as const, text: render(buildKnowledge) }] };
+      }
 
       const term = topic.toLowerCase();
       const matches = buildKnowledge.filter(
         (section) => section.id === term || section.title.toLowerCase().includes(term),
       );
       if (matches.length === 0) {
-        return { content: [{ type: "text" as const, text: `No section "${topic}". Topics: ${topics}.` }] };
+        return {
+          content: [{ type: "text" as const, text: `No section "${topic}". Topics: ${topics}.` }],
+        };
       }
       return { content: [{ type: "text" as const, text: render(matches) }] };
     },

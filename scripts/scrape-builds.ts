@@ -22,15 +22,23 @@ function capitalize(value: string): string {
 }
 
 function listUrl(className: string, popular: boolean, page: number): string {
-  const params = new URLSearchParams({ "q[dclass]": className, "q[view]": "by_build", page: String(page) });
+  const params = new URLSearchParams({
+    "q[dclass]": className,
+    "q[view]": "by_build",
+    page: String(page),
+  });
   params.set("q[sort]", popular ? "likes" : "date_added");
-  if (popular) params.set("q[top]", "true");
+  if (popular) {
+    params.set("q[top]", "true");
+  }
   return `${BUILDERS}?${params}`;
 }
 
 async function fetchPage(url: string): Promise<string> {
   const response = await fetch(url, { headers: { "User-Agent": USER_AGENT } });
-  if (!response.ok) throw new Error(`[destiny2-mcp] builders.gg returned ${response.status} for ${url}`);
+  if (!response.ok) {
+    throw new Error(`[destiny2-mcp] builders.gg returned ${response.status} for ${url}`);
+  }
   return response.text();
 }
 
@@ -41,7 +49,9 @@ function parseCards(html: string, className: string): Card[] {
 
   for (const match of html.matchAll(/href="\/destiny\/dim-builds\/([a-z0-9]+)\/([a-z0-9-]+)"/g)) {
     const [, shareId, slug] = match;
-    if (seen.has(shareId)) continue;
+    if (seen.has(shareId)) {
+      continue;
+    }
     seen.add(shareId);
 
     const window = html.slice(match.index, match.index + 600).replace(/<[^>]+>/g, " ");
@@ -53,7 +63,9 @@ function parseCards(html: string, className: string): Card[] {
 }
 
 async function fetchLoadout(shareId: string): Promise<DimLoadout | null> {
-  const response = await fetch(`${DIM_API}?shareId=${shareId}`, { headers: { "User-Agent": USER_AGENT } });
+  const response = await fetch(`${DIM_API}?shareId=${shareId}`, {
+    headers: { "User-Agent": USER_AGENT },
+  });
   if (!response.ok) {
     console.warn(`[destiny2-mcp]   ! DIM API ${response.status} for ${shareId}, skipping`);
     return null;
@@ -67,9 +79,14 @@ async function collectCards(className: string, popular: boolean, limit: number):
   const seen = new Set<string>();
 
   for (let page = 1; cards.length < limit && page <= 10; page++) {
-    const pageCards = parseCards(await fetchPage(listUrl(className, popular, page)), capitalize(className));
+    const pageCards = parseCards(
+      await fetchPage(listUrl(className, popular, page)),
+      capitalize(className),
+    );
     const fresh = pageCards.filter((card) => !seen.has(card.shareId));
-    if (fresh.length === 0) break;
+    if (fresh.length === 0) {
+      break;
+    }
 
     for (const card of fresh) {
       seen.add(card.shareId);
@@ -92,7 +109,9 @@ async function main(): Promise<void> {
   const builds: BuildRecipe[] = [];
   for (const card of cards) {
     const loadout = await fetchLoadout(card.shareId);
-    if (!loadout) continue;
+    if (!loadout) {
+      continue;
+    }
     console.log(`[destiny2-mcp]   ✓ ${loadout.name} (${card.subclass} ${capitalize(className)})`);
     builds.push({
       shareId: card.shareId,

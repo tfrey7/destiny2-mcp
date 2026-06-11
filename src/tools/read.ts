@@ -35,12 +35,18 @@ function instanceMap(profile: ProfileResponse): Map<string, number> {
   const map = new Map<string, number>();
   const add = (items?: DestinyItem[]) => {
     for (const item of items ?? []) {
-      if (item.itemInstanceId) map.set(item.itemInstanceId, item.itemHash);
+      if (item.itemInstanceId) {
+        map.set(item.itemInstanceId, item.itemHash);
+      }
     }
   };
 
-  for (const bucket of Object.values(profile.characterEquipment?.data ?? {})) add(bucket.items);
-  for (const bucket of Object.values(profile.characterInventories?.data ?? {})) add(bucket.items);
+  for (const bucket of Object.values(profile.characterEquipment?.data ?? {})) {
+    add(bucket.items);
+  }
+  for (const bucket of Object.values(profile.characterInventories?.data ?? {})) {
+    add(bucket.items);
+  }
   add(profile.profileInventory?.data?.items);
   return map;
 }
@@ -62,28 +68,40 @@ async function namedItems(
   );
 }
 
-async function describePerks(plugHashes: number[]): Promise<{ name: string; description: string }[]> {
+async function describePerks(
+  plugHashes: number[],
+): Promise<{ name: string; description: string }[]> {
   const definitions = await Promise.all(plugHashes.map((hash) => itemDefinition(hash)));
 
   const seen = new Set<string>();
   const perks: { name: string; description: string }[] = [];
   for (const definition of definitions) {
     const name = definition.displayProperties?.name;
-    if (!name || seen.has(name)) continue;
+    if (!name || seen.has(name)) {
+      continue;
+    }
     seen.add(name);
     perks.push({ name, description: definition.displayProperties?.description ?? "" });
   }
   return perks;
 }
 
-async function describeStats(stats: Record<string, { value?: number }>): Promise<Record<string, number>> {
+async function describeStats(
+  stats: Record<string, { value?: number }>,
+): Promise<Record<string, number>> {
   const entries = await Promise.all(
-    Object.entries(stats).map(async ([hash, stat]) => [await statName(Number(hash)), stat.value ?? 0] as const),
+    Object.entries(stats).map(
+      async ([hash, stat]) => [await statName(Number(hash)), stat.value ?? 0] as const,
+    ),
   );
   return Object.fromEntries(entries);
 }
 
-async function describeItem(itemHash: number, plugHashes: number[], stats: Record<string, { value?: number }>) {
+async function describeItem(
+  itemHash: number,
+  plugHashes: number[],
+  stats: Record<string, { value?: number }>,
+) {
   const definition = await itemDefinition(itemHash);
   const [perks, namedStats] = await Promise.all([describePerks(plugHashes), describeStats(stats)]);
   return {
@@ -101,7 +119,8 @@ export function registerReadTools(server: McpServer): void {
   server.registerTool(
     "list_characters",
     {
-      description: "List the player's Destiny 2 characters with class, power level, and characterId.",
+      description:
+        "List the player's Destiny 2 characters with class, power level, and characterId.",
       inputSchema: {},
     },
     async () => {
@@ -177,7 +196,9 @@ export function registerReadTools(server: McpServer): void {
       const loadoutData = profile.characterLoadouts?.data ?? {};
       const id = characterId ?? Object.keys(loadoutData)[0];
       const loadout = loadoutData[id]?.loadouts[loadoutIndex];
-      if (!loadout) return json({ error: `No loadout at index ${loadoutIndex} for character ${id}` });
+      if (!loadout) {
+        return json({ error: `No loadout at index ${loadoutIndex} for character ${id}` });
+      }
 
       const items = (
         await Promise.all(
@@ -207,7 +228,9 @@ export function registerReadTools(server: McpServer): void {
       const profile = await getProfile([Component.Characters, Component.CharacterEquipment]);
       const equipment = profile.characterEquipment?.data ?? {};
 
-      const entries = Object.entries(equipment).filter(([id]) => !characterId || id === characterId);
+      const entries = Object.entries(equipment).filter(
+        ([id]) => !characterId || id === characterId,
+      );
       const result = await Promise.all(
         entries.map(async ([id, bucket]) => ({
           characterId: id,
@@ -237,7 +260,9 @@ export function registerReadTools(server: McpServer): void {
         )[0]?.characterId ??
         Object.keys(equipment)[0];
       const bucket = id ? equipment[id] : undefined;
-      if (!bucket) return json({ error: `No equipped gear for character ${id}` });
+      if (!bucket) {
+        return json({ error: `No equipped gear for character ${id}` });
+      }
 
       const items = (await Promise.all(bucket.items.map((item) => itemMeta(item.itemHash)))).filter(
         (item): item is ItemMeta => item !== undefined,
@@ -313,7 +338,9 @@ export function registerReadTools(server: McpServer): void {
         ]);
 
         const hash = instanceMap(profile).get(itemInstanceId);
-        if (!hash) throw new Error(`[destiny2-mcp] No item found for instance ${itemInstanceId}.`);
+        if (!hash) {
+          throw new Error(`[destiny2-mcp] No item found for instance ${itemInstanceId}.`);
+        }
 
         const instance = profile.itemComponents?.instances?.data?.[itemInstanceId];
         const sockets = profile.itemComponents?.sockets?.data?.[itemInstanceId]?.sockets ?? [];
@@ -342,7 +369,9 @@ export function registerReadTools(server: McpServer): void {
       const described = await describeItem(itemHash, plugHashes, definition.stats?.stats ?? {});
       return json({
         ...described,
-        element: definition.defaultDamageType ? DamageType[definition.defaultDamageType] : undefined,
+        element: definition.defaultDamageType
+          ? DamageType[definition.defaultDamageType]
+          : undefined,
       });
     },
   );
@@ -359,7 +388,9 @@ export function registerReadTools(server: McpServer): void {
       const result = await Promise.all(
         items.map(async (name) => {
           const hash = await findItemByName(name);
-          if (hash === undefined) return { name, note: "No item with this exact name in the manifest." };
+          if (hash === undefined) {
+            return { name, note: "No item with this exact name in the manifest." };
+          }
           return acquisitionFor(hash, owned);
         }),
       );

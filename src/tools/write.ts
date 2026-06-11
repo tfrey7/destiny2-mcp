@@ -4,7 +4,9 @@ import { bungieFetch } from "../bungie/client.js";
 import { getPrimaryMembership } from "../bungie/profile.js";
 
 function ok(message: string, response: unknown) {
-  return { content: [{ type: "text" as const, text: `${message}\n${JSON.stringify(response, null, 2)}` }] };
+  return {
+    content: [{ type: "text" as const, text: `${message}\n${JSON.stringify(response, null, 2)}` }],
+  };
 }
 
 async function action(path: string, body: Record<string, unknown>): Promise<unknown> {
@@ -16,14 +18,18 @@ export function registerWriteTools(server: McpServer): void {
   server.registerTool(
     "equip_loadout",
     {
-      description: "Equip one of a character's saved in-game loadout slots. Find the loadoutIndex via list_loadouts.",
+      description:
+        "Equip one of a character's saved in-game loadout slots. Find the loadoutIndex via list_loadouts.",
       inputSchema: {
         characterId: z.string(),
         loadoutIndex: z.number().int().min(0),
       },
     },
     async ({ characterId, loadoutIndex }) => {
-      const response = await action("/Destiny2/Actions/Loadouts/EquipLoadout/", { characterId, loadoutIndex });
+      const response = await action("/Destiny2/Actions/Loadouts/EquipLoadout/", {
+        characterId,
+        loadoutIndex,
+      });
       return ok(`Equipped loadout ${loadoutIndex} on character ${characterId}.`, response);
     },
   );
@@ -39,8 +45,14 @@ export function registerWriteTools(server: McpServer): void {
       },
     },
     async ({ characterId, loadoutIndex }) => {
-      const response = await action("/Destiny2/Actions/Loadouts/SnapshotLoadout/", { characterId, loadoutIndex });
-      return ok(`Snapshotted current gear into loadout ${loadoutIndex} on character ${characterId}.`, response);
+      const response = await action("/Destiny2/Actions/Loadouts/SnapshotLoadout/", {
+        characterId,
+        loadoutIndex,
+      });
+      return ok(
+        `Snapshotted current gear into loadout ${loadoutIndex} on character ${characterId}.`,
+        response,
+      );
     },
   );
 
@@ -65,14 +77,18 @@ export function registerWriteTools(server: McpServer): void {
         colorHash,
         iconHash,
       });
-      return ok(`Updated identifiers for loadout ${loadoutIndex} on character ${characterId}.`, response);
+      return ok(
+        `Updated identifiers for loadout ${loadoutIndex} on character ${characterId}.`,
+        response,
+      );
     },
   );
 
   server.registerTool(
     "equip_item",
     {
-      description: "Equip a single item on a character by its item instance id (from list_inventory / get_equipped).",
+      description:
+        "Equip a single item on a character by its item instance id (from list_inventory / get_equipped).",
       inputSchema: {
         characterId: z.string(),
         itemId: z.string(),
@@ -94,7 +110,10 @@ export function registerWriteTools(server: McpServer): void {
       },
     },
     async ({ characterId, itemIds }) => {
-      const response = await action("/Destiny2/Actions/Items/EquipItems/", { characterId, itemIds });
+      const response = await action("/Destiny2/Actions/Items/EquipItems/", {
+        characterId,
+        itemIds,
+      });
       return ok(`Equipped ${itemIds.length} item(s) on character ${characterId}.`, response);
     },
   );
