@@ -1,79 +1,73 @@
 # destiny2-mcp
 
-An MCP server for the Destiny 2 (Bungie.net) API. Lets you ask Claude to view
-and change your loadouts, gear, and inventory in natural language.
+Talk to Claude about your Destiny 2 characters in plain English — inspect gear,
+craft builds from your real inventory, and equip loadouts. It's an MCP server
+that wraps the Bungie.net API.
 
-## Tools
+## Quick start
 
-**Read:** `list_characters`, `list_loadouts`, `get_equipped`, `list_inventory`,
-`inspect_item`, `how_to_acquire`
-**Write:** `equip_loadout`, `snapshot_loadout`, `update_loadout_identifiers`,
-`equip_item`, `equip_items`, `transfer_item`
-**Build-crafting:** `get_build_knowledge`
+```bash
+# 1. Clone and install
+git clone <repo-url> destiny2-mcp && cd destiny2-mcp
+npm install
 
-`inspect_item` reads one item's actual rolled perks, mods, stats, and element
-with current in-game descriptions (works on a subclass too, surfacing its
-aspects and fragments). `get_build_knowledge` returns curated synergy reasoning
-for designing builds. Together they let Claude craft builds grounded in the live
-game and your real gear.
+# 2. Add your Bungie API credentials
+cp .env.example .env        # then fill in the three values (see "Bungie app" below)
 
-`how_to_acquire` takes item names and returns each one's in-game source
-(activity/vendor), rarity, type, and whether your account already owns it. The
-underlying lookup lives in `src/bungie/acquisition.ts` (`acquisitionFor` /
-`acquisitionForMany`) so other features — e.g. a loadout generator — can annotate
-each gear piece with where to find it without going through the tool.
+# 3. Log in once (opens your browser; tokens saved to ~/.destiny2-mcp/)
+npm run auth
 
-## Prerequisites
+# 4. Register the server with Claude Code (use the absolute path to src/index.ts)
+claude mcp add destiny2 -- npx tsx "$(pwd)/src/index.ts"
+```
+
+That's it. Open Claude Code and ask it something (see below). Requires Node 22+.
+
+## Try it
+
+Once it's connected, talk to Claude naturally. A few things it can actually do:
+
+- **"Give me the latest Strand Hunter build."** Claude pulls curated Strand
+  synergies, finds matching gear you already own, checks the one-exotic limit
+  against what's equipped, and shows the loadout as a card — picking an
+  off-element energy weapon since Strand can't match that slot.
+- **"What's the god roll on my Fatebringer, and do I have it?"** Reads the
+  item's *actual* rolled perks, stats, and element from your inventory — not a
+  wiki guess.
+- **"Build me a max-resilience Void Titan loadout and equip it."** Designs from
+  your real gear, then equips it (transferring pieces across characters if
+  needed).
+- **"Where do I farm a Chill Inhibitor?"** Returns the in-game source (activity
+  or vendor), rarity, and whether your account already owns it.
+- **"Snapshot what I'm wearing as 'GM Sweat'."** Saves your current equip as a
+  named in-game loadout.
+
+Claude grounds every answer in live data — your characters, your rolls, your
+vault — so it won't recommend gear you don't have.
+
+## Bungie app
 
 Register an app at <https://www.bungie.net/en/Application>:
 
 - **OAuth Client Type:** Confidential
 - **Redirect URL:** `https://127.0.0.1:7777/callback` (must match exactly)
 - **Scopes:** Read your Destiny inventory/vault + Move or equip Destiny gear
-- Copy the **API Key**, **OAuth client_id**, and **OAuth client_secret** into a
-  `.env` file (see `.env.example`).
 
-## Setup
+Copy the **API Key**, **OAuth client_id**, and **OAuth client_secret** into your
+`.env` (see `.env.example`).
 
-```bash
-npm install
-npm run auth      # one-time browser login; saves tokens to ~/.destiny2-mcp/
-```
+## Good to know
 
-The server runs TypeScript directly via `tsx`, so there is no build step for
-day-to-day use. (`npm run build` and `npm run typecheck` still exist for
-compiling/sanity-checking types.)
+- **Re-auth ~every 90 days.** Just run `npm run auth` again.
+- **Self-signed cert warning during auth is expected** — proceed past it. To
+  silence it, install [mkcert](https://github.com/FiloSottile/mkcert) and run
+  `mkcert -install` once; `auth` will then issue a browser-trusted cert.
+- **Picking up code changes:** edit `src/`, then reconnect with `/mcp` in Claude
+  Code. The server runs TypeScript directly via `tsx` — no build step.
+- **Secrets:** `.env` and `oauth.txt` are gitignored. Never commit them. Tokens
+  and the cached Bungie manifest live in `~/.destiny2-mcp/`.
 
-During `npm run auth`, your browser warns about a self-signed certificate on the
-`127.0.0.1` callback page — that is expected; proceed past it. You only need to
-re-run `auth` about every 90 days.
-
-To remove that warning, install [mkcert](https://github.com/FiloSottile/mkcert)
-and trust its local CA once:
-
-```bash
-brew install mkcert
-mkcert -install      # one-time; adds a local CA to your system/browser trust store
-```
-
-With `mkcert` on your `PATH`, `npm run auth` issues a browser-trusted certificate
-for `127.0.0.1` (cached in `~/.destiny2-mcp/certs/`) and the warning goes away.
-Without it, the flow still works using the self-signed fallback.
-
-## Register with Claude Code
-
-```bash
-claude mcp add destiny2 -- npx tsx /Users/timothyfrey/Development/destiny2-mcp/src/index.ts
-```
-
-Credentials are read from this project's `.env` automatically (by absolute path,
-regardless of where Claude Code launches the server), so no `-e` flags are
-needed.
-
-To pick up code changes: edit `src/`, then reconnect the server with `/mcp` in
-Claude Code (or relaunch the tab). No rebuild needed.
-
-## Smoke test
+## Smoke test (optional)
 
 ```bash
 npx @modelcontextprotocol/inspector npx tsx src/index.ts
@@ -81,7 +75,16 @@ npx @modelcontextprotocol/inspector npx tsx src/index.ts
 
 Then call `list_characters` and `list_loadouts`.
 
-## Notes
+## Tools
 
-- `.env` and `oauth.txt` hold secrets and are gitignored. Never commit them.
-- Tokens and the cached Bungie manifest live in `~/.destiny2-mcp/`.
+**Read:** `list_characters`, `list_loadouts`, `get_equipped`, `list_inventory`,
+`search_items`, `inspect_item`, `how_to_acquire`
+**Build-crafting:** `get_build_knowledge`, `find_builds`, `import_build`
+**Visual cards:** `show_equipped`, `show_loadout`
+**Write:** `equip_loadout`, `equip_item`, `equip_items`, `transfer_item`,
+`snapshot_loadout`, `update_loadout_identifiers`
+
+`inspect_item` reads one item's real rolled perks, mods, stats, and element with
+current in-game descriptions (works on a subclass too). `get_build_knowledge`
+returns curated synergy reasoning. Together they let Claude craft builds
+grounded in the live game and your actual gear.
