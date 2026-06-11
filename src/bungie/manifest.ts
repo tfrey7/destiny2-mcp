@@ -57,6 +57,7 @@ export interface SocketEntry {
   singleInitialItemHash?: number;
   reusablePlugItems?: { plugItemHash: number }[];
   reusablePlugSetHash?: number;
+  randomizedPlugSetHash?: number;
 }
 
 export interface SocketCategoryEntry {

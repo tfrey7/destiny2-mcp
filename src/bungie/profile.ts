@@ -76,6 +76,10 @@ export interface ReusablePlug {
   enabled?: boolean;
 }
 
+interface PlugSets {
+  data?: { plugs?: Record<string, ReusablePlug[]> };
+}
+
 export interface ProfileResponse {
   characters?: { data?: Record<string, DestinyCharacter> };
   characterEquipment?: { data?: Record<string, ItemBucket> };
@@ -83,6 +87,8 @@ export interface ProfileResponse {
   characterLoadouts?: { data?: Record<string, { loadouts: DestinyLoadout[] }> };
   profileInventory?: { data?: ItemBucket };
   profileCollectibles?: { data?: { collectibles?: Record<string, { state: number }> } };
+  profilePlugSets?: PlugSets;
+  characterPlugSets?: { data?: Record<string, { plugs?: Record<string, ReusablePlug[]> }> };
   itemComponents?: {
     instances?: { data?: Record<string, ItemInstance> };
     stats?: { data?: Record<string, { stats?: Record<string, { value?: number }> }> };

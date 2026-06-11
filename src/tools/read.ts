@@ -147,21 +147,48 @@ function categoryHashByIndex(categories: SocketCategoryEntry[]): Map<number, num
   return map;
 }
 
-// Prefer the live component — it lists only the plugs the player has actually unlocked — and fall
-// back to the manifest plug set for static cosmetic sockets the profile does not enumerate.
+// Account-wide unlocks (shaders, universal ornaments) live in the profile/character plug-set
+// components, keyed by plug-set hash, not on the item instance. These ride along with ItemSockets.
+function mergedPlugSets(profile: ProfileResponse): Map<number, ReusablePlug[]> {
+  const sets = new Map<number, ReusablePlug[]>();
+  const add = (plugs?: Record<string, ReusablePlug[]>) => {
+    for (const [hash, list] of Object.entries(plugs ?? {})) {
+      sets.set(Number(hash), list);
+    }
+  };
+  add(profile.profilePlugSets?.data?.plugs);
+  for (const character of Object.values(profile.characterPlugSets?.data ?? {})) {
+    add(character.plugs);
+  }
+  return sets;
+}
+
+// Resolve the plugs the player can actually insert. Random-roll perk sockets are per-instance, so
+// the live component is authoritative; reusable cosmetic sockets pull their full unlocked set from
+// the account-wide plug-set components — the live component only reports a partial instance subset.
 async function availablePlugHashes(
   socketIndex: number,
   livePlugs: Record<string, ReusablePlug[]>,
   entry: SocketEntry | undefined,
+  plugSets: Map<number, ReusablePlug[]>,
 ): Promise<number[]> {
   const live = livePlugs[String(socketIndex)];
+  if (entry?.randomizedPlugSetHash !== undefined && live?.length) {
+    return live.filter((plug) => plug.canInsert !== false).map((plug) => plug.plugItemHash);
+  }
+  if (entry?.reusablePlugSetHash !== undefined) {
+    const set = plugSets.get(entry.reusablePlugSetHash);
+    if (set?.length) {
+      return set.filter((plug) => plug.canInsert).map((plug) => plug.plugItemHash);
+    }
+  }
   if (live?.length) {
     return live.filter((plug) => plug.canInsert !== false).map((plug) => plug.plugItemHash);
   }
   if (entry?.reusablePlugItems?.length) {
     return entry.reusablePlugItems.map((plug) => plug.plugItemHash);
   }
-  if (entry?.reusablePlugSetHash) {
+  if (entry?.reusablePlugSetHash !== undefined) {
     return plugSetItemHashes(entry.reusablePlugSetHash);
   }
   return [];
@@ -519,6 +546,7 @@ export function registerReadTools(server: McpServer): void {
       const categoryHashes = categoryHashByIndex(definition.sockets?.socketCategories ?? []);
       const liveSockets = profile.itemComponents?.sockets?.data?.[itemInstanceId]?.sockets ?? [];
       const livePlugs = profile.itemComponents?.reusablePlugs?.data?.[itemInstanceId]?.plugs ?? {};
+      const plugSets = mergedPlugSets(profile);
 
       const sockets = (
         await Promise.all(
@@ -530,7 +558,7 @@ export function registerReadTools(server: McpServer): void {
             const entry = entries[index];
             const categoryHash = categoryHashes.get(index);
             const currentHash = live.plugHash ?? entry?.singleInitialItemHash;
-            const allHashes = await availablePlugHashes(index, livePlugs, entry);
+            const allHashes = await availablePlugHashes(index, livePlugs, entry, plugSets);
             const cap = socketIndex === undefined ? PLUGS_PER_SOCKET : allHashes.length;
             const available = await Promise.all(allHashes.slice(0, cap).map(plugView));
 
