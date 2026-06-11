@@ -13,7 +13,10 @@ export interface LoadoutCardItem {
 export interface LoadoutCard {
   title: string;
   className: string;
-  slot: number;
+  /** Saved-loadout slot index. Omit for community builds, which have no slot. */
+  slot?: number;
+  /** Overrides the detail shown after the class name. Defaults to `slot N` when slot is set. */
+  subtitle?: string;
   items: LoadoutCardItem[];
 }
 
@@ -31,6 +34,16 @@ function displayWidth(text: string): number {
 
 function pad(text: string, width: number): string {
   return text + " ".repeat(Math.max(0, width - displayWidth(text)));
+}
+
+function truncate(text: string, max: number): string {
+  if (displayWidth(text) <= max) return text;
+  let out = "";
+  for (const ch of text) {
+    if (displayWidth(out + ch + "…") > max) break;
+    out += ch;
+  }
+  return out + "…";
 }
 
 function rgb(text: string, [r, g, b]: Rgb): string {
@@ -67,19 +80,26 @@ function inSection(items: LoadoutCardItem[], section: Section): LoadoutCardItem[
 }
 
 export function renderLoadoutCard(card: LoadoutCard): string {
-  const subtitle = dim(`${card.className} · slot ${card.slot}`);
+  const detail = card.subtitle ?? (card.slot !== undefined ? `slot ${card.slot}` : undefined);
+  const subtitle = dim(detail ? `${card.className} · ${detail}` : card.className);
+  // Reserve one space between a long title and the subtitle so the right border stays aligned.
+  const titleWidth = BOX_WIDTH - displayWidth(subtitle);
   const lines = [
     "╭" + "─".repeat(BOX_WIDTH + 2) + "╮",
-    boxLine(pad(card.title, BOX_WIDTH - displayWidth(subtitle)) + subtitle),
+    boxLine(pad(truncate(card.title, titleWidth - 1), titleWidth) + subtitle),
     "├" + "─".repeat(BOX_WIDTH + 2) + "┤",
-    boxLine(dim("WEAPONS")),
   ];
 
-  for (const item of inSection(card.items, "WEAPONS")) {
-    lines.push(boxLine(row(item.name, rarityColor(item.rarity), item.type, elementTag(item.element))));
+  const weapons = inSection(card.items, "WEAPONS");
+  if (weapons.length > 0) {
+    lines.push(boxLine(dim("WEAPONS")));
+    for (const item of weapons) {
+      lines.push(boxLine(row(item.name, rarityColor(item.rarity), item.type, elementTag(item.element))));
+    }
+    lines.push(boxLine(""));
   }
 
-  lines.push(boxLine(""), boxLine(dim("ARMOR")));
+  lines.push(boxLine(dim("ARMOR")));
   const armor = inSection(card.items, "ARMOR");
   for (const item of armor) {
     lines.push(boxLine(row(item.name, rarityColor(item.rarity), BUCKET[item.bucketHash].label, "")));
