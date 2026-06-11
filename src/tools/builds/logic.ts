@@ -1,25 +1,39 @@
 import type { DestinyItem, ProfileResponse } from "../../bungie/profile.js";
 
-function allItems(profile: ProfileResponse): DestinyItem[] {
-  const items: DestinyItem[] = [];
-  for (const bucket of Object.values(profile.characterEquipment?.data ?? {})) {
-    items.push(...bucket.items);
-  }
-  for (const bucket of Object.values(profile.characterInventories?.data ?? {})) {
-    items.push(...bucket.items);
-  }
-  items.push(...(profile.profileInventory?.data?.items ?? []));
-  return items;
+export type ItemLocation = "equipped" | "inventory" | "vault";
+
+export interface OwnedItem {
+  itemInstanceId: string;
+  location: ItemLocation;
+  characterId?: string;
 }
 
-// Maps each owned item hash to one of its instance ids, so an imported build can report
-// which gear the player already has (and the instance id to hand to equip_items).
-export function ownedInstanceByHash(profile: ProfileResponse): Map<number, string> {
-  const map = new Map<number, string>();
-  for (const item of allItems(profile)) {
+// Maps each owned item hash to one of its instances, recording where that copy lives so an imported
+// build can tell the player what needs transferring before it can be equipped. Vault items and items
+// on another character must be pulled to the target character first; equip only works on gear the
+// character already holds. Equipped > inventory > vault ordering picks the copy nearest to ready.
+export function ownedItemsByHash(profile: ProfileResponse): Map<number, OwnedItem> {
+  const map = new Map<number, OwnedItem>();
+
+  const record = (item: DestinyItem, location: ItemLocation, characterId?: string) => {
     if (item.itemInstanceId && !map.has(item.itemHash)) {
-      map.set(item.itemHash, item.itemInstanceId);
+      map.set(item.itemHash, { itemInstanceId: item.itemInstanceId, location, characterId });
+    }
+  };
+
+  for (const [characterId, bucket] of Object.entries(profile.characterEquipment?.data ?? {})) {
+    for (const item of bucket.items) {
+      record(item, "equipped", characterId);
     }
   }
+  for (const [characterId, bucket] of Object.entries(profile.characterInventories?.data ?? {})) {
+    for (const item of bucket.items) {
+      record(item, "inventory", characterId);
+    }
+  }
+  for (const item of profile.profileInventory?.data?.items ?? []) {
+    record(item, "vault");
+  }
+
   return map;
 }

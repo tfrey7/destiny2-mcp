@@ -88,7 +88,7 @@ export function registerWriteTools(server: McpServer): void {
     "equip_item",
     {
       description:
-        "Equip a single item on a character by its item instance id (from list_inventory / get_equipped).",
+        "Equip a single item on a character by its item instance id (from list_inventory / get_equipped). The item must already be in that character's inventory: an item in the vault, or on a different character, must first be moved with transfer_item or the equip fails.",
       inputSchema: {
         characterId: z.string(),
         itemId: z.string(),
@@ -103,7 +103,8 @@ export function registerWriteTools(server: McpServer): void {
   server.registerTool(
     "equip_items",
     {
-      description: "Equip several items on a character at once by their item instance ids.",
+      description:
+        "Equip several items on a character at once by their item instance ids. Every item must already be in that character's inventory: pull anything sitting in the vault or on another character with transfer_item first, or the equip fails.",
       inputSchema: {
         characterId: z.string(),
         itemIds: z.array(z.string()).min(1),
@@ -122,7 +123,7 @@ export function registerWriteTools(server: McpServer): void {
     "transfer_item",
     {
       description:
-        "Move an item between a character and the vault. itemReferenceHash is the item's definition hash; itemId is its instance id. Set transferToVault true to push to the vault, false to pull to the character.",
+        "Move an item between a character and the vault. itemReferenceHash is the item's definition hash; itemId is its instance id. Set transferToVault true to push to the vault, false to pull to the character. Transfers only run character↔vault, so moving gear from one character to another is two calls: push to vault, then pull to the other character.",
       inputSchema: {
         characterId: z.string(),
         itemId: z.string(),

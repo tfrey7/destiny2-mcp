@@ -3,7 +3,7 @@ import { z } from "zod";
 import { itemMeta, itemName, loadoutName, type ItemMeta } from "../../bungie/manifest.js";
 import { Component, getProfile } from "../../bungie/profile.js";
 import { renderLoadoutCardText } from "../../format/loadout/index.js";
-import { ownedInstanceByHash } from "./logic.js";
+import { ownedItemsByHash } from "./logic.js";
 import { loadBuilds, type BuildRecipe, type DimItem } from "./recipes.js";
 
 function json(value: unknown) {
@@ -93,16 +93,21 @@ export function registerBuildTools(server: McpServer): void {
         Component.CharacterInventories,
         Component.ProfileInventories,
       ]);
-      const owned = ownedInstanceByHash(profile);
+      const ownedByHash = ownedItemsByHash(profile);
 
       const gear = await Promise.all(
         build.loadout.equipped
           .filter((item) => !item.socketOverrides)
-          .map(async (item) => ({
-            name: await itemName(item.hash),
-            owned: owned.has(item.hash),
-            itemInstanceId: owned.get(item.hash),
-          })),
+          .map(async (item) => {
+            const owned = ownedByHash.get(item.hash);
+            return {
+              name: await itemName(item.hash),
+              owned: owned !== undefined,
+              itemInstanceId: owned?.itemInstanceId,
+              location: owned?.location,
+              characterId: owned?.characterId,
+            };
+          }),
       );
 
       const subclass = subclassItem(build);
@@ -124,11 +129,18 @@ export function registerBuildTools(server: McpServer): void {
           dimLink: build.dimLink,
         },
         suggestedLoadoutName: nameHash ? await loadoutName(nameHash) : undefined,
-        equip: gear.filter((item) => item.owned),
+        equip: gear
+          .filter((item) => item.owned)
+          .map(({ name, itemInstanceId, location, characterId }) => ({
+            name,
+            itemInstanceId,
+            location,
+            characterId,
+          })),
         missing: gear.filter((item) => !item.owned).map((item) => item.name),
         subclass: subclassConfig,
         armorMods: mods,
-        note: "Plan only. Equip the owned items with equip_items using their itemInstanceId; set the subclass plugs and armor mods manually in-game.",
+        note: "Plan only. equip_items only accepts gear the target character already holds: items with location 'vault' (or 'equipped'/'inventory' on a different characterId) must first be pulled to that character with transfer_item — cross-character moves go via the vault, so two transfers. Set the subclass plugs and armor mods manually in-game.",
       });
     },
   );
