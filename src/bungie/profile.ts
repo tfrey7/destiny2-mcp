@@ -9,6 +9,7 @@ export const Component = {
   ItemInstances: 300,
   ItemStats: 304,
   ItemSockets: 305,
+  Collectibles: 800,
 } as const;
 
 export const ClassType: Record<number, string> = {
@@ -74,6 +75,7 @@ export interface ProfileResponse {
   characterInventories?: { data?: Record<string, ItemBucket> };
   characterLoadouts?: { data?: Record<string, { loadouts: DestinyLoadout[] }> };
   profileInventory?: { data?: ItemBucket };
+  profileCollectibles?: { data?: { collectibles?: Record<string, { state: number }> } };
   itemComponents?: {
     instances?: { data?: Record<string, ItemInstance> };
     stats?: { data?: Record<string, { stats?: Record<string, { value?: number }> }> };

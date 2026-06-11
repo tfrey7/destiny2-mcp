@@ -6,7 +6,7 @@ and change your loadouts, gear, and inventory in natural language.
 ## Tools
 
 **Read:** `list_characters`, `list_loadouts`, `get_equipped`, `list_inventory`,
-`inspect_item`
+`inspect_item`, `how_to_acquire`
 **Write:** `equip_loadout`, `snapshot_loadout`, `update_loadout_identifiers`,
 `equip_item`, `equip_items`, `transfer_item`
 **Build-crafting:** `get_build_knowledge`
@@ -16,6 +16,12 @@ with current in-game descriptions (works on a subclass too, surfacing its
 aspects and fragments). `get_build_knowledge` returns curated synergy reasoning
 for designing builds. Together they let Claude craft builds grounded in the live
 game and your real gear.
+
+`how_to_acquire` takes item names and returns each one's in-game source
+(activity/vendor), rarity, type, and whether your account already owns it. The
+underlying lookup lives in `src/bungie/acquisition.ts` (`acquisitionFor` /
+`acquisitionForMany`) so other features — e.g. a loadout generator — can annotate
+each gear piece with where to find it without going through the tool.
 
 ## Prerequisites
 
