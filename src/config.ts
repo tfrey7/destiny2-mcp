@@ -1,5 +1,8 @@
 import { homedir } from "node:os";
 import { join } from "node:path";
+import { config as loadEnv } from "dotenv";
+
+loadEnv({ path: new URL("../.env", import.meta.url) });
 
 export const BUNGIE_BASE = "https://www.bungie.net/Platform";
 export const AUTHORIZE_URL = "https://www.bungie.net/en/OAuth/Authorize";

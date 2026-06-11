@@ -23,9 +23,12 @@ Register an app at <https://www.bungie.net/en/Application>:
 
 ```bash
 npm install
-npm run build
 npm run auth      # one-time browser login; saves tokens to ~/.destiny2-mcp/
 ```
+
+The server runs TypeScript directly via `tsx`, so there is no build step for
+day-to-day use. (`npm run build` and `npm run typecheck` still exist for
+compiling/sanity-checking types.)
 
 During `npm run auth`, your browser warns about a self-signed certificate on the
 `127.0.0.1` callback page — that is expected; proceed past it. You only need to
@@ -34,17 +37,20 @@ re-run `auth` about every 90 days.
 ## Register with Claude Code
 
 ```bash
-claude mcp add destiny2 \
-  -e BUNGIE_API_KEY=... \
-  -e BUNGIE_CLIENT_ID=... \
-  -e BUNGIE_CLIENT_SECRET=... \
-  -- node /Users/timothyfrey/Development/destiny2-mcp/dist/index.js
+claude mcp add destiny2 -- npx tsx /Users/timothyfrey/Development/destiny2-mcp/src/index.ts
 ```
+
+Credentials are read from this project's `.env` automatically (by absolute path,
+regardless of where Claude Code launches the server), so no `-e` flags are
+needed.
+
+To pick up code changes: edit `src/`, then reconnect the server with `/mcp` in
+Claude Code (or relaunch the tab). No rebuild needed.
 
 ## Smoke test
 
 ```bash
-npx @modelcontextprotocol/inspector node dist/index.js
+npx @modelcontextprotocol/inspector npx tsx src/index.ts
 ```
 
 Then call `list_characters` and `list_loadouts`.
