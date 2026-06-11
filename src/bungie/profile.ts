@@ -9,6 +9,7 @@ export const Component = {
   ItemInstances: 300,
   ItemStats: 304,
   ItemSockets: 305,
+  ItemReusablePlugs: 310,
   Collectibles: 800,
 } as const;
 
@@ -69,6 +70,12 @@ export interface ItemSocket {
   isVisible?: boolean;
 }
 
+export interface ReusablePlug {
+  plugItemHash: number;
+  canInsert?: boolean;
+  enabled?: boolean;
+}
+
 export interface ProfileResponse {
   characters?: { data?: Record<string, DestinyCharacter> };
   characterEquipment?: { data?: Record<string, ItemBucket> };
@@ -80,6 +87,7 @@ export interface ProfileResponse {
     instances?: { data?: Record<string, ItemInstance> };
     stats?: { data?: Record<string, { stats?: Record<string, { value?: number }> }> };
     sockets?: { data?: Record<string, { sockets?: ItemSocket[] }> };
+    reusablePlugs?: { data?: Record<string, { plugs?: Record<string, ReusablePlug[]> }> };
   };
 }
 

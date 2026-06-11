@@ -52,6 +52,18 @@ export interface ItemMeta {
   bucketHash: number;
 }
 
+export interface SocketEntry {
+  socketTypeHash?: number;
+  singleInitialItemHash?: number;
+  reusablePlugItems?: { plugItemHash: number }[];
+  reusablePlugSetHash?: number;
+}
+
+export interface SocketCategoryEntry {
+  socketCategoryHash: number;
+  socketIndexes: number[];
+}
+
 export interface ItemDefinition {
   displayProperties?: { name?: string; description?: string };
   itemTypeDisplayName?: string;
@@ -59,7 +71,7 @@ export interface ItemDefinition {
   inventory?: { tierTypeName?: string; bucketTypeHash?: number };
   defaultDamageType?: number;
   equippingBlock?: { ammoType?: number };
-  sockets?: { socketEntries?: { singleInitialItemHash?: number }[] };
+  sockets?: { socketEntries?: SocketEntry[]; socketCategories?: SocketCategoryEntry[] };
   stats?: { stats?: Record<string, { value?: number }> };
 }
 
@@ -228,6 +240,21 @@ export async function itemMeta(hash: number): Promise<ItemMeta | undefined> {
   };
 }
 
+export async function socketCategoryName(hash: number): Promise<string> {
+  const category = await getDefinition<NameDefinition>("DestinySocketCategoryDefinition", hash);
+  return category.displayProperties?.name ?? `Socket category ${hash >>> 0}`;
+}
+
+// The candidate plugs for a non-randomized socket (shader, ornament, emblem variant) live in a
+// plug set keyed off the item definition; the live profile component only fills in what's unlocked.
+export async function plugSetItemHashes(plugSetHash: number): Promise<number[]> {
+  const plugSet = await getDefinition<{ reusablePlugItems?: { plugItemHash: number }[] }>(
+    "DestinyPlugSetDefinition",
+    plugSetHash,
+  );
+  return (plugSet.reusablePlugItems ?? []).map((plug) => plug.plugItemHash);
+}
+
 export async function loadoutName(hash: number): Promise<string> {
   const loadout = definition<NameDefinition>(await db(), "DestinyLoadoutNameDefinition", hash);
   return loadout?.displayProperties?.name ?? loadout?.name ?? "Unnamed loadout";
@@ -287,7 +314,22 @@ export async function findItemByName(name: string): Promise<number | undefined> 
   })[0].hash;
 }
 
-const ITEM_TYPE_BY_CATEGORY: Record<string, number> = { weapon: 3, armor: 2 };
+export type ItemCategory = "weapon" | "armor" | "shader" | "emblem" | "ornament" | "cosmetic";
+
+const isShader = (entry: CatalogEntry) => entry.type === "Shader";
+const isEmblem = (entry: CatalogEntry) => entry.type === "Emblem";
+// Universal/transmog ornaments carry no dedicated category hash (just the generic Mods category), so
+// the item type display name ("Weapon Ornament", "Hunter Universal Ornament", …) is the reliable signal.
+const isOrnament = (entry: CatalogEntry) => Boolean(entry.type?.includes("Ornament"));
+
+const CATEGORY_MATCHES: Record<ItemCategory, (entry: CatalogEntry) => boolean> = {
+  weapon: (entry) => entry.itemType === 3,
+  armor: (entry) => entry.itemType === 2,
+  shader: isShader,
+  emblem: isEmblem,
+  ornament: isOrnament,
+  cosmetic: (entry) => isShader(entry) || isEmblem(entry) || isOrnament(entry),
+};
 
 export interface CatalogEntry {
   hash: number;
@@ -306,7 +348,7 @@ export interface SearchFilters {
   element?: string;
   type?: string;
   tier?: string;
-  category?: "weapon" | "armor";
+  category?: ItemCategory;
   limit?: number;
 }
 
@@ -320,7 +362,9 @@ function buildCatalog(connection: Database.Database): CatalogEntry[] {
   for (const { id, json } of rows as IterableIterator<{ id: number; json: string }>) {
     const item = JSON.parse(json) as RawItem;
     const name = item.displayProperties?.name;
-    if (!name) continue;
+    if (!name) {
+      continue;
+    }
 
     catalog.push({
       hash: id >>> 0,
@@ -348,31 +392,47 @@ function dedupeByName(entries: CatalogEntry[]): CatalogEntry[] {
   const byName = new Map<string, CatalogEntry>();
   for (const entry of entries) {
     const existing = byName.get(entry.name);
-    if (!existing || (!existing.collectibleHash && entry.collectibleHash)) byName.set(entry.name, entry);
+    if (!existing || (!existing.collectibleHash && entry.collectibleHash)) {
+      byName.set(entry.name, entry);
+    }
   }
   return [...byName.values()];
 }
 
 export async function searchItems(filters: SearchFilters): Promise<SearchResult> {
-  if (!catalogPromise) catalogPromise = db().then(buildCatalog);
+  if (!catalogPromise) {
+    catalogPromise = (async () => buildCatalog(await db()))();
+  }
   const catalog = await catalogPromise;
 
   const name = filters.name?.toLowerCase();
   const type = filters.type?.toLowerCase();
-  const itemType = filters.category ? ITEM_TYPE_BY_CATEGORY[filters.category] : undefined;
+  const inCategory = filters.category ? CATEGORY_MATCHES[filters.category] : undefined;
 
   const matches = catalog.filter((entry) => {
-    if (name && !entry.name.toLowerCase().includes(name)) return false;
-    if (type && !entry.type?.toLowerCase().includes(type)) return false;
-    if (filters.element && entry.element !== filters.element) return false;
-    if (filters.tier && entry.tier !== filters.tier) return false;
-    if (itemType !== undefined && entry.itemType !== itemType) return false;
+    if (name && !entry.name.toLowerCase().includes(name)) {
+      return false;
+    }
+    if (type && !entry.type?.toLowerCase().includes(type)) {
+      return false;
+    }
+    if (filters.element && entry.element !== filters.element) {
+      return false;
+    }
+    if (filters.tier && entry.tier !== filters.tier) {
+      return false;
+    }
+    if (inCategory && !inCategory(entry)) {
+      return false;
+    }
     return true;
   });
 
   const sorted = dedupeByName(matches).sort((a, b) => {
     const tier = (TIER_RANK[b.tier ?? ""] ?? 0) - (TIER_RANK[a.tier ?? ""] ?? 0);
-    if (tier !== 0) return tier;
+    if (tier !== 0) {
+      return tier;
+    }
     return a.name.localeCompare(b.name);
   });
 

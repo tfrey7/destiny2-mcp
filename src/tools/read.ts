@@ -8,10 +8,14 @@ import {
   itemMeta,
   itemName,
   loadoutName,
+  plugSetItemHashes,
   searchItems,
   slotFromBucketHash,
+  socketCategoryName,
   statName,
   type ItemMeta,
+  type SocketCategoryEntry,
+  type SocketEntry,
 } from "../bungie/manifest.js";
 import {
   ClassType,
@@ -20,6 +24,7 @@ import {
   getProfile,
   type DestinyItem,
   type ProfileResponse,
+  type ReusablePlug,
 } from "../bungie/profile.js";
 import { renderLoadoutCardText, type LoadoutCard } from "../format/loadout/index.js";
 
@@ -126,6 +131,44 @@ async function describeItem(
     perks,
     stats: namedStats,
   };
+}
+
+// Cap the candidate plugs reported per socket: account-wide shader/ornament sets run into the
+// hundreds. Inspecting a single socketIndex lifts the cap so the full option set is available.
+const PLUGS_PER_SOCKET = 16;
+
+function categoryHashByIndex(categories: SocketCategoryEntry[]): Map<number, number> {
+  const map = new Map<number, number>();
+  for (const category of categories) {
+    for (const index of category.socketIndexes) {
+      map.set(index, category.socketCategoryHash);
+    }
+  }
+  return map;
+}
+
+// Prefer the live component — it lists only the plugs the player has actually unlocked — and fall
+// back to the manifest plug set for static cosmetic sockets the profile does not enumerate.
+async function availablePlugHashes(
+  socketIndex: number,
+  livePlugs: Record<string, ReusablePlug[]>,
+  entry: SocketEntry | undefined,
+): Promise<number[]> {
+  const live = livePlugs[String(socketIndex)];
+  if (live?.length) {
+    return live.filter((plug) => plug.canInsert !== false).map((plug) => plug.plugItemHash);
+  }
+  if (entry?.reusablePlugItems?.length) {
+    return entry.reusablePlugItems.map((plug) => plug.plugItemHash);
+  }
+  if (entry?.reusablePlugSetHash) {
+    return plugSetItemHashes(entry.reusablePlugSetHash);
+  }
+  return [];
+}
+
+async function plugView(plugItemHash: number) {
+  return { plugItemHash, name: await itemName(plugItemHash) };
 }
 
 export function registerReadTools(server: McpServer): void {
@@ -443,6 +486,72 @@ export function registerReadTools(server: McpServer): void {
   );
 
   server.registerTool(
+    "inspect_sockets",
+    {
+      description:
+        "List the sockets on an owned item instance: each socket's index, its category (shader, " +
+        "ornament, weapon perk, mod, …), the plug currently inserted, and the plugs the player can " +
+        "insert into it. This is how you find the socketIndex and plugItemHash to pass to insert_plug " +
+        "when applying a shader or ornament. Pass an itemInstanceId from get_equipped / list_inventory; " +
+        "pass a socketIndex to inspect just that socket and get its full (uncapped) list of options.",
+      inputSchema: {
+        itemInstanceId: z.string(),
+        socketIndex: z.number().int().min(0).optional(),
+      },
+    },
+    async ({ itemInstanceId, socketIndex }) => {
+      const profile = await getProfile([
+        Component.Characters,
+        Component.CharacterEquipment,
+        Component.CharacterInventories,
+        Component.ProfileInventories,
+        Component.ItemSockets,
+        Component.ItemReusablePlugs,
+      ]);
+
+      const hash = instanceMap(profile).get(itemInstanceId);
+      if (!hash) {
+        throw new Error(`[destiny2-mcp] No item found for instance ${itemInstanceId}.`);
+      }
+
+      const definition = await itemDefinition(hash);
+      const entries = definition.sockets?.socketEntries ?? [];
+      const categoryHashes = categoryHashByIndex(definition.sockets?.socketCategories ?? []);
+      const liveSockets = profile.itemComponents?.sockets?.data?.[itemInstanceId]?.sockets ?? [];
+      const livePlugs = profile.itemComponents?.reusablePlugs?.data?.[itemInstanceId]?.plugs ?? {};
+
+      const sockets = (
+        await Promise.all(
+          liveSockets.map(async (live, index) => {
+            if (live.isVisible === false || (socketIndex !== undefined && index !== socketIndex)) {
+              return undefined;
+            }
+
+            const entry = entries[index];
+            const categoryHash = categoryHashes.get(index);
+            const currentHash = live.plugHash ?? entry?.singleInitialItemHash;
+            const allHashes = await availablePlugHashes(index, livePlugs, entry);
+            const cap = socketIndex === undefined ? PLUGS_PER_SOCKET : allHashes.length;
+            const available = await Promise.all(allHashes.slice(0, cap).map(plugView));
+
+            return {
+              socketIndex: index,
+              category: categoryHash ? await socketCategoryName(categoryHash) : undefined,
+              current: currentHash ? await plugView(currentHash) : undefined,
+              ...(available.length ? { available } : {}),
+              ...(allHashes.length > available.length
+                ? { moreAvailable: allHashes.length - available.length }
+                : {}),
+            };
+          }),
+        )
+      ).filter((socket) => socket !== undefined);
+
+      return json({ name: definition.displayProperties?.name, itemInstanceId, sockets });
+    },
+  );
+
+  server.registerTool(
     "how_to_acquire",
     {
       description:
@@ -468,7 +577,7 @@ export function registerReadTools(server: McpServer): void {
     "search_items",
     {
       description:
-        "Search the full Destiny 2 item catalog (the manifest, not the player's inventory) by attribute. Filter by any combination of name substring, element, item type (e.g. 'Trace Rifle'), tier, and category. Use this to enumerate gear that matches criteria — e.g. every exotic Strand weapon — rather than answering from memory. Each result's name and itemHash feed how_to_acquire and inspect_item.",
+        "Search the full Destiny 2 item catalog (the manifest, not the player's inventory) by attribute. Filter by any combination of name substring, element, item type (e.g. 'Trace Rifle'), tier, and category. Use this to enumerate gear that matches criteria — e.g. every exotic Strand weapon, or every shader matching a theme — rather than answering from memory. The cosmetic categories (shader, emblem, ornament, or cosmetic for all three) surface looks a player can apply; each result's itemHash is the plugItemHash for insert_plug (shaders/ornaments) or feeds how_to_acquire and inspect_item.",
       inputSchema: {
         name: z.string().optional(),
         element: z
@@ -476,7 +585,9 @@ export function registerReadTools(server: McpServer): void {
           .optional(),
         type: z.string().optional(),
         tier: z.enum(["Exotic", "Legendary", "Rare", "Uncommon", "Common"]).optional(),
-        category: z.enum(["weapon", "armor"]).optional(),
+        category: z
+          .enum(["weapon", "armor", "shader", "emblem", "ornament", "cosmetic"])
+          .optional(),
         limit: z.number().int().min(1).max(200).optional(),
       },
     },
