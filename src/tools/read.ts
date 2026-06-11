@@ -68,6 +68,36 @@ async function namedItems(
   );
 }
 
+interface InventoryItem {
+  name: string;
+  itemInstanceId?: string;
+  quantity: number;
+  slot?: string;
+  element?: string;
+  type?: string;
+  tier?: string;
+}
+
+// Like namedItems, but carries the manifest attributes (element/type/tier) that list_inventory filters
+// and projects on. All come from the item definition, so no per-instance profile components are needed.
+async function inventoryItems(items: DestinyItem[]): Promise<InventoryItem[]> {
+  return Promise.all(
+    items.map(async (item) => {
+      const meta = await itemMeta(item.itemHash);
+      return {
+        name: meta?.name ?? (await itemName(item.itemHash)),
+        itemInstanceId: item.itemInstanceId,
+        quantity: item.quantity,
+        slot: slotFromBucketHash(meta?.bucketHash),
+        element: meta?.element,
+        type: meta?.type || undefined,
+        // "Basic" is the manifest default for unranked junk; drop it so the field stays signal.
+        tier: meta?.rarity && meta.rarity !== "Basic" ? meta.rarity : undefined,
+      };
+    }),
+  );
+}
+
 async function describePerks(
   plugHashes: number[],
 ): Promise<{ name: string; description: string }[]> {
@@ -282,13 +312,20 @@ export function registerReadTools(server: McpServer): void {
     "list_inventory",
     {
       description:
-        "List items in character inventories and the vault, by name. Optionally filter to one character or a case-insensitive name search.",
+        "List items in character inventories and the vault. Filter by any combination of character, case-insensitive name search, element, item type (e.g. 'Auto Rifle'), and tier. Each item also reports its element, type, and tier so results can be refined without inspect_item. The full inventory is large: narrow with filters, or pass summary:true to get counts by element/type/slot/tier instead of the item list. Results are capped at `limit` (default 200) with a `truncated` flag.",
       inputSchema: {
         characterId: z.string().optional(),
         search: z.string().optional(),
+        element: z
+          .enum(["Kinetic", "Arc", "Solar", "Void", "Stasis", "Strand", "Prismatic"])
+          .optional(),
+        type: z.string().optional(),
+        tier: z.enum(["Exotic", "Legendary", "Rare", "Uncommon", "Common"]).optional(),
+        summary: z.boolean().optional(),
+        limit: z.number().int().min(1).max(500).optional(),
       },
     },
-    async ({ characterId, search }) => {
+    async ({ characterId, search, element, type, tier, summary, limit }) => {
       const profile = await getProfile([
         Component.Characters,
         Component.CharacterInventories,
@@ -296,22 +333,69 @@ export function registerReadTools(server: McpServer): void {
       ]);
 
       const term = search?.toLowerCase();
-      const filter = (items: { name: string }[]) =>
-        term ? items.filter((item) => item.name.toLowerCase().includes(term)) : items;
+      const typeTerm = type?.toLowerCase();
+      const matches = (item: InventoryItem) =>
+        (!term || item.name.toLowerCase().includes(term)) &&
+        (!element || item.element === element) &&
+        (!typeTerm || (item.type ?? "").toLowerCase().includes(typeTerm)) &&
+        (!tier || item.tier === tier);
 
       const inventories = profile.characterInventories?.data ?? {};
-      const characters = await Promise.all(
+      const charGroups = await Promise.all(
         Object.entries(inventories)
           .filter(([id]) => !characterId || id === characterId)
           .map(async ([id, bucket]) => ({
             characterId: id,
             class: ClassType[profile.characters?.data?.[id]?.classType ?? -1] ?? "Unknown",
-            items: filter(await namedItems(bucket.items)),
+            items: (await inventoryItems(bucket.items)).filter(matches),
           })),
       );
+      const vaultItems = (await inventoryItems(profile.profileInventory?.data?.items ?? [])).filter(
+        matches,
+      );
 
-      const vault = filter(await namedItems(profile.profileInventory?.data?.items ?? []));
-      return json({ characters, vault });
+      if (summary) {
+        const all = [...charGroups.flatMap((group) => group.items), ...vaultItems];
+        const tally = (key: keyof InventoryItem) => {
+          const counts: Record<string, number> = {};
+          for (const item of all) {
+            const value = item[key];
+            if (typeof value === "string") {
+              counts[value] = (counts[value] ?? 0) + 1;
+            }
+          }
+          return counts;
+        };
+        return json({
+          total: all.length,
+          byElement: tally("element"),
+          byType: tally("type"),
+          bySlot: tally("slot"),
+          byTier: tally("tier"),
+        });
+      }
+
+      const cap = limit ?? 200;
+      const total =
+        charGroups.reduce((sum, group) => sum + group.items.length, 0) + vaultItems.length;
+      let budget = cap;
+      const take = (items: InventoryItem[]) => {
+        const slice = items.slice(0, Math.max(0, budget));
+        budget -= slice.length;
+        return slice;
+      };
+
+      const characters = charGroups.map((group) => ({ ...group, items: take(group.items) }));
+      const vault = take(vaultItems);
+      return json({
+        total,
+        truncated: total > cap,
+        ...(total > cap
+          ? { note: `Showing ${cap} of ${total} items. Narrow with filters or use summary:true.` }
+          : {}),
+        characters,
+        vault,
+      });
     },
   );
 
@@ -405,7 +489,9 @@ export function registerReadTools(server: McpServer): void {
         "Search the full Destiny 2 item catalog (the manifest, not the player's inventory) by attribute. Filter by any combination of name substring, element, item type (e.g. 'Trace Rifle'), tier, and category. Use this to enumerate gear that matches criteria — e.g. every exotic Strand weapon — rather than answering from memory. Each result's name and itemHash feed how_to_acquire and inspect_item.",
       inputSchema: {
         name: z.string().optional(),
-        element: z.enum(["Kinetic", "Arc", "Solar", "Void", "Stasis", "Strand", "Prismatic"]).optional(),
+        element: z
+          .enum(["Kinetic", "Arc", "Solar", "Void", "Stasis", "Strand", "Prismatic"])
+          .optional(),
         type: z.string().optional(),
         tier: z.enum(["Exotic", "Legendary", "Rare", "Uncommon", "Common"]).optional(),
         category: z.enum(["weapon", "armor"]).optional(),
