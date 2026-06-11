@@ -5,9 +5,17 @@ and change your loadouts, gear, and inventory in natural language.
 
 ## Tools
 
-**Read:** `list_characters`, `list_loadouts`, `get_equipped`, `list_inventory`
+**Read:** `list_characters`, `list_loadouts`, `get_equipped`, `list_inventory`,
+`inspect_item`
 **Write:** `equip_loadout`, `snapshot_loadout`, `update_loadout_identifiers`,
 `equip_item`, `equip_items`, `transfer_item`
+**Build-crafting:** `get_build_knowledge`
+
+`inspect_item` reads one item's actual rolled perks, mods, stats, and element
+with current in-game descriptions (works on a subclass too, surfacing its
+aspects and fragments). `get_build_knowledge` returns curated synergy reasoning
+for designing builds. Together they let Claude craft builds grounded in the live
+game and your real gear.
 
 ## Prerequisites
 
