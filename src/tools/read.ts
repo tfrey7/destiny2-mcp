@@ -8,6 +8,7 @@ import {
   itemMeta,
   itemName,
   loadoutName,
+  searchItems,
   slotFromBucketHash,
   statName,
   type ItemMeta,
@@ -363,6 +364,35 @@ export function registerReadTools(server: McpServer): void {
         }),
       );
       return json(result);
+    },
+  );
+
+  server.registerTool(
+    "search_items",
+    {
+      description:
+        "Search the full Destiny 2 item catalog (the manifest, not the player's inventory) by attribute. Filter by any combination of name substring, element, item type (e.g. 'Trace Rifle'), tier, and category. Use this to enumerate gear that matches criteria — e.g. every exotic Strand weapon — rather than answering from memory. Each result's name and itemHash feed how_to_acquire and inspect_item.",
+      inputSchema: {
+        name: z.string().optional(),
+        element: z.enum(["Kinetic", "Arc", "Solar", "Void", "Stasis", "Strand", "Prismatic"]).optional(),
+        type: z.string().optional(),
+        tier: z.enum(["Exotic", "Legendary", "Rare", "Uncommon", "Common"]).optional(),
+        category: z.enum(["weapon", "armor"]).optional(),
+        limit: z.number().int().min(1).max(200).optional(),
+      },
+    },
+    async (filters) => {
+      const { count, truncated, items } = await searchItems(filters);
+      const result = items.map((item) => ({
+        name: item.name,
+        tier: item.tier,
+        type: item.type,
+        element: item.element,
+        slot: item.slot,
+        ammoType: item.ammoType,
+        itemHash: item.hash,
+      }));
+      return json({ count, truncated, items: result });
     },
   );
 }

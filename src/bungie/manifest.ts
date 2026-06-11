@@ -15,10 +15,12 @@ interface ManifestMeta {
 
 interface RawItem {
   displayProperties?: { name?: string };
+  itemType?: number;
   itemTypeDisplayName?: string;
   collectibleHash?: number;
   defaultDamageType?: number;
   talentGrid?: { hudDamageType?: number };
+  equippingBlock?: { ammoType?: number };
   inventory?: { tierTypeName?: string; bucketTypeHash?: number };
 }
 
@@ -96,6 +98,15 @@ export function ammoTypeLabel(ammoType: number | undefined): string | undefined 
 }
 
 const TIER_RANK: Record<string, number> = { Exotic: 4, Legendary: 3, Rare: 2, Uncommon: 1, Common: 0 };
+
+// Weapons carry their element in defaultDamageType; subclasses leave it 0 and use talentGrid.hudDamageType.
+function elementOf(item: RawItem): string | undefined {
+  return (
+    DAMAGE_TYPE[item.defaultDamageType ?? 0] ??
+    DAMAGE_TYPE[item.talentGrid?.hudDamageType ?? 0] ??
+    (item.displayProperties?.name?.includes("Prismatic") ? "Prismatic" : undefined)
+  );
+}
 
 let metaPromise: Promise<{ versionDir: string; mobilePath: string }> | null = null;
 
@@ -188,17 +199,11 @@ export async function itemMeta(hash: number): Promise<ItemMeta | undefined> {
   const name = item?.displayProperties?.name;
   if (!name) return undefined;
 
-  // Weapons carry their element in defaultDamageType; subclasses leave it 0 and use talentGrid.hudDamageType.
-  const element =
-    DAMAGE_TYPE[item.defaultDamageType ?? 0] ??
-    DAMAGE_TYPE[item.talentGrid?.hudDamageType ?? 0] ??
-    (name.includes("Prismatic") ? "Prismatic" : undefined);
-
   return {
     name,
     rarity: item.inventory?.tierTypeName ?? "Basic",
     type: item.itemTypeDisplayName ?? "",
-    element,
+    element: elementOf(item),
     bucketHash: item.inventory?.bucketTypeHash ?? 0,
   };
 }
@@ -243,4 +248,97 @@ export async function findItemByName(name: string): Promise<number | undefined> 
     if (tier !== 0) return tier;
     return Number(Boolean(b.collectibleHash)) - Number(Boolean(a.collectibleHash));
   })[0].hash;
+}
+
+const ITEM_TYPE_BY_CATEGORY: Record<string, number> = { weapon: 3, armor: 2 };
+
+export interface CatalogEntry {
+  hash: number;
+  name: string;
+  tier?: string;
+  type?: string;
+  element?: string;
+  slot?: string;
+  ammoType?: string;
+  itemType?: number;
+  collectibleHash?: number;
+}
+
+export interface SearchFilters {
+  name?: string;
+  element?: string;
+  type?: string;
+  tier?: string;
+  category?: "weapon" | "armor";
+  limit?: number;
+}
+
+let catalogPromise: Promise<CatalogEntry[]> | null = null;
+
+// Searching by attribute means scanning the whole item table once; cache the catalog for the
+// process lifetime, mirroring the name index. Skip rows without a display name (dummies, redacted).
+function buildCatalog(connection: Database.Database): CatalogEntry[] {
+  const catalog: CatalogEntry[] = [];
+  const rows = connection.prepare(`SELECT id, json FROM ${ITEM_TABLE}`).iterate();
+  for (const { id, json } of rows as IterableIterator<{ id: number; json: string }>) {
+    const item = JSON.parse(json) as RawItem;
+    const name = item.displayProperties?.name;
+    if (!name) continue;
+
+    catalog.push({
+      hash: id >>> 0,
+      name,
+      tier: item.inventory?.tierTypeName,
+      type: item.itemTypeDisplayName || undefined,
+      element: elementOf(item),
+      slot: slotFromBucketHash(item.inventory?.bucketTypeHash),
+      ammoType: ammoTypeLabel(item.equippingBlock?.ammoType),
+      itemType: item.itemType,
+      collectibleHash: item.collectibleHash,
+    });
+  }
+  return catalog;
+}
+
+export interface SearchResult {
+  count: number;
+  truncated: boolean;
+  items: CatalogEntry[];
+}
+
+// Names repeat across reissues; keep the copy with a Collections source so its hash chains into how_to_acquire.
+function dedupeByName(entries: CatalogEntry[]): CatalogEntry[] {
+  const byName = new Map<string, CatalogEntry>();
+  for (const entry of entries) {
+    const existing = byName.get(entry.name);
+    if (!existing || (!existing.collectibleHash && entry.collectibleHash)) byName.set(entry.name, entry);
+  }
+  return [...byName.values()];
+}
+
+export async function searchItems(filters: SearchFilters): Promise<SearchResult> {
+  if (!catalogPromise) catalogPromise = db().then(buildCatalog);
+  const catalog = await catalogPromise;
+
+  const name = filters.name?.toLowerCase();
+  const type = filters.type?.toLowerCase();
+  const itemType = filters.category ? ITEM_TYPE_BY_CATEGORY[filters.category] : undefined;
+
+  const matches = catalog.filter((entry) => {
+    if (name && !entry.name.toLowerCase().includes(name)) return false;
+    if (type && !entry.type?.toLowerCase().includes(type)) return false;
+    if (filters.element && entry.element !== filters.element) return false;
+    if (filters.tier && entry.tier !== filters.tier) return false;
+    if (itemType !== undefined && entry.itemType !== itemType) return false;
+    return true;
+  });
+
+  const sorted = dedupeByName(matches).sort((a, b) => {
+    const tier = (TIER_RANK[b.tier ?? ""] ?? 0) - (TIER_RANK[a.tier ?? ""] ?? 0);
+    if (tier !== 0) return tier;
+    return a.name.localeCompare(b.name);
+  });
+
+  const limit = filters.limit ?? 50;
+  return { count: sorted.length, truncated: sorted.length > limit, items: sorted.slice(0, limit) };
 }
