@@ -13,8 +13,9 @@ export function registerKnowledgeTools(server: McpServer): void {
     "get_build_knowledge",
     {
       description:
-        "Curated Destiny 2 build-crafting knowledge: the verb system, each subclass's engine, build " +
-        "archetypes, cross-cutting systems, and proven synergy recipes. Qualitative reasoning frozen at " +
+        "Curated Destiny 2 build-crafting knowledge: loadout mechanics (slots, elements, exotic limits), " +
+        "the verb system, each subclass's engine, build archetypes, cross-cutting systems, and proven " +
+        "synergy recipes. Qualitative reasoning frozen at " +
         "the game's end-of-life — pair it with inspect_item / list_inventory for exact current effects and " +
         `the player's actual gear. Optionally pass a topic to read one section. Topics: ${topics}.`,
       inputSchema: {

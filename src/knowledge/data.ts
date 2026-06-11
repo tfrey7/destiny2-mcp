@@ -31,6 +31,34 @@ on candidate weapons/armor and on the equipped subclass to read the actual rolle
 and fragments with their current in-game descriptions. Do not assume a roll — verify it.`,
   },
   {
+    id: "loadout",
+    title: "Loadout mechanics: slots, elements, and exotic limits",
+    body: `The rules that govern what can go where. A weapon recommendation that violates these is invalid,
+so check them before suggesting a swap.
+
+Equip slots — a character runs three weapons, five armor pieces, and a subclass:
+- Weapons: Kinetic slot (top), Energy slot (middle), Power slot (bottom, the heavy slot).
+- Armor: helmet, gauntlets, chest, legs, class item.
+
+Slot is set by the weapon's DAMAGE TYPE, not its archetype — and the top slot's NAME is not an element:
+- Kinetic slot holds Kinetic, Stasis, and Strand weapons. "Kinetic" here is the slot label, a
+  historical name. A Strand or Stasis weapon sitting in it still deals Strand/Stasis damage — never
+  read the slot "Kinetic" as the element Kinetic. Take element from the item's element field, not its slot.
+- Energy slot holds Solar, Arc, and Void weapons.
+- Power slot holds any element.
+Consequence: a Strand or Stasis build cannot element-match its energy weapon — the energy slot is
+always off-element (Solar/Arc/Void). Pick it as a utility tool, not for surge. Top and power slots can match.
+
+Exotic limit — at most ONE exotic weapon AND ONE exotic armor piece equipped at once. The two limits
+are independent: an exotic armor piece does not block an exotic weapon. Before recommending a weapon for
+a slot, check whether an exotic weapon is already equipped in ANY weapon slot; if one is, the pick must
+be Legendary unless the player is willing to drop the existing exotic.
+
+Ammo types — Primary (infinite), Special (scarce), Heavy. Power-slot weapons are Heavy; Kinetic and
+Energy weapons are Primary or Special. Running Special in both Kinetic and Energy makes them compete for
+the same scarce ammo, which is a real cost to weigh when planning a loadout.`,
+  },
+  {
     id: "verbs",
     title: "Keyword glossary (the verbs)",
     body: `Verbs are the buffs and debuffs that builds chain together. Grouped by element.
