@@ -7,12 +7,23 @@ export const Component = {
   CharacterEquipment: 205,
   CharacterLoadouts: 206,
   ItemInstances: 300,
+  ItemStats: 304,
+  ItemSockets: 305,
 } as const;
 
 export const ClassType: Record<number, string> = {
   0: "Titan",
   1: "Hunter",
   2: "Warlock",
+};
+
+export const DamageType: Record<number, string> = {
+  1: "Kinetic",
+  2: "Arc",
+  3: "Solar",
+  4: "Void",
+  6: "Stasis",
+  7: "Strand",
 };
 
 export interface Membership {
@@ -45,13 +56,29 @@ interface ItemBucket {
   items: DestinyItem[];
 }
 
+export interface ItemInstance {
+  primaryStat?: { value: number };
+  damageType?: number;
+  energy?: { energyCapacity?: number };
+}
+
+export interface ItemSocket {
+  plugHash?: number;
+  isEnabled?: boolean;
+  isVisible?: boolean;
+}
+
 export interface ProfileResponse {
   characters?: { data?: Record<string, DestinyCharacter> };
   characterEquipment?: { data?: Record<string, ItemBucket> };
   characterInventories?: { data?: Record<string, ItemBucket> };
   characterLoadouts?: { data?: Record<string, { loadouts: DestinyLoadout[] }> };
   profileInventory?: { data?: ItemBucket };
-  itemComponents?: { instances?: { data?: Record<string, { primaryStat?: { value: number } }> } };
+  itemComponents?: {
+    instances?: { data?: Record<string, ItemInstance> };
+    stats?: { data?: Record<string, { stats?: Record<string, { value?: number }> }> };
+    sockets?: { data?: Record<string, { sockets?: ItemSocket[] }> };
+  };
 }
 
 interface MembershipsResponse {

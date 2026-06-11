@@ -158,3 +158,40 @@ export async function loadoutName(hash: number): Promise<string> {
   const names = await loadoutIndex;
   return names.get(hash >>> 0) ?? "Unnamed loadout";
 }
+
+export interface ItemDefinition {
+  displayProperties?: { name?: string; description?: string };
+  itemTypeDisplayName?: string;
+  flavorText?: string;
+  inventory?: { tierTypeName?: string };
+  defaultDamageType?: number;
+  sockets?: { socketEntries?: { singleInitialItemHash?: number }[] };
+  stats?: { stats?: Record<string, { value?: number }> };
+}
+
+interface StatDefinition {
+  displayProperties?: { name?: string };
+}
+
+const definitionCache = new Map<string, Promise<unknown>>();
+
+// The single-entity manifest endpoint resolves one definition at a time, so we can
+// describe a roll's perks and stats without streaming the ~190MB item table.
+export function getDefinition<T>(entityType: string, hash: number): Promise<T> {
+  const key = `${entityType}:${hash >>> 0}`;
+  let cached = definitionCache.get(key);
+  if (!cached) {
+    cached = bungieFetch<T>(`/Destiny2/Manifest/${entityType}/${hash >>> 0}/`, { auth: false });
+    definitionCache.set(key, cached);
+  }
+  return cached as Promise<T>;
+}
+
+export function itemDefinition(hash: number): Promise<ItemDefinition> {
+  return getDefinition<ItemDefinition>("DestinyInventoryItemDefinition", hash);
+}
+
+export async function statName(hash: number): Promise<string> {
+  const definition = await getDefinition<StatDefinition>("DestinyStatDefinition", hash);
+  return definition.displayProperties?.name ?? `Stat ${hash >>> 0}`;
+}
