@@ -59,6 +59,41 @@ Energy weapons are Primary or Special. Running Special in both Kinetic and Energ
 the same scarce ammo, which is a real cost to weigh when planning a loadout.`,
   },
   {
+    id: "cosmetics",
+    title: "Cosmetics: shaders, ornaments, and emblems",
+    body: `How a player changes how their gear looks, separate from what it does. Cosmetics never touch
+stats, perks, element, or the exotic limit — only appearance. There are three kinds, and they are not
+applied the same way.
+
+Shaders — recolor a single weapon or armor piece. Every weapon and armor piece has one shader socket.
+Shaders unlock account-wide in Collections; once unlocked a shader is reusable and never consumed, and
+applying it costs nothing. Applying a shader is a free socket insert (insert_plug into that piece's
+shader socket).
+
+Ornaments — change a piece's model/silhouette, also a free socket insert into the piece's ornament
+socket. Two flavours:
+- Item-specific ornaments are tied to one exotic (or one legendary set): an exotic ornament only fits
+  the exotic it was made for, and shows up only in that item's ornament socket. You must own/unlock it
+  (earned in-game, or bought with Bright Dust / Silver).
+- Universal (transmog) ornaments are armor-only and class-specific (Hunter / Titan / Warlock). They let
+  any Legendary armor of that class take the look of another set you have unlocked as a universal
+  ornament (via Synthesis / Synthweave). They fit the armor's universal-ornament socket; an exotic armor
+  piece uses its own dedicated ornaments instead.
+
+Emblems — the nameplate shown on your character and in other players' rosters. Unlike shaders and
+ornaments, an emblem is an equipped ITEM in the Emblems slot, not a socket plug: change it with
+equip_item (the emblem must be in that character's inventory first), NOT insert_plug.
+
+Mechanics and constraints:
+- Applying a shader or ornament: POST InsertSocketPlugFree (the insert_plug tool) with the piece's
+  socketIndex and the cosmetic's plugItemHash. It is free, reversible, and instant.
+- You can only insert a cosmetic the account has unlocked. Exotic ornaments fit only their exotic;
+  universal ornaments fit only same-class Legendary armor.
+- Workflow to theme a look: search_items (category shader / ornament / emblem, plus a name or theme)
+  to find candidates and their hashes → inspect_sockets on each piece to find the socketIndex and
+  confirm the plug is available → insert_plug per piece (or equip_item for the emblem).`,
+  },
+  {
     id: "verbs",
     title: "Keyword glossary (the verbs)",
     body: `Verbs are the buffs and debuffs that builds chain together. Grouped by element.
