@@ -92,6 +92,11 @@ const WEAPON_SLOT_BY_BUCKET: Record<number, string> = {
   953998645: "Power",
 };
 
+// DestinyInventoryBucketDefinition hashes for the five armor equip slots (helmet, gauntlets, chest,
+// legs, class item). With the three weapon buckets above, these are the buckets holding gear that
+// transfers freely between a character and the vault — unlike subclass, postmaster, or cosmetic buckets.
+const ARMOR_BUCKETS = new Set([3448274439, 3551918588, 14239492, 20886954, 1585787867]);
+
 // DestinyAmmunitionType enum: 0 = None (non-weapon), 1 = Primary, 2 = Special, 3 = Heavy.
 const AMMO_TYPE: Record<number, string> = {
   1: "Primary",
@@ -102,6 +107,16 @@ const AMMO_TYPE: Record<number, string> = {
 // The equip slot a weapon competes for, or undefined for non-weapons.
 export function slotFromBucketHash(bucketHash: number | undefined): string | undefined {
   return bucketHash === undefined ? undefined : WEAPON_SLOT_BY_BUCKET[bucketHash];
+}
+
+// True for a bucket holding equippable weapons or armor — the gear a player vaults to clear a
+// character. Excludes subclass, postmaster, consumables, and cosmetics, which a plain transfer
+// either can't move or the player keeps on the character.
+export function isGearBucket(bucketHash: number | undefined): boolean {
+  if (bucketHash === undefined) {
+    return false;
+  }
+  return WEAPON_SLOT_BY_BUCKET[bucketHash] !== undefined || ARMOR_BUCKETS.has(bucketHash);
 }
 
 // The ammo a weapon draws from, or undefined when None / not a weapon.

@@ -32,7 +32,7 @@ Once it's connected, talk to Claude naturally. A few things it can actually do:
   against what's equipped, and shows the loadout as a card — picking an
   off-element energy weapon since Strand can't match that slot.
 - **"What's the god roll on my Fatebringer, and do I have it?"** Reads the
-  item's *actual* rolled perks, stats, and element from your inventory — not a
+  item's _actual_ rolled perks, stats, and element from your inventory — not a
   wiki guess.
 - **"Build me a max-resilience Void Titan loadout and equip it."** Designs from
   your real gear, then equips it (transferring pieces across characters if
