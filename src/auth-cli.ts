@@ -11,7 +11,7 @@ function openBrowser(url: string): void {
 }
 
 function reply(body: string): string {
-  return `<html><body style="font-family:sans-serif;padding:2rem">${body}</body></html>`;
+  return `<html><head><meta charset="utf-8"></head><body style="font-family:sans-serif;padding:2rem">${body}</body></html>`;
 }
 
 async function main(): Promise<void> {
@@ -39,7 +39,7 @@ async function main(): Promise<void> {
 
       exchangeCode(code)
         .then(() => {
-          response.writeHead(200, { "Content-Type": "text/html" });
+          response.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
           response.end(reply("<h2>Authenticated ✨</h2><p>You can close this tab and return to the terminal.</p>"));
           server.close();
           resolve();
