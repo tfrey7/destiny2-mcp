@@ -1,6 +1,4 @@
-import { BUCKET, CLASS_ITEM_BUCKET, ELEMENT, RARITY_COLOR, type Section } from "./data.js";
-
-export type Rgb = [number, number, number];
+import { BUCKET, CLASS_ITEM_BUCKET, type Section } from "./data.js";
 
 export interface LoadoutCardItem {
   name: string;
@@ -20,18 +18,13 @@ export interface LoadoutCard {
   items: LoadoutCardItem[];
 }
 
-export interface CardRowElement {
-  name: string;
-  icon: string;
-  color: Rgb;
-}
-
 export interface CardRow {
   name: string;
-  color: Rgb;
+  rarity: string;
   /** Middle column: weapon type or armor slot label. */
   middle: string;
-  element?: CardRowElement;
+  /** Element name (e.g. "Strand"), when the item or subclass has one. */
+  element?: string;
   /** The placeholder row for a loadout with no class item equipped. */
   empty?: boolean;
 }
@@ -45,18 +38,6 @@ export interface CardModel {
   title: string;
   subtitle: string;
   sections: CardSection[];
-}
-
-function rarityColor(rarity: string): Rgb {
-  return RARITY_COLOR[rarity] ?? RARITY_COLOR.Basic;
-}
-
-function elementOf(name: string | undefined): CardRowElement | undefined {
-  const entry = name ? ELEMENT[name] : undefined;
-  if (!entry || !name) {
-    return undefined;
-  }
-  return { name, icon: entry.icon, color: entry.color };
 }
 
 function inSection(items: LoadoutCardItem[], section: Section): LoadoutCardItem[] {
@@ -77,9 +58,9 @@ export function cardModel(card: LoadoutCard): CardModel {
       label: "WEAPONS",
       rows: weapons.map((item) => ({
         name: item.name,
-        color: rarityColor(item.rarity),
+        rarity: item.rarity,
         middle: item.type,
-        element: elementOf(item.element),
+        element: item.element,
       })),
     });
   }
@@ -87,27 +68,24 @@ export function cardModel(card: LoadoutCard): CardModel {
   const armor = inSection(card.items, "ARMOR");
   const armorRows: CardRow[] = armor.map((item) => ({
     name: item.name,
-    color: rarityColor(item.rarity),
+    rarity: item.rarity,
     middle: BUCKET[item.bucketHash].label,
   }));
   if (!armor.some((item) => item.bucketHash === CLASS_ITEM_BUCKET)) {
-    armorRows.push({ name: "—", color: rarityColor("Basic"), middle: "Class item", empty: true });
+    armorRows.push({ name: "—", rarity: "Basic", middle: "Class item", empty: true });
   }
   sections.push({ label: "ARMOR", rows: armorRows });
 
   const subclass = inSection(card.items, "SUBCLASS")[0];
   if (subclass) {
-    const color = subclass.element
-      ? (ELEMENT[subclass.element]?.color ?? rarityColor("Basic"))
-      : rarityColor("Basic");
     sections.push({
       label: "SUBCLASS",
       rows: [
         {
           name: subclass.name,
-          color,
+          rarity: subclass.rarity,
           middle: subclass.element ?? "",
-          element: elementOf(subclass.element),
+          element: subclass.element,
         },
       ],
     });

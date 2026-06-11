@@ -2,7 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { itemMeta, itemName, loadoutName, type ItemMeta } from "../../bungie/manifest.js";
 import { Component, getProfile } from "../../bungie/profile.js";
-import { renderLoadoutCardPng } from "../../format/loadout/index.js";
+import { renderLoadoutCardText } from "../../format/loadout/index.js";
 import { ownedInstanceByHash } from "./logic.js";
 import { loadBuilds, type BuildRecipe, type DimItem } from "./recipes.js";
 
@@ -10,30 +10,27 @@ function json(value: unknown) {
   return { content: [{ type: "text" as const, text: JSON.stringify(value, null, 2) }] };
 }
 
-type ImageBlock = { type: "image"; data: string; mimeType: "image/png" };
+type TextBlock = { type: "text"; text: string };
 
-function imageBlock(png: Buffer): ImageBlock {
-  return { type: "image", data: png.toString("base64"), mimeType: "image/png" };
-}
-
-/** One or more visual cards followed by the structured payload, so builds read at a glance but stay actionable. */
-function cardsAndJson(cards: ImageBlock[], value: unknown) {
+/** One or more text cards followed by the structured payload, so builds read at a glance but stay actionable. */
+function cardsAndJson(cards: TextBlock[], value: unknown) {
   return { content: [...cards, { type: "text" as const, text: JSON.stringify(value, null, 2) }] };
 }
 
-/** Render a community build's gear (weapons, armor, and subclass) as a loadout card PNG. */
-async function buildCard(build: BuildRecipe): Promise<ImageBlock> {
+/** Render a community build's gear (weapons, armor, and subclass) as a loadout text card. */
+async function buildCard(build: BuildRecipe): Promise<TextBlock> {
   const items = (
     await Promise.all(build.loadout.equipped.map((item) => itemMeta(item.hash)))
   ).filter((meta): meta is ItemMeta => meta !== undefined);
-  return imageBlock(
-    renderLoadoutCardPng({
+  return {
+    type: "text",
+    text: renderLoadoutCardText({
       title: build.loadout.name.toUpperCase(),
       className: build.className,
       subtitle: build.subclass,
       items,
     }),
-  );
+  };
 }
 
 function matches(value: string, filter?: string): boolean {
@@ -53,7 +50,7 @@ export function registerBuildTools(server: McpServer): void {
     "find_builds",
     {
       description:
-        "Search popular community Destiny 2 builds scraped from builders.gg (DIM loadouts). Optionally filter by class and subclass. Renders each build as a visual loadout card, plus a shareId index to pass to import_build.",
+        "Search popular community Destiny 2 builds scraped from builders.gg (DIM loadouts). Optionally filter by class and subclass. Renders each build as a text loadout card, plus a shareId index to pass to import_build.",
       inputSchema: {
         className: z.enum(["Titan", "Hunter", "Warlock"]).optional(),
         subclass: z.enum(["Prismatic", "Solar", "Arc", "Void", "Stasis", "Strand"]).optional(),
@@ -81,7 +78,7 @@ export function registerBuildTools(server: McpServer): void {
     "import_build",
     {
       description:
-        "Map a popular build (by shareId from find_builds) onto the gear you own. Renders the build as a visual loadout card, then reports which items you already have (with itemInstanceId for equip_items), which are missing, plus the subclass plugs and armor mods to set up manually. This is a plan — it does not change your gear.",
+        "Map a popular build (by shareId from find_builds) onto the gear you own. Renders the build as a text loadout card, then reports which items you already have (with itemInstanceId for equip_items), which are missing, plus the subclass plugs and armor mods to set up manually. This is a plan — it does not change your gear.",
       inputSchema: { shareId: z.string() },
     },
     async ({ shareId }) => {

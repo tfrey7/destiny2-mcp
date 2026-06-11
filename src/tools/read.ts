@@ -21,18 +21,14 @@ import {
   type DestinyItem,
   type ProfileResponse,
 } from "../bungie/profile.js";
-import { renderLoadoutCardPng, type LoadoutCard } from "../format/loadout/index.js";
+import { renderLoadoutCardText, type LoadoutCard } from "../format/loadout/index.js";
 
 function json(value: unknown) {
   return { content: [{ type: "text" as const, text: JSON.stringify(value, null, 2) }] };
 }
 
-/** Render a loadout card to a PNG image block — the visual artifact shows inline instead of collapsing. */
 function card(spec: LoadoutCard) {
-  const png = renderLoadoutCardPng(spec);
-  return {
-    content: [{ type: "image" as const, data: png.toString("base64"), mimeType: "image/png" }],
-  };
+  return { content: [{ type: "text" as const, text: renderLoadoutCardText(spec) }] };
 }
 
 function instanceMap(profile: ProfileResponse): Map<string, number> {
@@ -55,23 +51,6 @@ function instanceMap(profile: ProfileResponse): Map<string, number> {
   return map;
 }
 
-async function namedItems(
-  items: DestinyItem[],
-): Promise<{ name: string; itemInstanceId?: string; quantity: number; slot?: string }[]> {
-  return Promise.all(
-    items.map(async (item) => {
-      const meta = await itemMeta(item.itemHash);
-      return {
-        name: meta?.name ?? (await itemName(item.itemHash)),
-        itemInstanceId: item.itemInstanceId,
-        quantity: item.quantity,
-        // Only weapons resolve to a slot; armor and consumables leave it undefined (omitted from JSON).
-        slot: slotFromBucketHash(meta?.bucketHash),
-      };
-    }),
-  );
-}
-
 interface InventoryItem {
   name: string;
   itemInstanceId?: string;
@@ -82,8 +61,8 @@ interface InventoryItem {
   tier?: string;
 }
 
-// Like namedItems, but carries the manifest attributes (element/type/tier) that list_inventory filters
-// and projects on. All come from the item definition, so no per-instance profile components are needed.
+// Carries the manifest attributes (element/type/tier) that list_inventory filters and projects on,
+// and that get_equipped reports. All come from the item definition, so no per-instance components needed.
 async function inventoryItems(items: DestinyItem[]): Promise<InventoryItem[]> {
   return Promise.all(
     items.map(async (item) => {
@@ -214,7 +193,7 @@ export function registerReadTools(server: McpServer): void {
     "show_loadout",
     {
       description:
-        "Render a saved loadout as a visual card with rarity-colored item names and element icons. Defaults to the first character; pass a loadoutIndex (from list_loadouts) to choose a slot.",
+        "Render a saved loadout as a text card: weapons, armor, and subclass in aligned columns, with exotics marked and elements named. Defaults to the first character; pass a loadoutIndex (from list_loadouts) to choose a slot.",
       inputSchema: { loadoutIndex: z.number(), characterId: z.string().optional() },
     },
     async ({ loadoutIndex, characterId }) => {
@@ -254,7 +233,8 @@ export function registerReadTools(server: McpServer): void {
   server.registerTool(
     "get_equipped",
     {
-      description: "List the currently equipped items for each character, by name.",
+      description:
+        "List the currently equipped items for each character. Each item reports its slot, element, type, and tier, so element matching and the one-exotic-weapon limit can be reasoned about directly — no follow-up inspect_item needed for those attributes.",
       inputSchema: { characterId: z.string().optional() },
     },
     async ({ characterId }) => {
@@ -268,7 +248,7 @@ export function registerReadTools(server: McpServer): void {
         entries.map(async ([id, bucket]) => ({
           characterId: id,
           class: ClassType[profile.characters?.data?.[id]?.classType ?? -1] ?? "Unknown",
-          equipped: await namedItems(bucket.items),
+          equipped: await inventoryItems(bucket.items),
         })),
       );
       return json(result);
@@ -279,7 +259,7 @@ export function registerReadTools(server: McpServer): void {
     "show_equipped",
     {
       description:
-        "Render the currently equipped gear as a visual card with rarity-colored item names and element icons. Defaults to the most recently played character; pass a characterId to choose another. Use this to show a player their current loadout.",
+        "Render the currently equipped gear as a text card: weapons, armor, and subclass in aligned columns, with exotics marked and elements named. Defaults to the most recently played character; pass a characterId to choose another. Use this to show a player their current loadout.",
       inputSchema: { characterId: z.string().optional() },
     },
     async ({ characterId }) => {
