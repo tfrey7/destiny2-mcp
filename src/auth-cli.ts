@@ -1,7 +1,7 @@
 import { exec } from "node:child_process";
 import { randomBytes } from "node:crypto";
 import { createServer } from "node:https";
-import selfsigned from "selfsigned";
+import { resolveCert } from "./certs.js";
 import { AUTHORIZE_URL, CALLBACK_PORT, credentials, REDIRECT_URI } from "./config.js";
 import { exchangeCode } from "./bungie/auth.js";
 
@@ -19,10 +19,10 @@ async function main(): Promise<void> {
   const state = randomBytes(16).toString("hex");
 
   const authorizeUrl = `${AUTHORIZE_URL}?client_id=${clientId}&response_type=code&state=${state}`;
-  const pems = selfsigned.generate([{ name: "commonName", value: "127.0.0.1" }], { days: 365 });
+  const tls = resolveCert();
 
   await new Promise<void>((resolve, reject) => {
-    const server = createServer({ key: pems.private, cert: pems.cert }, (request, response) => {
+    const server = createServer({ key: tls.key, cert: tls.cert }, (request, response) => {
       const url = new URL(request.url ?? "/", REDIRECT_URI);
       if (url.pathname !== "/callback") {
         response.writeHead(404).end();
@@ -54,7 +54,10 @@ async function main(): Promise<void> {
     server.listen(CALLBACK_PORT, "127.0.0.1", () => {
       console.log("[destiny2-mcp] Opening browser to log in to Bungie...");
       console.log(`[destiny2-mcp] If it doesn't open, visit:\n${authorizeUrl}`);
-      console.log("[destiny2-mcp] Your browser will warn about a self-signed certificate — that is expected; proceed.");
+      if (!tls.trusted) {
+        console.log("[destiny2-mcp] Your browser will warn about a self-signed certificate — that is expected; proceed.");
+        console.log("[destiny2-mcp] To remove that warning, install mkcert (https://github.com/FiloSottile/mkcert) and run `mkcert -install`.");
+      }
       openBrowser(authorizeUrl);
     });
   });

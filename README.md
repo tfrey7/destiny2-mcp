@@ -34,6 +34,18 @@ During `npm run auth`, your browser warns about a self-signed certificate on the
 `127.0.0.1` callback page — that is expected; proceed past it. You only need to
 re-run `auth` about every 90 days.
 
+To remove that warning, install [mkcert](https://github.com/FiloSottile/mkcert)
+and trust its local CA once:
+
+```bash
+brew install mkcert
+mkcert -install      # one-time; adds a local CA to your system/browser trust store
+```
+
+With `mkcert` on your `PATH`, `npm run auth` issues a browser-trusted certificate
+for `127.0.0.1` (cached in `~/.destiny2-mcp/certs/`) and the warning goes away.
+Without it, the flow still works using the self-signed fallback.
+
 ## Register with Claude Code
 
 ```bash

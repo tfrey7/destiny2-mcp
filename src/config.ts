@@ -14,6 +14,7 @@ export const REDIRECT_URI = `https://127.0.0.1:${CALLBACK_PORT}/callback`;
 export const DATA_DIR = join(homedir(), ".destiny2-mcp");
 export const TOKENS_PATH = join(DATA_DIR, "tokens.json");
 export const MANIFEST_DIR = join(DATA_DIR, "manifest");
+export const CERT_DIR = join(DATA_DIR, "certs");
 
 export function requireEnv(name: string): string {
   const value = process.env[name];
