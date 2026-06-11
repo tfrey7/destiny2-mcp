@@ -271,6 +271,36 @@ export async function plugSetItemHashes(plugSetHash: number): Promise<number[]> 
   return (plugSet.reusablePlugItems ?? []).map((plug) => plug.plugItemHash);
 }
 
+export async function artifactName(hash: number): Promise<string> {
+  const artifact = await getDefinition<NameDefinition>("DestinyArtifactDefinition", hash);
+  return artifact.displayProperties?.name ?? `Artifact ${hash >>> 0}`;
+}
+
+interface ArtifactPerkDefinition {
+  displayProperties?: { name?: string; description?: string };
+  perks?: { perkHash: number }[];
+}
+
+// An artifact perk carries its name on the item but its tooltip on a linked sandbox perk.
+export async function artifactPerkText(
+  itemHash: number,
+): Promise<{ name: string; description: string }> {
+  const item = await getDefinition<ArtifactPerkDefinition>(ITEM_TABLE, itemHash);
+  const name = item.displayProperties?.name ?? `Perk ${itemHash >>> 0}`;
+  if (item.displayProperties?.description) {
+    return { name, description: item.displayProperties.description };
+  }
+
+  const perkHash = item.perks?.[0]?.perkHash;
+  if (perkHash === undefined) {
+    return { name, description: "" };
+  }
+  const sandbox = await getDefinition<
+    NameDefinition & { displayProperties?: { description?: string } }
+  >("DestinySandboxPerkDefinition", perkHash);
+  return { name, description: sandbox.displayProperties?.description ?? "" };
+}
+
 export async function loadoutName(hash: number): Promise<string> {
   const loadout = definition<NameDefinition>(await db(), "DestinyLoadoutNameDefinition", hash);
   return loadout?.displayProperties?.name ?? loadout?.name ?? "Unnamed loadout";

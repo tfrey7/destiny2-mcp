@@ -3,6 +3,8 @@ import { z } from "zod";
 import { acquisitionFor, ownedCollectibles } from "../bungie/acquisition.js";
 import {
   ammoTypeLabel,
+  artifactName,
+  artifactPerkText,
   findItemByName,
   itemDefinition,
   itemMeta,
@@ -25,7 +27,9 @@ import {
   type DestinyItem,
   type ProfileResponse,
   type ReusablePlug,
+  type SeasonalArtifact,
 } from "../bungie/profile.js";
+import { renderArtifactCardText, type ArtifactView } from "../format/artifact.js";
 import { renderLoadoutCardText, type LoadoutCard } from "../format/loadout/index.js";
 
 function json(value: unknown) {
@@ -34,6 +38,10 @@ function json(value: unknown) {
 
 function card(spec: LoadoutCard) {
   return { content: [{ type: "text" as const, text: renderLoadoutCardText(spec) }] };
+}
+
+function artifactCard(view: ArtifactView) {
+  return { content: [{ type: "text" as const, text: renderArtifactCardText(view) }] };
 }
 
 function instanceMap(profile: ProfileResponse): Map<string, number> {
@@ -130,6 +138,40 @@ async function describeItem(
     ammoType: ammoTypeLabel(definition.equippingBlock?.ammoType),
     perks,
     stats: namedStats,
+  };
+}
+
+// The artifact is account-wide, so its unlock state is identical on every character; read the first.
+function seasonalArtifact(profile: ProfileResponse): SeasonalArtifact | undefined {
+  for (const character of Object.values(profile.characterProgressions?.data ?? {})) {
+    if (character.seasonalArtifact) {
+      return character.seasonalArtifact;
+    }
+  }
+  return undefined;
+}
+
+async function describeArtifact(artifact: SeasonalArtifact) {
+  const tiers = await Promise.all(
+    artifact.tiers.map(async (tier, index) => ({
+      tier: index + 1,
+      unlocked: tier.isUnlocked,
+      perks: await Promise.all(
+        tier.items
+          .filter((perk) => perk.isVisible !== false)
+          .map(async (perk) => {
+            const { name, description } = await artifactPerkText(perk.itemHash);
+            return { name, description, active: perk.isActive };
+          }),
+      ),
+    })),
+  );
+
+  return {
+    name: await artifactName(artifact.artifactHash),
+    pointsUsed: artifact.pointsUsed,
+    resetCount: artifact.resetCount,
+    tiers,
   };
 }
 
@@ -631,6 +673,40 @@ export function registerReadTools(server: McpServer): void {
         itemHash: item.hash,
       }));
       return json({ count, truncated, items: result });
+    },
+  );
+
+  server.registerTool(
+    "get_artifact",
+    {
+      description:
+        "Report the player's active seasonal artifact: its name, points spent, and every perk grouped by tier — each marked as chosen or not — with current in-game descriptions. This is the source of truth for which artifact perks (anti-champion mods and build bonuses) are currently active. Read-only: the artifact and its perks are chosen in-game and can't be set through the API.",
+      inputSchema: {},
+    },
+    async () => {
+      const profile = await getProfile([Component.CharacterProgressions]);
+      const artifact = seasonalArtifact(profile);
+      if (!artifact) {
+        return json({ error: "No seasonal artifact found on this account." });
+      }
+      return json(await describeArtifact(artifact));
+    },
+  );
+
+  server.registerTool(
+    "show_artifact",
+    {
+      description:
+        "Render the player's active seasonal artifact as a text card: each tier's perks listed with the chosen ones marked ●. Use this to show a player their artifact at a glance; pair with get_artifact for the perk descriptions.",
+      inputSchema: {},
+    },
+    async () => {
+      const profile = await getProfile([Component.CharacterProgressions]);
+      const artifact = seasonalArtifact(profile);
+      if (!artifact) {
+        return json({ error: "No seasonal artifact found on this account." });
+      }
+      return artifactCard(await describeArtifact(artifact));
     },
   );
 }

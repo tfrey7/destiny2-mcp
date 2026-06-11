@@ -4,6 +4,7 @@ export const Component = {
   ProfileInventories: 102,
   Characters: 200,
   CharacterInventories: 201,
+  CharacterProgressions: 202,
   CharacterEquipment: 205,
   CharacterLoadouts: 206,
   ItemInstances: 300,
@@ -58,6 +59,26 @@ interface ItemBucket {
   items: DestinyItem[];
 }
 
+export interface ArtifactPerk {
+  itemHash: number;
+  isActive: boolean;
+  isVisible?: boolean;
+}
+
+export interface ArtifactTier {
+  tierHash: number;
+  isUnlocked: boolean;
+  pointsToUnlock: number;
+  items: ArtifactPerk[];
+}
+
+export interface SeasonalArtifact {
+  artifactHash: number;
+  pointsUsed: number;
+  resetCount: number;
+  tiers: ArtifactTier[];
+}
+
 export interface ItemInstance {
   primaryStat?: { value: number };
   damageType?: number;
@@ -85,6 +106,7 @@ export interface ProfileResponse {
   characterEquipment?: { data?: Record<string, ItemBucket> };
   characterInventories?: { data?: Record<string, ItemBucket> };
   characterLoadouts?: { data?: Record<string, { loadouts: DestinyLoadout[] }> };
+  characterProgressions?: { data?: Record<string, { seasonalArtifact?: SeasonalArtifact }> };
   profileInventory?: { data?: ItemBucket };
   profileCollectibles?: { data?: { collectibles?: Record<string, { state: number }> } };
   profilePlugSets?: PlugSets;
