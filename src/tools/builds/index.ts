@@ -2,7 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { itemMeta, itemName, loadoutName, type ItemMeta } from "../../bungie/manifest.js";
 import { Component, getProfile } from "../../bungie/profile.js";
-import { renderLoadoutCard } from "../../format/loadout/index.js";
+import { renderLoadoutCardPng } from "../../format/loadout/index.js";
 import { ownedInstanceByHash } from "./logic.js";
 import { loadBuilds, type BuildRecipe, type DimItem } from "./recipes.js";
 
@@ -10,27 +10,30 @@ function json(value: unknown) {
   return { content: [{ type: "text" as const, text: JSON.stringify(value, null, 2) }] };
 }
 
-/** A visual card followed by the structured payload, so the build reads at a glance but stays actionable. */
-function cardAndJson(card: string, value: unknown) {
-  return {
-    content: [
-      { type: "text" as const, text: card },
-      { type: "text" as const, text: JSON.stringify(value, null, 2) },
-    ],
-  };
+type ImageBlock = { type: "image"; data: string; mimeType: "image/png" };
+
+function imageBlock(png: Buffer): ImageBlock {
+  return { type: "image", data: png.toString("base64"), mimeType: "image/png" };
 }
 
-/** Render a community build's gear (weapons, armor, and subclass) as a loadout card. */
-async function buildCard(build: BuildRecipe): Promise<string> {
+/** One or more visual cards followed by the structured payload, so builds read at a glance but stay actionable. */
+function cardsAndJson(cards: ImageBlock[], value: unknown) {
+  return { content: [...cards, { type: "text" as const, text: JSON.stringify(value, null, 2) }] };
+}
+
+/** Render a community build's gear (weapons, armor, and subclass) as a loadout card PNG. */
+async function buildCard(build: BuildRecipe): Promise<ImageBlock> {
   const items = (
     await Promise.all(build.loadout.equipped.map((item) => itemMeta(item.hash)))
   ).filter((meta): meta is ItemMeta => meta !== undefined);
-  return renderLoadoutCard({
-    title: build.loadout.name.toUpperCase(),
-    className: build.className,
-    subtitle: build.subclass,
-    items,
-  });
+  return imageBlock(
+    renderLoadoutCardPng({
+      title: build.loadout.name.toUpperCase(),
+      className: build.className,
+      subtitle: build.subclass,
+      items,
+    }),
+  );
 }
 
 function matches(value: string, filter?: string): boolean {
@@ -70,7 +73,7 @@ export function registerBuildTools(server: McpServer): void {
         subclass: build.subclass,
         dimLink: build.dimLink,
       }));
-      return cardAndJson(cards.join("\n\n"), { scrapedAt, count: index.length, builds: index });
+      return cardsAndJson(cards, { scrapedAt, count: index.length, builds: index });
     },
   );
 
@@ -116,7 +119,7 @@ export function registerBuildTools(server: McpServer): void {
       const mods = await namesOf([...new Set(build.loadout.parameters?.mods ?? [])]);
       const nameHash = build.loadout.parameters?.inGameIdentifiers?.nameHash;
 
-      return cardAndJson(await buildCard(build), {
+      return cardsAndJson([await buildCard(build)], {
         build: {
           name: build.loadout.name,
           class: build.className,

@@ -33,10 +33,3 @@ export const BUCKET: Record<number, { section: Section; label: string; order: nu
   [CLASS_ITEM_BUCKET]: { section: "ARMOR", label: "Class item", order: 7 },
   3284755031: { section: "SUBCLASS", label: "Subclass", order: 8 },
 };
-
-// Glyphs the terminal renders two cells wide; padding math counts them as 2.
-export const WIDE_GLYPHS = new Set(
-  Object.values(ELEMENT)
-    .map((entry) => entry.icon)
-    .filter((icon) => icon !== ELEMENT.Kinetic.icon),
-);

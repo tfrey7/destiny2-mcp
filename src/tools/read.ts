@@ -21,14 +21,18 @@ import {
   type DestinyItem,
   type ProfileResponse,
 } from "../bungie/profile.js";
-import { renderLoadoutCard } from "../format/loadout/index.js";
+import { renderLoadoutCardPng, type LoadoutCard } from "../format/loadout/index.js";
 
 function json(value: unknown) {
   return { content: [{ type: "text" as const, text: JSON.stringify(value, null, 2) }] };
 }
 
-function text(value: string) {
-  return { content: [{ type: "text" as const, text: value }] };
+/** Render a loadout card to a PNG image block — the visual artifact shows inline instead of collapsing. */
+function card(spec: LoadoutCard) {
+  const png = renderLoadoutCardPng(spec);
+  return {
+    content: [{ type: "image" as const, data: png.toString("base64"), mimeType: "image/png" }],
+  };
 }
 
 function instanceMap(profile: ProfileResponse): Map<string, number> {
@@ -238,13 +242,12 @@ export function registerReadTools(server: McpServer): void {
         )
       ).filter((item): item is ItemMeta => item !== undefined);
 
-      const card = renderLoadoutCard({
+      return card({
         title: (await loadoutName(loadout.nameHash)).toUpperCase(),
         className: ClassType[profile.characters?.data?.[id]?.classType ?? -1] ?? "Unknown",
         slot: loadoutIndex,
         items,
       });
-      return text(card);
     },
   );
 
@@ -298,13 +301,12 @@ export function registerReadTools(server: McpServer): void {
         (item): item is ItemMeta => item !== undefined,
       );
 
-      const card = renderLoadoutCard({
+      return card({
         title: "EQUIPPED",
         className: ClassType[profile.characters?.data?.[id]?.classType ?? -1] ?? "Unknown",
         subtitle: "current",
         items,
       });
-      return text(card);
     },
   );
 
