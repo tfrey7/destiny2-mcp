@@ -54,8 +54,9 @@ export interface ItemDefinition {
   displayProperties?: { name?: string; description?: string };
   itemTypeDisplayName?: string;
   flavorText?: string;
-  inventory?: { tierTypeName?: string };
+  inventory?: { tierTypeName?: string; bucketTypeHash?: number };
   defaultDamageType?: number;
+  equippingBlock?: { ammoType?: number };
   sockets?: { socketEntries?: { singleInitialItemHash?: number }[] };
   stats?: { stats?: Record<string, { value?: number }> };
 }
@@ -68,6 +69,31 @@ const DAMAGE_TYPE: Record<number, string> = {
   6: "Stasis",
   7: "Strand",
 };
+
+// DestinyInventoryBucketDefinition hashes for the three weapon equip slots. An item only carries a
+// meaningful slot if it lives in one of these buckets; armor and everything else map to undefined.
+const WEAPON_SLOT_BY_BUCKET: Record<number, string> = {
+  1498876634: "Kinetic",
+  2465295065: "Energy",
+  953998645: "Power",
+};
+
+// DestinyAmmunitionType enum: 0 = None (non-weapon), 1 = Primary, 2 = Special, 3 = Heavy.
+const AMMO_TYPE: Record<number, string> = {
+  1: "Primary",
+  2: "Special",
+  3: "Heavy",
+};
+
+// The equip slot a weapon competes for, or undefined for non-weapons.
+export function slotFromBucketHash(bucketHash: number | undefined): string | undefined {
+  return bucketHash === undefined ? undefined : WEAPON_SLOT_BY_BUCKET[bucketHash];
+}
+
+// The ammo a weapon draws from, or undefined when None / not a weapon.
+export function ammoTypeLabel(ammoType: number | undefined): string | undefined {
+  return ammoType === undefined ? undefined : AMMO_TYPE[ammoType];
+}
 
 const TIER_RANK: Record<string, number> = { Exotic: 4, Legendary: 3, Rare: 2, Uncommon: 1, Common: 0 };
 

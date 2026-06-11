@@ -1,7 +1,17 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { acquisitionFor, ownedCollectibles } from "../bungie/acquisition.js";
-import { findItemByName, itemDefinition, itemMeta, itemName, loadoutName, statName, type ItemMeta } from "../bungie/manifest.js";
+import {
+  ammoTypeLabel,
+  findItemByName,
+  itemDefinition,
+  itemMeta,
+  itemName,
+  loadoutName,
+  slotFromBucketHash,
+  statName,
+  type ItemMeta,
+} from "../bungie/manifest.js";
 import {
   ClassType,
   Component,
@@ -34,13 +44,20 @@ function instanceMap(profile: ProfileResponse): Map<string, number> {
   return map;
 }
 
-async function namedItems(items: DestinyItem[]): Promise<{ name: string; itemInstanceId?: string; quantity: number }[]> {
+async function namedItems(
+  items: DestinyItem[],
+): Promise<{ name: string; itemInstanceId?: string; quantity: number; slot?: string }[]> {
   return Promise.all(
-    items.map(async (item) => ({
-      name: await itemName(item.itemHash),
-      itemInstanceId: item.itemInstanceId,
-      quantity: item.quantity,
-    })),
+    items.map(async (item) => {
+      const meta = await itemMeta(item.itemHash);
+      return {
+        name: meta?.name ?? (await itemName(item.itemHash)),
+        itemInstanceId: item.itemInstanceId,
+        quantity: item.quantity,
+        // Only weapons resolve to a slot; armor and consumables leave it undefined (omitted from JSON).
+        slot: slotFromBucketHash(meta?.bucketHash),
+      };
+    }),
   );
 }
 
@@ -72,6 +89,8 @@ async function describeItem(itemHash: number, plugHashes: number[], stats: Recor
     name: definition.displayProperties?.name ?? `Item ${itemHash >>> 0}`,
     type: definition.itemTypeDisplayName,
     tier: definition.inventory?.tierTypeName,
+    slot: slotFromBucketHash(definition.inventory?.bucketTypeHash),
+    ammoType: ammoTypeLabel(definition.equippingBlock?.ammoType),
     perks,
     stats: namedStats,
   };
