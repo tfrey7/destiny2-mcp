@@ -1,12 +1,14 @@
 import tseslint from "typescript-eslint";
 import prettier from "eslint-config-prettier";
 import promise from "eslint-plugin-promise";
+import unicorn from "eslint-plugin-unicorn";
 
 export default tseslint.config({ ignores: ["dist/"] }, prettier, {
   files: ["src/**/*.ts", "scripts/**/*.ts"],
   extends: [tseslint.configs.base],
-  plugins: { promise },
+  plugins: { promise, unicorn },
   rules: {
+    "unicorn/filename-case": ["error", { case: "snakeCase" }],
     // After eslint-config-prettier, which disables `curly` wholesale; the
     // `"all"` option doesn't actually conflict with Prettier, so re-enable it.
     curly: ["error", "all"],
