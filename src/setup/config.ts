@@ -27,6 +27,7 @@ export function requireEnv(name: string): string {
   if (!value) {
     throw new Error(`[destiny2-mcp] Missing required env var ${name}`);
   }
+
   return value;
 }
 

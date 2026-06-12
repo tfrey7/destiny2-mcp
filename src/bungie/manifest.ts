@@ -117,6 +117,7 @@ export function isGearBucket(bucketHash: number | undefined): boolean {
   if (bucketHash === undefined) {
     return false;
   }
+
   return WEAPON_SLOT_BY_BUCKET[bucketHash] !== undefined || ARMOR_BUCKETS.has(bucketHash);
 }
 
@@ -155,6 +156,7 @@ function meta() {
       };
     })();
   }
+
   return metaPromise;
 }
 
@@ -192,6 +194,7 @@ function db() {
       return new Database(dbPath, { readonly: true, fileMustExist: true });
     })();
   }
+
   return dbPromise;
 }
 
@@ -209,6 +212,7 @@ function definition<T>(connection: Database.Database, table: string, hash: numbe
     statement = connection.prepare(`SELECT json FROM ${table} WHERE id = ?`);
     statements.set(table, statement);
   }
+
   const row = statement.get(toId(hash)) as { json: string } | undefined;
 
   return row ? (JSON.parse(row.json) as T) : undefined;
@@ -242,6 +246,7 @@ export async function itemInfo(hash: number): Promise<ItemInfo | undefined> {
   if (!name) {
     return undefined;
   }
+
   return {
     name,
     tier: item.inventory?.tierTypeName,
@@ -311,6 +316,7 @@ export async function artifactPerkText(
   if (perkHash === undefined) {
     return { name, description: "" };
   }
+
   const sandbox = await getDefinition<
     NameDefinition & { displayProperties?: { description?: string } }
   >("DestinySandboxPerkDefinition", perkHash);
@@ -359,6 +365,7 @@ function buildNameIndex(connection: Database.Database) {
     });
     index.set(key, candidates);
   }
+
   return index;
 }
 
@@ -367,6 +374,7 @@ export async function findItemByName(name: string): Promise<number | undefined> 
   if (!nameIndexPromise) {
     nameIndexPromise = (async () => buildNameIndex(await db()))();
   }
+
   const candidates = (await nameIndexPromise).get(name.toLowerCase());
 
   if (!candidates?.length) {
@@ -379,6 +387,7 @@ export async function findItemByName(name: string): Promise<number | undefined> 
     if (tier !== 0) {
       return tier;
     }
+
     return Number(Boolean(b.collectibleHash)) - Number(Boolean(a.collectibleHash));
   })[0].hash;
 }
@@ -449,6 +458,7 @@ function buildCatalog(connection: Database.Database): CatalogEntry[] {
       collectibleHash: item.collectibleHash,
     });
   }
+
   return catalog;
 }
 
@@ -469,6 +479,7 @@ function dedupeByName(entries: CatalogEntry[]): CatalogEntry[] {
       byName.set(entry.name, entry);
     }
   }
+
   return [...byName.values()];
 }
 
@@ -476,6 +487,7 @@ export async function searchItems(filters: SearchFilters): Promise<SearchResult>
   if (!catalogPromise) {
     catalogPromise = (async () => buildCatalog(await db()))();
   }
+
   const catalog = await catalogPromise;
 
   const name = filters.name?.toLowerCase();
@@ -486,18 +498,23 @@ export async function searchItems(filters: SearchFilters): Promise<SearchResult>
     if (name && !entry.name.toLowerCase().includes(name)) {
       return false;
     }
+
     if (type && !entry.type?.toLowerCase().includes(type)) {
       return false;
     }
+
     if (filters.element && entry.element !== filters.element) {
       return false;
     }
+
     if (filters.tier && entry.tier !== filters.tier) {
       return false;
     }
+
     if (inCategory && !inCategory(entry)) {
       return false;
     }
+
     return true;
   });
 
@@ -507,6 +524,7 @@ export async function searchItems(filters: SearchFilters): Promise<SearchResult>
     if (tier !== 0) {
       return tier;
     }
+
     return a.name.localeCompare(b.name);
   });
 

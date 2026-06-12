@@ -18,6 +18,9 @@ export default tseslint.config({ ignores: ["dist/"] }, prettier, {
       "error",
       { blankLine: "always", prev: ["const", "let", "var"], next: "*" },
       { blankLine: "any", prev: ["const", "let", "var"], next: ["const", "let", "var"] },
+      // Require a blank line after a block (guard clauses, loops, etc.) before
+      // the next statement.
+      { blankLine: "always", prev: "multiline-block-like", next: "*" },
     ],
   },
 });

@@ -32,6 +32,7 @@ function listUrl(className: string, popular: boolean, page: number): string {
   if (popular) {
     params.set("q[top]", "true");
   }
+
   return `${BUILDERS}?${params}`;
 }
 
@@ -41,6 +42,7 @@ async function fetchPage(url: string): Promise<string> {
   if (!response.ok) {
     throw new Error(`[destiny2-mcp] builders.gg returned ${response.status} for ${url}`);
   }
+
   return response.text();
 }
 
@@ -55,6 +57,7 @@ function parseCards(html: string, className: string): Card[] {
     if (seen.has(shareId)) {
       continue;
     }
+
     seen.add(shareId);
 
     const window = html.slice(match.index, match.index + 600).replace(/<[^>]+>/g, " ");
@@ -75,6 +78,7 @@ async function fetchLoadout(shareId: string): Promise<DimLoadout | null> {
     console.warn(`[destiny2-mcp]   ! DIM API ${response.status} for ${shareId}, skipping`);
     return null;
   }
+
   const data = (await response.json()) as { loadout?: DimLoadout };
 
   return data.loadout ?? null;
@@ -122,6 +126,7 @@ async function main(): Promise<void> {
     if (!loadout) {
       continue;
     }
+
     console.log(`[destiny2-mcp]   ✓ ${loadout.name} (${card.subclass} ${capitalize(className)})`);
     builds.push({
       shareId: card.shareId,

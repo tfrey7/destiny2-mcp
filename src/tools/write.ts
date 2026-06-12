@@ -55,6 +55,7 @@ function locate(profile: ProfileResponse, itemId: string): Location | undefined 
       return { item, characterId };
     }
   }
+
   for (const [characterId, bucket] of Object.entries(profile.characterInventories?.data ?? {})) {
     const item = find(bucket.items);
 
@@ -62,6 +63,7 @@ function locate(profile: ProfileResponse, itemId: string): Location | undefined 
       return { item, characterId };
     }
   }
+
   const vaultItem = find(profile.profileInventory?.data?.items);
 
   return vaultItem ? { item: vaultItem } : undefined;
@@ -346,6 +348,7 @@ export function registerWriteTools(server: McpServer): void {
           if (!item.itemInstanceId || !isGearBucket(item.bucketHash)) {
             continue;
           }
+
           const name = await itemName(item.itemHash);
 
           try {

@@ -26,6 +26,7 @@ function tail(row: CardRow): string {
   if (row.empty) {
     return "(empty)";
   }
+
   return row.element ? `● ${row.element}` : "";
 }
 
@@ -52,6 +53,7 @@ export function renderLoadoutCardText(card: LoadoutCard): string {
     if (i > 0) {
       lines.push(boxLine(""));
     }
+
     lines.push(boxLine(section.label));
     for (const row of section.rows) {
       lines.push(rowLine(row));

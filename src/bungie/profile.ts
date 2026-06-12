@@ -143,9 +143,11 @@ export async function getPrimaryMembership(): Promise<Membership> {
   if (!chosen) {
     chosen = memberships.find((m) => m.crossSaveOverride === m.membershipType);
   }
+
   if (!chosen) {
     chosen = memberships[0];
   }
+
   if (!chosen) {
     throw new Error("[destiny2-mcp] No Destiny membership found on this account.");
   }

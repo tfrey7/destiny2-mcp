@@ -74,6 +74,7 @@ async function main(): Promise<void> {
           "[destiny2-mcp] To remove that warning, install mkcert (https://github.com/FiloSottile/mkcert) and run `mkcert -install`.",
         );
       }
+
       openBrowser(authorizeUrl);
     });
   });

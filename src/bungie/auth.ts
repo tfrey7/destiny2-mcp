@@ -62,6 +62,7 @@ async function postToken(params: Record<string, string>): Promise<TokenResponse>
       `[destiny2-mcp] Token request failed (${response.status}): ${await response.text()}`,
     );
   }
+
   return (await response.json()) as TokenResponse;
 }
 

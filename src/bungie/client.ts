@@ -35,6 +35,7 @@ export async function bungieFetch<T>(path: string, options: RequestOptions = {})
   if (auth) {
     headers.Authorization = `Bearer ${await getAccessToken()}`;
   }
+
   if (body !== undefined) {
     headers["Content-Type"] = "application/json";
   }
@@ -50,5 +51,6 @@ export async function bungieFetch<T>(path: string, options: RequestOptions = {})
   if (envelope.ErrorCode !== 1) {
     throw new BungieError(envelope.ErrorStatus, envelope.ErrorCode, envelope.Message);
   }
+
   return envelope.Response;
 }

@@ -23,6 +23,7 @@ export async function ownedCollectibles(): Promise<Set<number>> {
       owned.add(Number(hash));
     }
   }
+
   return owned;
 }
 
@@ -41,6 +42,7 @@ export async function acquisitionFor(itemHash: number, owned?: Set<number>): Pro
       acquisition.owned = owned.has(info.collectibleHash);
     }
   }
+
   return acquisition;
 }
 

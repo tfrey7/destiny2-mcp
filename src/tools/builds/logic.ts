@@ -26,11 +26,13 @@ export function ownedItemsByHash(profile: ProfileResponse): Map<number, OwnedIte
       record(item, "equipped", characterId);
     }
   }
+
   for (const [characterId, bucket] of Object.entries(profile.characterInventories?.data ?? {})) {
     for (const item of bucket.items) {
       record(item, "inventory", characterId);
     }
   }
+
   for (const item of profile.profileInventory?.data?.items ?? []) {
     record(item, "vault");
   }

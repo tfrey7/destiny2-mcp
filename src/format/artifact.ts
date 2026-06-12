@@ -53,6 +53,7 @@ export function renderArtifactCardText(artifact: ArtifactView): string {
     if (i > 0) {
       lines.push(boxLine(""));
     }
+
     lines.push(boxLine(tier.unlocked ? `TIER ${tier.tier}` : `TIER ${tier.tier} · locked`));
     for (const perk of tier.perks) {
       lines.push(perkLine(perk));

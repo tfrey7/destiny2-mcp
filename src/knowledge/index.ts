@@ -37,6 +37,7 @@ export function registerKnowledgeTools(server: McpServer): void {
           content: [{ type: "text" as const, text: `No section "${topic}". Topics: ${topics}.` }],
         };
       }
+
       return { content: [{ type: "text" as const, text: render(matches) }] };
     },
   );

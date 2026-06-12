@@ -57,9 +57,11 @@ function instanceMap(profile: ProfileResponse): Map<string, number> {
   for (const bucket of Object.values(profile.characterEquipment?.data ?? {})) {
     add(bucket.items);
   }
+
   for (const bucket of Object.values(profile.characterInventories?.data ?? {})) {
     add(bucket.items);
   }
+
   add(profile.profileInventory?.data?.items);
   return map;
 }
@@ -109,9 +111,11 @@ async function describePerks(
     if (!name || seen.has(name)) {
       continue;
     }
+
     seen.add(name);
     perks.push({ name, description: definition.displayProperties?.description ?? "" });
   }
+
   return perks;
 }
 
@@ -153,6 +157,7 @@ function seasonalArtifact(profile: ProfileResponse): SeasonalArtifact | undefine
       return character.seasonalArtifact;
     }
   }
+
   return undefined;
 }
 
@@ -193,6 +198,7 @@ function categoryHashByIndex(categories: SocketCategoryEntry[]): Map<number, num
       map.set(index, category.socketCategoryHash);
     }
   }
+
   return map;
 }
 
@@ -210,6 +216,7 @@ function mergedPlugSets(profile: ProfileResponse): Map<number, ReusablePlug[]> {
   for (const character of Object.values(profile.characterPlugSets?.data ?? {})) {
     add(character.plugs);
   }
+
   return sets;
 }
 
@@ -227,6 +234,7 @@ async function availablePlugHashes(
   if (entry?.randomizedPlugSetHash !== undefined && live?.length) {
     return live.filter((plug) => plug.canInsert !== false).map((plug) => plug.plugItemHash);
   }
+
   if (entry?.reusablePlugSetHash !== undefined) {
     const set = plugSets.get(entry.reusablePlugSetHash);
 
@@ -234,15 +242,19 @@ async function availablePlugHashes(
       return set.filter((plug) => plug.canInsert).map((plug) => plug.plugItemHash);
     }
   }
+
   if (live?.length) {
     return live.filter((plug) => plug.canInsert !== false).map((plug) => plug.plugItemHash);
   }
+
   if (entry?.reusablePlugItems?.length) {
     return entry.reusablePlugItems.map((plug) => plug.plugItemHash);
   }
+
   if (entry?.reusablePlugSetHash !== undefined) {
     return plugSetItemHashes(entry.reusablePlugSetHash);
   }
+
   return [];
 }
 
@@ -475,6 +487,7 @@ export function registerReadTools(server: McpServer): void {
               counts[value] = (counts[value] ?? 0) + 1;
             }
           }
+
           return counts;
         };
 
@@ -661,6 +674,7 @@ export function registerReadTools(server: McpServer): void {
           if (hash === undefined) {
             return { name, note: "No item with this exact name in the manifest." };
           }
+
           return acquisitionFor(hash, owned);
         }),
       );
@@ -717,6 +731,7 @@ export function registerReadTools(server: McpServer): void {
       if (!artifact) {
         return json({ error: "No seasonal artifact found on this account." });
       }
+
       return json(await describeArtifact(artifact));
     },
   );
@@ -735,6 +750,7 @@ export function registerReadTools(server: McpServer): void {
       if (!artifact) {
         return json({ error: "No seasonal artifact found on this account." });
       }
+
       return artifactCard(await describeArtifact(artifact));
     },
   );
