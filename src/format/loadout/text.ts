@@ -7,6 +7,9 @@ import { cardModel, type CardRow, type LoadoutCard } from "./model.js";
  * ╭────────────────────────────────────────────────╮
  * │ Threadrunner                   Hunter · slot 2 │
  * ├────────────────────────────────────────────────┤
+ * │ SUBCLASS                                       │
+ * │   Strand Hunter     Strand       ● Strand      │
+ * │                                                │
  * │ WEAPONS                                        │
  * │   Quicksilver Sto… ★Auto Rifle   ● Strand      │
  * │   The Immortal      SMG          ● Arc         │
@@ -18,9 +21,6 @@ import { cardModel, type CardRow, type LoadoutCard } from "./model.js";
  * │   Chestpiece        Chest                      │
  * │   Boots             Legs                       │
  * │   —                 Class item   (empty)       │
- * │                                                │
- * │ SUBCLASS                                       │
- * │   Strand Hunter     Strand       ● Strand      │
  * ╰────────────────────────────────────────────────╯
  */
 export function renderLoadoutCardText(card: LoadoutCard): string {

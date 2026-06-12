@@ -48,15 +48,15 @@ export interface CardModel {
  *   title: "Threadrunner",
  *   subtitle: "Hunter · slot 2",
  *   sections: [
+ *     { label: "SUBCLASS", rows: [
+ *       { name: "Strand Hunter", rarity: "Basic", middle: "Strand", element: "Strand" },
+ *     ] },
  *     { label: "WEAPONS", rows: [
  *       { name: "Quicksilver Storm", rarity: "Exotic", middle: "Auto Rifle", element: "Strand" },
  *     ] },
  *     { label: "ARMOR", rows: [
  *       { name: "Mask of Bakris", rarity: "Exotic", middle: "Helmet" },
  *       { name: "—", rarity: "Basic", middle: "Class item", empty: true },
- *     ] },
- *     { label: "SUBCLASS", rows: [
- *       { name: "Strand Hunter", rarity: "Basic", middle: "Strand", element: "Strand" },
  *     ] },
  *   ],
  * }
@@ -65,6 +65,23 @@ export function cardModel(card: LoadoutCard): CardModel {
   const detail = card.subtitle ?? (card.slot !== undefined ? `slot ${card.slot}` : undefined);
   const subtitle = detail ? `${card.className} · ${detail}` : card.className;
   const sections: CardSection[] = [];
+
+  // Subclass leads the card — it sets the build's identity, the way loadouts read in-game / DIM.
+  const subclass = inSection(card.items, "SUBCLASS")[0];
+
+  if (subclass) {
+    sections.push({
+      label: "SUBCLASS",
+      rows: [
+        {
+          name: subclass.name,
+          rarity: subclass.rarity,
+          middle: subclass.element ?? "",
+          element: subclass.element,
+        },
+      ],
+    });
+  }
 
   const weapons = inSection(card.items, "WEAPONS");
 
@@ -93,22 +110,6 @@ export function cardModel(card: LoadoutCard): CardModel {
   }
 
   sections.push({ label: "ARMOR", rows: armorRows });
-
-  const subclass = inSection(card.items, "SUBCLASS")[0];
-
-  if (subclass) {
-    sections.push({
-      label: "SUBCLASS",
-      rows: [
-        {
-          name: subclass.name,
-          rarity: subclass.rarity,
-          middle: subclass.element ?? "",
-          element: subclass.element,
-        },
-      ],
-    });
-  }
 
   return { title: card.title, subtitle, sections };
 }

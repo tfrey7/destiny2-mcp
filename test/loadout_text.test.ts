@@ -43,15 +43,15 @@ describe("renderLoadoutCardText", () => {
       "╭────────────────────────────────────────────────╮
       │ MY BUILD                       Hunter · Strand │
       ├────────────────────────────────────────────────┤
+      │ SUBCLASS                                       │
+      │   Strand            Strand       ● Strand      │
+      │                                                │
       │ WEAPONS                                        │
       │   Final Warning ★   Sidearm      ● Strand      │
       │                                                │
       │ ARMOR                                          │
       │   Cyrtarachne's F… ★Helmet                     │
       │   —                 Class item   (empty)       │
-      │                                                │
-      │ SUBCLASS                                       │
-      │   Strand            Strand       ● Strand      │
       ╰────────────────────────────────────────────────╯"
     `);
   });

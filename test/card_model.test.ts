@@ -116,7 +116,7 @@ describe("cardModel subclass", () => {
 });
 
 describe("cardModel sections", () => {
-  test("orders sections weapons, armor, subclass", () => {
+  test("orders sections subclass, weapons, armor", () => {
     const model = cardModel(
       card({
         items: [cardItem(SUBCLASS, { element: "Void" }), cardItem(KINETIC), cardItem(HELMET)],
@@ -124,9 +124,9 @@ describe("cardModel sections", () => {
     );
 
     expect(model.sections.map((section) => section.label)).toEqual([
+      "SUBCLASS",
       "WEAPONS",
       "ARMOR",
-      "SUBCLASS",
     ]);
   });
 

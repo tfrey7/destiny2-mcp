@@ -1,8 +1,10 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
+import { LOADOUT_UI_RESOURCE_URI } from "../format/loadout/html.js";
 import { itemMeta, type ItemMeta } from "../bungie/manifest.js";
 import { ClassType, Component, type DestinyCharacter, getProfile } from "../bungie/profile.js";
 import { card, json } from "./response.js";
+import { clientSupportsUi } from "./ui_capability.js";
 
 export function registerShowEquipped(server: McpServer): void {
   server.registerTool(
@@ -12,6 +14,7 @@ export function registerShowEquipped(server: McpServer): void {
         "Render the currently equipped gear as a text card: weapons, armor, and subclass in aligned columns, with exotics marked and elements named. Defaults to the most recently played character; pass a characterId to choose another. Use this to show a player their current loadout.",
       inputSchema: { characterId: z.string().optional() },
       annotations: { readOnlyHint: true },
+      _meta: { ui: { resourceUri: LOADOUT_UI_RESOURCE_URI, visibility: ["model", "app"] } },
     },
     async ({ characterId }) => {
       const profile = await getProfile([Component.Characters, Component.CharacterEquipment]);
@@ -31,12 +34,19 @@ export function registerShowEquipped(server: McpServer): void {
         (item): item is ItemMeta => item !== undefined,
       );
 
-      return card({
+      const spec = {
         title: "EQUIPPED",
         className: ClassType[profile.characters?.data?.[id]?.classType ?? -1] ?? "Unknown",
         subtitle: "current",
         items,
-      });
+      };
+
+      // Currently-equipped gear has no slot to re-equip, so the interactive card is
+      // visual-only (no action button). UI-capable hosts get structuredContent; the CLI
+      // falls through to the text card.
+      const ui = clientSupportsUi(server) ? {} : undefined;
+
+      return card(spec, ui);
     },
   );
 }
