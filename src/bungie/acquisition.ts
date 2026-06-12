@@ -18,11 +18,6 @@ export interface OwnedGear {
   acquiredCollectibles: Set<number>;
 }
 
-// Bit 0 of DestinyCollectibleState; set means the account has never acquired the item. Collections
-// is an unreliable sole signal — some exotics keep this bit set even while the weapon sits in the
-// inventory — so it backs up the held-gear check rather than standing alone.
-const NOT_ACQUIRED = 1;
-
 export async function ownedGear(): Promise<OwnedGear> {
   const profile = await getProfile([
     Component.ProfileInventories,
@@ -123,3 +118,8 @@ export async function acquisitionForMany(itemHashes: number[]): Promise<Acquisit
 
   return Promise.all(itemHashes.map((hash) => acquisitionFor(hash, owned)));
 }
+
+// Bit 0 of DestinyCollectibleState; set means the account has never acquired the item. Collections
+// is an unreliable sole signal — some exotics keep this bit set even while the weapon sits in the
+// inventory — so it backs up the held-gear check rather than standing alone.
+const NOT_ACQUIRED = 1;

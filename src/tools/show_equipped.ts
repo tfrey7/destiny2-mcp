@@ -4,16 +4,6 @@ import { itemMeta, type ItemMeta } from "../bungie/manifest.js";
 import { ClassType, Component, type DestinyCharacter, getProfile } from "../bungie/profile.js";
 import { card, json } from "./response.js";
 
-function mostRecentlyPlayed(
-  characters: Record<string, DestinyCharacter>,
-): DestinyCharacter | undefined {
-  return Object.values(characters).reduce<DestinyCharacter | undefined>(
-    (latest, character) =>
-      character.dateLastPlayed > (latest?.dateLastPlayed ?? "") ? character : latest,
-    undefined,
-  );
-}
-
 export function registerShowEquipped(server: McpServer): void {
   server.registerTool(
     "show_equipped",
@@ -47,5 +37,15 @@ export function registerShowEquipped(server: McpServer): void {
         items,
       });
     },
+  );
+}
+
+function mostRecentlyPlayed(
+  characters: Record<string, DestinyCharacter>,
+): DestinyCharacter | undefined {
+  return Object.values(characters).reduce<DestinyCharacter | undefined>(
+    (latest, character) =>
+      character.dateLastPlayed > (latest?.dateLastPlayed ?? "") ? character : latest,
+    undefined,
   );
 }

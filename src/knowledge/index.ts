@@ -3,12 +3,6 @@ import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { buildKnowledge } from "./data.js";
 
-const SCHEME = "knowledge";
-
-function render(sections: typeof buildKnowledge): string {
-  return sections.map((section) => `## ${section.title}\n\n${section.body}`).join("\n\n");
-}
-
 // The build knowledge is static reference content, so each section is also exposed as a resource —
 // a client can browse or attach a single topic by URI (knowledge://loadout) without the model
 // having to call a tool. The tool below stays for autonomous, model-driven retrieval mid-build;
@@ -98,4 +92,10 @@ export function registerKnowledgeTools(server: McpServer): void {
       return { content: [{ type: "text" as const, text: render(matches) }] };
     },
   );
+}
+
+const SCHEME = "knowledge";
+
+function render(sections: typeof buildKnowledge): string {
+  return sections.map((section) => `## ${section.title}\n\n${section.body}`).join("\n\n");
 }

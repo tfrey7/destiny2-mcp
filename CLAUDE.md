@@ -49,6 +49,12 @@ checked without guesswork. Don't add a tool that returns gear without them.
 
 - Read tools project a deliberately narrow shape over the manifest (name + a few attributes), not the raw
   Bungie payload. Keep that projection tight; the full vault is large.
+- **Exported members come first.** Within a file, put everything `export`ed (functions, types, consts,
+  classes) at the top, above all private/internal declarations — the public surface should read first.
+  This is a convention, not lint-enforced: function declarations hoist and types are erased, so the order
+  is free; the one exception is an exported `const` whose initializer reads a private `const` at module-load
+  time (e.g. `BUILDS_FILE` depends on `packageRoot` in `setup/config.ts`) — that private dependency stays
+  inline above its consumer to avoid a temporal-dead-zone crash at startup.
 - The server runs via `tsx` with no build step for day-to-day use. After editing `src/`, reconnect with
   `/mcp`.
 - Before committing: `npm run typecheck`, `npm run lint`, `npm run format`. Never skip hooks.

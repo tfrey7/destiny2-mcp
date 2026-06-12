@@ -40,12 +40,6 @@ export interface CardModel {
   sections: CardSection[];
 }
 
-function inSection(items: LoadoutCardItem[], section: Section): LoadoutCardItem[] {
-  return items
-    .filter((item) => BUCKET[item.bucketHash]?.section === section)
-    .sort((a, b) => (BUCKET[a.bucketHash]?.order ?? 99) - (BUCKET[b.bucketHash]?.order ?? 99));
-}
-
 /**
  * Reduce a loadout to ordered sections and rows — the shared input for every card renderer.
  *
@@ -117,4 +111,10 @@ export function cardModel(card: LoadoutCard): CardModel {
   }
 
   return { title: card.title, subtitle, sections };
+}
+
+function inSection(items: LoadoutCardItem[], section: Section): LoadoutCardItem[] {
+  return items
+    .filter((item) => BUCKET[item.bucketHash]?.section === section)
+    .sort((a, b) => (BUCKET[a.bucketHash]?.order ?? 99) - (BUCKET[b.bucketHash]?.order ?? 99));
 }

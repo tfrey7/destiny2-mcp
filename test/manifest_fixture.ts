@@ -3,12 +3,6 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 
-interface SeedRow {
-  table: string;
-  hash: number;
-  json: unknown;
-}
-
 // Builds a throwaway SQLite database matching the real manifest schema (id INTEGER, json TEXT) from a
 // committed seed of real item rows, then points the manifest reader at it via the DESTINY2_MANIFEST_DB
 // seam. The reader can't tell the fixture from the full manifest — both are point queries by hash.
@@ -30,4 +24,10 @@ export function useManifestFixture(seedPath: string): void {
 
   connection.close();
   process.env.DESTINY2_MANIFEST_DB = dbPath;
+}
+
+interface SeedRow {
+  table: string;
+  hash: number;
+  json: unknown;
 }

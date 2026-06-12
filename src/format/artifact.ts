@@ -1,8 +1,3 @@
-const BOX_WIDTH = 46;
-const PERK_NAME_WIDTH = 42;
-const ACTIVE_MARK = "●";
-const INACTIVE_MARK = "○";
-
 export interface ArtifactPerkView {
   name: string;
   active: boolean;
@@ -19,24 +14,6 @@ export interface ArtifactView {
   pointsUsed: number;
   resetCount: number;
   tiers: ArtifactTierView[];
-}
-
-function pad(text: string, width: number): string {
-  return text + " ".repeat(Math.max(0, width - text.length));
-}
-
-function truncate(text: string, max: number): string {
-  return text.length <= max ? text : text.slice(0, max - 1) + "…";
-}
-
-function boxLine(content: string): string {
-  return `│ ${pad(content, BOX_WIDTH)} │`;
-}
-
-function perkLine(perk: ArtifactPerkView): string {
-  const mark = perk.active ? ACTIVE_MARK : INACTIVE_MARK;
-
-  return boxLine(`  ${mark} ${truncate(perk.name, PERK_NAME_WIDTH)}`);
 }
 
 /**
@@ -76,4 +53,27 @@ export function renderArtifactCardText(artifact: ArtifactView): string {
 
   lines.push("╰" + "─".repeat(BOX_WIDTH + 2) + "╯");
   return lines.join("\n");
+}
+
+const BOX_WIDTH = 46;
+const PERK_NAME_WIDTH = 42;
+const ACTIVE_MARK = "●";
+const INACTIVE_MARK = "○";
+
+function pad(text: string, width: number): string {
+  return text + " ".repeat(Math.max(0, width - text.length));
+}
+
+function truncate(text: string, max: number): string {
+  return text.length <= max ? text : text.slice(0, max - 1) + "…";
+}
+
+function boxLine(content: string): string {
+  return `│ ${pad(content, BOX_WIDTH)} │`;
+}
+
+function perkLine(perk: ArtifactPerkView): string {
+  const mark = perk.active ? ACTIVE_MARK : INACTIVE_MARK;
+
+  return boxLine(`  ${mark} ${truncate(perk.name, PERK_NAME_WIDTH)}`);
 }

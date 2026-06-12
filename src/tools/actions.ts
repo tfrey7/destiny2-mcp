@@ -34,51 +34,6 @@ export function transfer(
   });
 }
 
-interface Location {
-  item: DestinyItem;
-  // The character holding the item, or undefined when it sits in the vault.
-  characterId?: string;
-}
-
-// Find an instanced item anywhere it can live — equipped, in a character's inventory, or the vault —
-// so the server can derive its definition hash and current home without the client supplying either.
-function locate(profile: ProfileResponse, itemId: string): Location | undefined {
-  const find = (items?: DestinyItem[]) => items?.find((item) => item.itemInstanceId === itemId);
-
-  for (const [characterId, bucket] of Object.entries(profile.characterEquipment?.data ?? {})) {
-    const item = find(bucket.items);
-
-    if (item) {
-      return { item, characterId };
-    }
-  }
-
-  for (const [characterId, bucket] of Object.entries(profile.characterInventories?.data ?? {})) {
-    const item = find(bucket.items);
-
-    if (item) {
-      return { item, characterId };
-    }
-  }
-
-  const vaultItem = find(profile.profileInventory?.data?.items);
-
-  return vaultItem ? { item: vaultItem } : undefined;
-}
-
-// A non-equipped copy of the same item already sitting in the character's inventory. Copies share a
-// definition hash and therefore a bucket, so one of these is exactly what occupies a full destination.
-function inventoryDuplicate(
-  profile: ProfileResponse,
-  characterId: string,
-  itemHash: number,
-  excludeItemId: string,
-): DestinyItem | undefined {
-  const items = profile.characterInventories?.data?.[characterId]?.items ?? [];
-
-  return items.find((item) => item.itemHash === itemHash && item.itemInstanceId !== excludeItemId);
-}
-
 // Bring an instanced item onto a character so it can be equipped, returning a note describing any
 // transfer performed (empty when the item was already there). Pulls from the vault unconditionally;
 // when the destination bucket is full it only evicts a *duplicate of the same item*, matching the
@@ -129,4 +84,49 @@ export async function ensureOnCharacter(
     await transfer(characterId, itemId, itemHash, false);
     return `Pulled ${name} to the character, evicting a duplicate to the vault for room. `;
   }
+}
+
+interface Location {
+  item: DestinyItem;
+  // The character holding the item, or undefined when it sits in the vault.
+  characterId?: string;
+}
+
+// Find an instanced item anywhere it can live — equipped, in a character's inventory, or the vault —
+// so the server can derive its definition hash and current home without the client supplying either.
+function locate(profile: ProfileResponse, itemId: string): Location | undefined {
+  const find = (items?: DestinyItem[]) => items?.find((item) => item.itemInstanceId === itemId);
+
+  for (const [characterId, bucket] of Object.entries(profile.characterEquipment?.data ?? {})) {
+    const item = find(bucket.items);
+
+    if (item) {
+      return { item, characterId };
+    }
+  }
+
+  for (const [characterId, bucket] of Object.entries(profile.characterInventories?.data ?? {})) {
+    const item = find(bucket.items);
+
+    if (item) {
+      return { item, characterId };
+    }
+  }
+
+  const vaultItem = find(profile.profileInventory?.data?.items);
+
+  return vaultItem ? { item: vaultItem } : undefined;
+}
+
+// A non-equipped copy of the same item already sitting in the character's inventory. Copies share a
+// definition hash and therefore a bucket, so one of these is exactly what occupies a full destination.
+function inventoryDuplicate(
+  profile: ProfileResponse,
+  characterId: string,
+  itemHash: number,
+  excludeItemId: string,
+): DestinyItem | undefined {
+  const items = profile.characterInventories?.data?.[characterId]?.items ?? [];
+
+  return items.find((item) => item.itemHash === itemHash && item.itemInstanceId !== excludeItemId);
 }

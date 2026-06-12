@@ -21,6 +21,14 @@ const packageRoot = join(fileURLToPath(import.meta.url), "..", "..", "..");
 
 export const BUILDS_FILE = join(packageRoot, "data", "builds.json");
 
+export function credentials() {
+  return {
+    apiKey: credential("apiKey", "BUNGIE_API_KEY"),
+    clientId: credential("clientId", "BUNGIE_CLIENT_ID"),
+    clientSecret: credential("clientSecret", "BUNGIE_CLIENT_SECRET"),
+  };
+}
+
 // Baked into the bundle so the .mcpb ships ready-to-run with no per-user secret prompt — the DIM
 // model (see docs/oauth-mcpb-findings.md). These are *app* credentials, not per-user; env vars
 // override them so local dev reads from .env and the real values are pasted in only at bundle time.
@@ -38,12 +46,4 @@ function credential(name: keyof typeof BAKED_IN, envName: string): string {
   }
 
   return value;
-}
-
-export function credentials() {
-  return {
-    apiKey: credential("apiKey", "BUNGIE_API_KEY"),
-    clientId: credential("clientId", "BUNGIE_CLIENT_ID"),
-    clientSecret: credential("clientSecret", "BUNGIE_CLIENT_SECRET"),
-  };
 }

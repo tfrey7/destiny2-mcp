@@ -1,19 +1,6 @@
 import { BUNGIE_BASE, credentials } from "../setup/config.js";
 import { getAccessToken } from "./auth.js";
 
-interface BungieEnvelope<T> {
-  Response: T;
-  ErrorCode: number;
-  ErrorStatus: string;
-  Message: string;
-}
-
-interface RequestOptions {
-  method?: "GET" | "POST";
-  body?: unknown;
-  auth?: boolean;
-}
-
 // Carries Bungie's machine-readable ErrorStatus (e.g. "DestinyNoRoomInDestination") so callers can
 // branch on a specific failure instead of pattern-matching the human message.
 export class BungieError extends Error {
@@ -53,4 +40,17 @@ export async function bungieFetch<T>(path: string, options: RequestOptions = {})
   }
 
   return envelope.Response;
+}
+
+interface BungieEnvelope<T> {
+  Response: T;
+  ErrorCode: number;
+  ErrorStatus: string;
+  Message: string;
+}
+
+interface RequestOptions {
+  method?: "GET" | "POST";
+  body?: unknown;
+  auth?: boolean;
 }

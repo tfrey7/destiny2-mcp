@@ -7,37 +7,6 @@ import { MANIFEST_DIR } from "../setup/config.js";
 import type { Element, ItemCategory } from "../schemas.js";
 import { bungieFetch } from "./client.js";
 
-const ITEM_TABLE = "DestinyInventoryItemDefinition";
-
-interface ManifestMeta {
-  version: string;
-  mobileWorldContentPaths: Record<string, string>;
-}
-
-interface RawItem {
-  displayProperties?: { name?: string };
-  itemType?: number;
-  itemTypeDisplayName?: string;
-  collectibleHash?: number;
-  defaultDamageType?: number;
-  talentGrid?: { hudDamageType?: number };
-  equippingBlock?: { ammoType?: number };
-  inventory?: { tierTypeName?: string; bucketTypeHash?: number };
-}
-
-interface CollectibleDefinition {
-  sourceString?: string;
-}
-
-interface NameDefinition {
-  displayProperties?: { name?: string };
-  name?: string;
-}
-
-interface StatDefinition {
-  displayProperties?: { name?: string };
-}
-
 export interface ItemInfo {
   name: string;
   tier?: string;
@@ -77,6 +46,280 @@ export interface ItemDefinition {
   stats?: { stats?: Record<string, { value?: number }> };
 }
 
+// The equip slot a weapon competes for, or undefined for non-weapons.
+export function slotFromBucketHash(bucketHash: number | undefined): string | undefined {
+  return bucketHash === undefined ? undefined : WEAPON_SLOT_BY_BUCKET[bucketHash];
+}
+
+// True for a bucket holding equippable weapons or armor — the gear a player vaults to clear a
+// character. Excludes subclass, postmaster, consumables, and cosmetics, which a plain transfer
+// either can't move or the player keeps on the character.
+export function isGearBucket(bucketHash: number | undefined): boolean {
+  if (bucketHash === undefined) {
+    return false;
+  }
+
+  return WEAPON_SLOT_BY_BUCKET[bucketHash] !== undefined || ARMOR_BUCKETS.has(bucketHash);
+}
+
+// The ammo a weapon draws from, or undefined when None / not a weapon.
+export function ammoTypeLabel(ammoType: number | undefined): string | undefined {
+  return ammoType === undefined ? undefined : AMMO_TYPE[ammoType];
+}
+
+// Force the manifest to download and open up front, so a missing or unreadable manifest fails
+// loudly at startup instead of surfacing as a cryptic error on the first gear tool call.
+export async function loadManifest(): Promise<void> {
+  await db();
+}
+
+// Every definition is local, so resolving one by hash is a point query rather than a network call.
+export async function getDefinition<T>(entityType: string, hash: number): Promise<T> {
+  return definition<T>(await db(), entityType, hash) ?? ({} as T);
+}
+
+export function itemDefinition(hash: number): Promise<ItemDefinition> {
+  return getDefinition<ItemDefinition>(ITEM_TABLE, hash);
+}
+
+export async function statName(hash: number): Promise<string> {
+  const stat = await getDefinition<StatDefinition>("DestinyStatDefinition", hash);
+
+  return stat.displayProperties?.name ?? `Stat ${hash >>> 0}`;
+}
+
+export async function itemName(hash: number): Promise<string> {
+  const item = definition<RawItem>(await db(), ITEM_TABLE, hash);
+
+  return item?.displayProperties?.name ?? `Unknown item ${hash >>> 0}`;
+}
+
+export async function itemInfo(hash: number): Promise<ItemInfo | undefined> {
+  const item = definition<RawItem>(await db(), ITEM_TABLE, hash);
+  const name = item?.displayProperties?.name;
+
+  if (!name) {
+    return undefined;
+  }
+
+  return {
+    name,
+    tier: item.inventory?.tierTypeName,
+    itemType: item.itemTypeDisplayName || undefined,
+    collectibleHash: item.collectibleHash,
+  };
+}
+
+export async function itemMeta(hash: number): Promise<ItemMeta | undefined> {
+  const item = definition<RawItem>(await db(), ITEM_TABLE, hash);
+  const name = item?.displayProperties?.name;
+
+  if (!name) {
+    return undefined;
+  }
+
+  return {
+    name,
+    rarity: item.inventory?.tierTypeName ?? "Basic",
+    type: item.itemTypeDisplayName ?? "",
+    element: elementOf(item),
+    bucketHash: item.inventory?.bucketTypeHash ?? 0,
+  };
+}
+
+export async function socketCategoryName(hash: number): Promise<string> {
+  const category = await getDefinition<NameDefinition>("DestinySocketCategoryDefinition", hash);
+
+  return category.displayProperties?.name ?? `Socket category ${hash >>> 0}`;
+}
+
+// The candidate plugs for a non-randomized socket (shader, ornament, emblem variant) live in a
+// plug set keyed off the item definition; the live profile component only fills in what's unlocked.
+export async function plugSetItemHashes(plugSetHash: number): Promise<number[]> {
+  const plugSet = await getDefinition<{ reusablePlugItems?: { plugItemHash: number }[] }>(
+    "DestinyPlugSetDefinition",
+    plugSetHash,
+  );
+
+  return (plugSet.reusablePlugItems ?? []).map((plug) => plug.plugItemHash);
+}
+
+export async function artifactName(hash: number): Promise<string> {
+  const artifact = await getDefinition<NameDefinition>("DestinyArtifactDefinition", hash);
+
+  return artifact.displayProperties?.name ?? `Artifact ${hash >>> 0}`;
+}
+
+// An artifact perk carries its name on the item but its tooltip on a linked sandbox perk.
+export async function artifactPerkText(
+  itemHash: number,
+): Promise<{ name: string; description: string }> {
+  const item = await getDefinition<ArtifactPerkDefinition>(ITEM_TABLE, itemHash);
+  const name = item.displayProperties?.name ?? `Perk ${itemHash >>> 0}`;
+
+  if (item.displayProperties?.description) {
+    return { name, description: item.displayProperties.description };
+  }
+
+  const perkHash = item.perks?.[0]?.perkHash;
+
+  if (perkHash === undefined) {
+    return { name, description: "" };
+  }
+
+  const sandbox = await getDefinition<
+    NameDefinition & { displayProperties?: { description?: string } }
+  >("DestinySandboxPerkDefinition", perkHash);
+
+  return { name, description: sandbox.displayProperties?.description ?? "" };
+}
+
+export async function loadoutName(hash: number): Promise<string> {
+  const loadout = definition<NameDefinition>(await db(), "DestinyLoadoutNameDefinition", hash);
+
+  return loadout?.displayProperties?.name ?? loadout?.name ?? "Unnamed loadout";
+}
+
+export async function collectibleSource(collectibleHash: number): Promise<string | undefined> {
+  return (
+    definition<CollectibleDefinition>(await db(), "DestinyCollectibleDefinition", collectibleHash)
+      ?.sourceString || undefined
+  );
+}
+
+// Prefer the highest rarity, then a candidate that actually has a Collections source.
+export async function findItemByName(name: string): Promise<number | undefined> {
+  if (!nameIndexPromise) {
+    nameIndexPromise = (async () => {
+      try {
+        return buildNameIndex(await db());
+      } catch (error) {
+        nameIndexPromise = null;
+        throw error;
+      }
+    })();
+  }
+
+  const candidates = (await nameIndexPromise).get(name.toLowerCase());
+
+  if (!candidates?.length) {
+    return undefined;
+  }
+
+  const owned = (entry: { collectibleHash?: number }): number => (entry.collectibleHash ? 1 : 0);
+
+  return [...candidates].sort((a, b) => compareByTier(a, b) || owned(b) - owned(a))[0].hash;
+}
+
+export interface CatalogEntry {
+  hash: number;
+  name: string;
+  tier?: string;
+  type?: string;
+  element?: string;
+  slot?: string;
+  ammoType?: string;
+  itemType?: number;
+  collectibleHash?: number;
+}
+
+export interface SearchFilters {
+  name?: string;
+  element?: string;
+  type?: string;
+  tier?: string;
+  category?: ItemCategory;
+  limit?: number;
+}
+
+export interface SearchResult {
+  count: number;
+  truncated: boolean;
+  items: CatalogEntry[];
+}
+
+export async function searchItems(filters: SearchFilters): Promise<SearchResult> {
+  if (!catalogPromise) {
+    catalogPromise = (async () => {
+      try {
+        return buildCatalog(await db());
+      } catch (error) {
+        catalogPromise = null;
+        throw error;
+      }
+    })();
+  }
+
+  const catalog = await catalogPromise;
+
+  const name = filters.name?.toLowerCase();
+  const type = filters.type?.toLowerCase();
+  const inCategory = filters.category ? CATEGORY_MATCHES[filters.category] : undefined;
+
+  const matches = catalog.filter((entry) => {
+    if (name && !entry.name.toLowerCase().includes(name)) {
+      return false;
+    }
+
+    if (type && !entry.type?.toLowerCase().includes(type)) {
+      return false;
+    }
+
+    if (filters.element && entry.element !== filters.element) {
+      return false;
+    }
+
+    if (filters.tier && entry.tier !== filters.tier) {
+      return false;
+    }
+
+    if (inCategory && !inCategory(entry)) {
+      return false;
+    }
+
+    return true;
+  });
+
+  const sorted = dedupeByName(matches).sort(
+    (a, b) => compareByTier(a, b) || a.name.localeCompare(b.name),
+  );
+
+  const limit = filters.limit ?? 50;
+
+  return { count: sorted.length, truncated: sorted.length > limit, items: sorted.slice(0, limit) };
+}
+
+const ITEM_TABLE = "DestinyInventoryItemDefinition";
+
+interface ManifestMeta {
+  version: string;
+  mobileWorldContentPaths: Record<string, string>;
+}
+
+interface RawItem {
+  displayProperties?: { name?: string };
+  itemType?: number;
+  itemTypeDisplayName?: string;
+  collectibleHash?: number;
+  defaultDamageType?: number;
+  talentGrid?: { hudDamageType?: number };
+  equippingBlock?: { ammoType?: number };
+  inventory?: { tierTypeName?: string; bucketTypeHash?: number };
+}
+
+interface CollectibleDefinition {
+  sourceString?: string;
+}
+
+interface NameDefinition {
+  displayProperties?: { name?: string };
+  name?: string;
+}
+
+interface StatDefinition {
+  displayProperties?: { name?: string };
+}
+
 const DAMAGE_TYPE: Record<number, Element> = {
   1: "Kinetic",
   2: "Arc",
@@ -105,27 +348,6 @@ const AMMO_TYPE: Record<number, string> = {
   2: "Special",
   3: "Heavy",
 };
-
-// The equip slot a weapon competes for, or undefined for non-weapons.
-export function slotFromBucketHash(bucketHash: number | undefined): string | undefined {
-  return bucketHash === undefined ? undefined : WEAPON_SLOT_BY_BUCKET[bucketHash];
-}
-
-// True for a bucket holding equippable weapons or armor — the gear a player vaults to clear a
-// character. Excludes subclass, postmaster, consumables, and cosmetics, which a plain transfer
-// either can't move or the player keeps on the character.
-export function isGearBucket(bucketHash: number | undefined): boolean {
-  if (bucketHash === undefined) {
-    return false;
-  }
-
-  return WEAPON_SLOT_BY_BUCKET[bucketHash] !== undefined || ARMOR_BUCKETS.has(bucketHash);
-}
-
-// The ammo a weapon draws from, or undefined when None / not a weapon.
-export function ammoTypeLabel(ammoType: number | undefined): string | undefined {
-  return ammoType === undefined ? undefined : AMMO_TYPE[ammoType];
-}
 
 const TIER_RANK: Record<string, number> = {
   Exotic: 4,
@@ -223,12 +445,6 @@ function db() {
   return dbPromise;
 }
 
-// Force the manifest to download and open up front, so a missing or unreadable manifest fails
-// loudly at startup instead of surfacing as a cryptic error on the first gear tool call.
-export async function loadManifest(): Promise<void> {
-  await db();
-}
-
 // The SQLite id column stores each hash as a signed 32-bit integer.
 function toId(hash: number): number {
   return hash | 0;
@@ -249,123 +465,9 @@ function definition<T>(connection: DatabaseSync, table: string, hash: number): T
   return row ? (JSON.parse(row.json) as T) : undefined;
 }
 
-// Every definition is local, so resolving one by hash is a point query rather than a network call.
-export async function getDefinition<T>(entityType: string, hash: number): Promise<T> {
-  return definition<T>(await db(), entityType, hash) ?? ({} as T);
-}
-
-export function itemDefinition(hash: number): Promise<ItemDefinition> {
-  return getDefinition<ItemDefinition>(ITEM_TABLE, hash);
-}
-
-export async function statName(hash: number): Promise<string> {
-  const stat = await getDefinition<StatDefinition>("DestinyStatDefinition", hash);
-
-  return stat.displayProperties?.name ?? `Stat ${hash >>> 0}`;
-}
-
-export async function itemName(hash: number): Promise<string> {
-  const item = definition<RawItem>(await db(), ITEM_TABLE, hash);
-
-  return item?.displayProperties?.name ?? `Unknown item ${hash >>> 0}`;
-}
-
-export async function itemInfo(hash: number): Promise<ItemInfo | undefined> {
-  const item = definition<RawItem>(await db(), ITEM_TABLE, hash);
-  const name = item?.displayProperties?.name;
-
-  if (!name) {
-    return undefined;
-  }
-
-  return {
-    name,
-    tier: item.inventory?.tierTypeName,
-    itemType: item.itemTypeDisplayName || undefined,
-    collectibleHash: item.collectibleHash,
-  };
-}
-
-export async function itemMeta(hash: number): Promise<ItemMeta | undefined> {
-  const item = definition<RawItem>(await db(), ITEM_TABLE, hash);
-  const name = item?.displayProperties?.name;
-
-  if (!name) {
-    return undefined;
-  }
-
-  return {
-    name,
-    rarity: item.inventory?.tierTypeName ?? "Basic",
-    type: item.itemTypeDisplayName ?? "",
-    element: elementOf(item),
-    bucketHash: item.inventory?.bucketTypeHash ?? 0,
-  };
-}
-
-export async function socketCategoryName(hash: number): Promise<string> {
-  const category = await getDefinition<NameDefinition>("DestinySocketCategoryDefinition", hash);
-
-  return category.displayProperties?.name ?? `Socket category ${hash >>> 0}`;
-}
-
-// The candidate plugs for a non-randomized socket (shader, ornament, emblem variant) live in a
-// plug set keyed off the item definition; the live profile component only fills in what's unlocked.
-export async function plugSetItemHashes(plugSetHash: number): Promise<number[]> {
-  const plugSet = await getDefinition<{ reusablePlugItems?: { plugItemHash: number }[] }>(
-    "DestinyPlugSetDefinition",
-    plugSetHash,
-  );
-
-  return (plugSet.reusablePlugItems ?? []).map((plug) => plug.plugItemHash);
-}
-
-export async function artifactName(hash: number): Promise<string> {
-  const artifact = await getDefinition<NameDefinition>("DestinyArtifactDefinition", hash);
-
-  return artifact.displayProperties?.name ?? `Artifact ${hash >>> 0}`;
-}
-
 interface ArtifactPerkDefinition {
   displayProperties?: { name?: string; description?: string };
   perks?: { perkHash: number }[];
-}
-
-// An artifact perk carries its name on the item but its tooltip on a linked sandbox perk.
-export async function artifactPerkText(
-  itemHash: number,
-): Promise<{ name: string; description: string }> {
-  const item = await getDefinition<ArtifactPerkDefinition>(ITEM_TABLE, itemHash);
-  const name = item.displayProperties?.name ?? `Perk ${itemHash >>> 0}`;
-
-  if (item.displayProperties?.description) {
-    return { name, description: item.displayProperties.description };
-  }
-
-  const perkHash = item.perks?.[0]?.perkHash;
-
-  if (perkHash === undefined) {
-    return { name, description: "" };
-  }
-
-  const sandbox = await getDefinition<
-    NameDefinition & { displayProperties?: { description?: string } }
-  >("DestinySandboxPerkDefinition", perkHash);
-
-  return { name, description: sandbox.displayProperties?.description ?? "" };
-}
-
-export async function loadoutName(hash: number): Promise<string> {
-  const loadout = definition<NameDefinition>(await db(), "DestinyLoadoutNameDefinition", hash);
-
-  return loadout?.displayProperties?.name ?? loadout?.name ?? "Unnamed loadout";
-}
-
-export async function collectibleSource(collectibleHash: number): Promise<string | undefined> {
-  return (
-    definition<CollectibleDefinition>(await db(), "DestinyCollectibleDefinition", collectibleHash)
-      ?.sourceString || undefined
-  );
 }
 
 let nameIndexPromise: Promise<
@@ -400,30 +502,6 @@ function buildNameIndex(connection: DatabaseSync) {
   return index;
 }
 
-// Prefer the highest rarity, then a candidate that actually has a Collections source.
-export async function findItemByName(name: string): Promise<number | undefined> {
-  if (!nameIndexPromise) {
-    nameIndexPromise = (async () => {
-      try {
-        return buildNameIndex(await db());
-      } catch (error) {
-        nameIndexPromise = null;
-        throw error;
-      }
-    })();
-  }
-
-  const candidates = (await nameIndexPromise).get(name.toLowerCase());
-
-  if (!candidates?.length) {
-    return undefined;
-  }
-
-  const owned = (entry: { collectibleHash?: number }): number => (entry.collectibleHash ? 1 : 0);
-
-  return [...candidates].sort((a, b) => compareByTier(a, b) || owned(b) - owned(a))[0].hash;
-}
-
 const isShader = (entry: CatalogEntry) => entry.type === "Shader";
 const isEmblem = (entry: CatalogEntry) => entry.type === "Emblem";
 // Universal/transmog ornaments carry no dedicated category hash (just the generic Mods category), so
@@ -438,27 +516,6 @@ const CATEGORY_MATCHES: Record<ItemCategory, (entry: CatalogEntry) => boolean> =
   ornament: isOrnament,
   cosmetic: (entry) => isShader(entry) || isEmblem(entry) || isOrnament(entry),
 };
-
-export interface CatalogEntry {
-  hash: number;
-  name: string;
-  tier?: string;
-  type?: string;
-  element?: string;
-  slot?: string;
-  ammoType?: string;
-  itemType?: number;
-  collectibleHash?: number;
-}
-
-export interface SearchFilters {
-  name?: string;
-  element?: string;
-  type?: string;
-  tier?: string;
-  category?: ItemCategory;
-  limit?: number;
-}
 
 let catalogPromise: Promise<CatalogEntry[]> | null = null;
 
@@ -492,12 +549,6 @@ function buildCatalog(connection: DatabaseSync): CatalogEntry[] {
   return catalog;
 }
 
-export interface SearchResult {
-  count: number;
-  truncated: boolean;
-  items: CatalogEntry[];
-}
-
 // Names repeat across reissues; keep the copy with a Collections source so its hash chains into how_to_acquire.
 function dedupeByName(entries: CatalogEntry[]): CatalogEntry[] {
   const byName = new Map<string, CatalogEntry>();
@@ -511,55 +562,4 @@ function dedupeByName(entries: CatalogEntry[]): CatalogEntry[] {
   }
 
   return [...byName.values()];
-}
-
-export async function searchItems(filters: SearchFilters): Promise<SearchResult> {
-  if (!catalogPromise) {
-    catalogPromise = (async () => {
-      try {
-        return buildCatalog(await db());
-      } catch (error) {
-        catalogPromise = null;
-        throw error;
-      }
-    })();
-  }
-
-  const catalog = await catalogPromise;
-
-  const name = filters.name?.toLowerCase();
-  const type = filters.type?.toLowerCase();
-  const inCategory = filters.category ? CATEGORY_MATCHES[filters.category] : undefined;
-
-  const matches = catalog.filter((entry) => {
-    if (name && !entry.name.toLowerCase().includes(name)) {
-      return false;
-    }
-
-    if (type && !entry.type?.toLowerCase().includes(type)) {
-      return false;
-    }
-
-    if (filters.element && entry.element !== filters.element) {
-      return false;
-    }
-
-    if (filters.tier && entry.tier !== filters.tier) {
-      return false;
-    }
-
-    if (inCategory && !inCategory(entry)) {
-      return false;
-    }
-
-    return true;
-  });
-
-  const sorted = dedupeByName(matches).sort(
-    (a, b) => compareByTier(a, b) || a.name.localeCompare(b.name),
-  );
-
-  const limit = filters.limit ?? 50;
-
-  return { count: sorted.length, truncated: sorted.length > limit, items: sorted.slice(0, limit) };
 }

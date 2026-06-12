@@ -11,6 +11,10 @@ export interface Cert {
   trusted: boolean;
 }
 
+export function resolveCert(): Cert {
+  return mkcertAvailable() ? mkcertCert() : selfsignedCert();
+}
+
 function mkcertAvailable(): boolean {
   try {
     execFileSync("mkcert", ["-CAROOT"], { stdio: "ignore" });
@@ -47,8 +51,4 @@ function selfsignedCert(): Cert {
   const pems = selfsigned.generate([{ name: "commonName", value: "127.0.0.1" }], { days: 365 });
 
   return { key: pems.private, cert: pems.cert, trusted: false };
-}
-
-export function resolveCert(): Cert {
-  return mkcertAvailable() ? mkcertCert() : selfsignedCert();
 }

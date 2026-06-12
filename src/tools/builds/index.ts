@@ -7,46 +7,6 @@ import { renderLoadoutCardText } from "../../format/loadout/index.js";
 import { ownedItemsByHash } from "./logic.js";
 import { loadBuilds, type BuildRecipe, type DimItem } from "./recipes.js";
 
-function json(value: unknown) {
-  return { content: [{ type: "text" as const, text: JSON.stringify(value, null, 2) }] };
-}
-
-type TextBlock = { type: "text"; text: string };
-
-/** One or more text cards followed by the structured payload, so builds read at a glance but stay actionable. */
-function cardsAndJson(cards: TextBlock[], value: unknown) {
-  return { content: [...cards, { type: "text" as const, text: JSON.stringify(value, null, 2) }] };
-}
-
-/** Render a community build's gear (weapons, armor, and subclass) as a loadout text card. */
-async function buildCard(build: BuildRecipe): Promise<TextBlock> {
-  const items = (
-    await Promise.all(build.loadout.equipped.map((item) => itemMeta(item.hash)))
-  ).filter((meta): meta is ItemMeta => meta !== undefined);
-
-  return {
-    type: "text",
-    text: renderLoadoutCardText({
-      title: build.loadout.name.toUpperCase(),
-      className: build.className,
-      subtitle: build.subclass,
-      items,
-    }),
-  };
-}
-
-function matches(value: string, filter?: string): boolean {
-  return !filter || value.toLowerCase() === filter.toLowerCase();
-}
-
-async function namesOf(hashes: number[]): Promise<string[]> {
-  return Promise.all(hashes.map((hash) => itemName(hash)));
-}
-
-function subclassItem(build: BuildRecipe): DimItem | undefined {
-  return build.loadout.equipped.find((item) => item.socketOverrides);
-}
-
 export function registerBuildTools(server: McpServer): void {
   server.registerTool(
     "find_builds",
@@ -149,4 +109,44 @@ export function registerBuildTools(server: McpServer): void {
       });
     },
   );
+}
+
+function json(value: unknown) {
+  return { content: [{ type: "text" as const, text: JSON.stringify(value, null, 2) }] };
+}
+
+type TextBlock = { type: "text"; text: string };
+
+/** One or more text cards followed by the structured payload, so builds read at a glance but stay actionable. */
+function cardsAndJson(cards: TextBlock[], value: unknown) {
+  return { content: [...cards, { type: "text" as const, text: JSON.stringify(value, null, 2) }] };
+}
+
+/** Render a community build's gear (weapons, armor, and subclass) as a loadout text card. */
+async function buildCard(build: BuildRecipe): Promise<TextBlock> {
+  const items = (
+    await Promise.all(build.loadout.equipped.map((item) => itemMeta(item.hash)))
+  ).filter((meta): meta is ItemMeta => meta !== undefined);
+
+  return {
+    type: "text",
+    text: renderLoadoutCardText({
+      title: build.loadout.name.toUpperCase(),
+      className: build.className,
+      subtitle: build.subclass,
+      items,
+    }),
+  };
+}
+
+function matches(value: string, filter?: string): boolean {
+  return !filter || value.toLowerCase() === filter.toLowerCase();
+}
+
+async function namesOf(hashes: number[]): Promise<string[]> {
+  return Promise.all(hashes.map((hash) => itemName(hash)));
+}
+
+function subclassItem(build: BuildRecipe): DimItem | undefined {
+  return build.loadout.equipped.find((item) => item.socketOverrides);
 }

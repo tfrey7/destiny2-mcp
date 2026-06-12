@@ -56,10 +56,6 @@ export interface DestinyLoadout {
   items: { itemInstanceId: string; plugItemHashes: number[] }[];
 }
 
-interface ItemBucket {
-  items: DestinyItem[];
-}
-
 export interface ArtifactPerk {
   itemHash: number;
   isActive: boolean;
@@ -98,10 +94,6 @@ export interface ReusablePlug {
   enabled?: boolean;
 }
 
-interface PlugSets {
-  data?: { plugs?: Record<string, ReusablePlug[]> };
-}
-
 export interface ProfileResponse {
   characters?: { data?: Record<string, DestinyCharacter> };
   characterEquipment?: { data?: Record<string, ItemBucket> };
@@ -122,17 +114,6 @@ export interface ProfileResponse {
     reusablePlugs?: { data?: Record<string, { plugs?: Record<string, ReusablePlug[]> }> };
   };
 }
-
-interface MembershipsResponse {
-  primaryMembershipId?: string;
-  destinyMemberships: {
-    membershipId: string;
-    membershipType: number;
-    crossSaveOverride: number;
-  }[];
-}
-
-let cachedMembership: Membership | null = null;
 
 export async function getPrimaryMembership(): Promise<Membership> {
   if (cachedMembership) {
@@ -171,3 +152,22 @@ export async function getProfile(components: number[]): Promise<ProfileResponse>
     `/Destiny2/${membershipType}/Profile/${destinyMembershipId}/?components=${query}`,
   );
 }
+
+interface ItemBucket {
+  items: DestinyItem[];
+}
+
+interface PlugSets {
+  data?: { plugs?: Record<string, ReusablePlug[]> };
+}
+
+interface MembershipsResponse {
+  primaryMembershipId?: string;
+  destinyMemberships: {
+    membershipId: string;
+    membershipType: number;
+    crossSaveOverride: number;
+  }[];
+}
+
+let cachedMembership: Membership | null = null;

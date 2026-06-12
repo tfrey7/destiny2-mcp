@@ -5,17 +5,6 @@ import { resolveCert } from "./certs.js";
 import { AUTHORIZE_URL, CALLBACK_PORT, credentials, REDIRECT_URI } from "./config.js";
 import { exchangeCode } from "../bungie/auth.js";
 
-function openBrowser(url: string): void {
-  const opener =
-    process.platform === "darwin" ? "open" : process.platform === "win32" ? "start" : "xdg-open";
-
-  exec(`${opener} "${url}"`);
-}
-
-function reply(body: string): string {
-  return `<html><head><meta charset="utf-8"></head><body style="font-family:sans-serif;padding:2rem">${body}</body></html>`;
-}
-
 // Runs the full browser OAuth round-trip and persists the tokens. Logs to stderr only, never stdout,
 // so it is safe to call from inside the MCP stdio server (stdout is the protocol channel there).
 export async function runLogin(): Promise<void> {
@@ -78,4 +67,15 @@ export async function runLogin(): Promise<void> {
       openBrowser(authorizeUrl);
     });
   });
+}
+
+function openBrowser(url: string): void {
+  const opener =
+    process.platform === "darwin" ? "open" : process.platform === "win32" ? "start" : "xdg-open";
+
+  exec(`${opener} "${url}"`);
+}
+
+function reply(body: string): string {
+  return `<html><head><meta charset="utf-8"></head><body style="font-family:sans-serif;padding:2rem">${body}</body></html>`;
 }
