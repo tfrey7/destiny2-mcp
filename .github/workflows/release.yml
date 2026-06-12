@@ -1,0 +1,43 @@
+name: Release
+
+# Cut a release by pushing a tag that matches package.json's version, e.g.:
+#   npm version patch        # bumps package.json + creates the vX.Y.Z tag
+#   git push --follow-tags
+# This builds the .mcpb and attaches it to the GitHub Release for that tag.
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write # create the release and upload the .mcpb asset
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24 # matches .nvmrc; node:sqlite requires >=24
+          cache: npm
+
+      - run: npm ci
+
+      # The tag must match package.json's version, since that version is what gets
+      # stamped into the manifest and the artifact filename.
+      - name: Verify tag matches package.json version
+        run: |
+          PKG_VERSION="v$(node -p "require('./package.json').version")"
+          if [ "$PKG_VERSION" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json version $PKG_VERSION" >&2
+            exit 1
+          fi
+
+      - run: npm run pack:mcpb
+
+      - name: Publish .mcpb to the GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create "$GITHUB_REF_NAME" release/destiny2-mcp-*.mcpb --generate-notes

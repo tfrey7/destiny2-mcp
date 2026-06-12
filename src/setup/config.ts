@@ -33,9 +33,9 @@ export function credentials() {
 // model (see docs/oauth-mcpb-findings.md). These are *app* credentials, not per-user; env vars
 // override them so local dev reads from .env and the real values are pasted in only at bundle time.
 const BAKED_IN = {
-  apiKey: "",
-  clientId: "",
-  clientSecret: "",
+  apiKey: "4325eb7894a543c6a69b3b5a37b441b2",
+  clientId: "52705",
+  clientSecret: "jH0e4rC0MN96utuh8i4hvUEqOvuoRuKxh76DYm.AlWk",
 };
 
 function credential(name: keyof typeof BAKED_IN, envName: string): string {

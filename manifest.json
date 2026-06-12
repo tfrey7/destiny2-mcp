@@ -1,0 +1,29 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/mcpb/main/schemas/mcpb-manifest-v0.4.schema.json",
+  "manifest_version": "0.4",
+  "name": "destiny2-mcp",
+  "display_name": "Destiny 2",
+  "version": "1.0.0",
+  "description": "Inspect your Destiny 2 gear, craft builds, and equip loadouts via the Bungie.net API.",
+  "long_description": "An MCP server for Destiny 2. Reads your characters, inventory, and item rolls from Bungie.net; serves curated build knowledge; finds and imports builds; and equips gear and loadouts. Authenticate once with the `login` tool (opens a browser); tokens are stored locally in `~/.destiny2-mcp`.",
+  "author": {
+    "name": "tfrey7"
+  },
+  "server": {
+    "type": "node",
+    "entry_point": "server/dist/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/dist/index.js"]
+    }
+  },
+  "tools_generated": true,
+  "keywords": ["destiny", "destiny2", "bungie", "gaming"],
+  "compatibility": {
+    "claude_desktop": ">=1.0.0",
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "node": ">=24"
+    }
+  }
+}

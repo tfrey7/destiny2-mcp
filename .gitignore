@@ -12,6 +12,9 @@ yarn-error.log*
 
 /dist
 
+# MCPB build artifacts (staging tree + packed .mcpb)
+/release
+
 # Secrets — never commit
 .env
 oauth.txt
