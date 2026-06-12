@@ -47,6 +47,13 @@ export interface ItemDefinition {
   // masterwork plug from a mod or shader; investmentStats carry the stat bonuses it grants.
   plug?: { plugCategoryIdentifier?: string };
   investmentStats?: { statTypeHash: number; value: number }[];
+  // The sandbox perks an item confers. For subclass aspects and fragments the rules text lives here,
+  // not on the item's own displayProperties — see plugDescription.
+  perks?: { perkHash: number }[];
+}
+
+interface SandboxPerkDefinition {
+  displayProperties?: { description?: string };
 }
 
 export interface SetPerk {
@@ -123,6 +130,30 @@ export async function gearTierFromPlugs(plugHashes: number[]): Promise<number | 
 
 export function itemDefinition(hash: number): Promise<ItemDefinition> {
   return getDefinition<ItemDefinition>(ITEM_TABLE, hash);
+}
+
+// The rules text for a plug. Subclass aspects and fragments leave their own displayProperties.description
+// empty and carry the text on a linked sandbox perk instead, so fall back to the first perk that has one.
+export async function plugDescription(definition: ItemDefinition): Promise<string> {
+  const own = definition.displayProperties?.description;
+
+  if (own) {
+    return own;
+  }
+
+  for (const { perkHash } of definition.perks ?? []) {
+    const perk = await getDefinition<SandboxPerkDefinition>(
+      "DestinySandboxPerkDefinition",
+      perkHash,
+    );
+    const description = perk.displayProperties?.description;
+
+    if (description) {
+      return description;
+    }
+  }
+
+  return "";
 }
 
 export async function statName(hash: number): Promise<string> {

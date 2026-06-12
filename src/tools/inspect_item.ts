@@ -5,6 +5,7 @@ import {
   equipableItemSet,
   gearTierFromPlugs,
   itemDefinition,
+  plugDescription,
   slotFromBucketHash,
   statName,
 } from "../bungie/manifest.js";
@@ -92,19 +93,23 @@ async function describePerks(
   plugHashes: number[],
 ): Promise<{ name: string; description: string }[]> {
   const definitions = await Promise.all(plugHashes.map((hash) => itemDefinition(hash)));
+  const described = await Promise.all(
+    definitions.map(async (definition) => ({
+      name: definition.displayProperties?.name,
+      description: await plugDescription(definition),
+    })),
+  );
 
   const seen = new Set<string>();
   const perks: { name: string; description: string }[] = [];
 
-  for (const definition of definitions) {
-    const name = definition.displayProperties?.name;
-
+  for (const { name, description } of described) {
     if (!name || seen.has(name)) {
       continue;
     }
 
     seen.add(name);
-    perks.push({ name, description: definition.displayProperties?.description ?? "" });
+    perks.push({ name, description });
   }
 
   return perks;
@@ -141,9 +146,10 @@ async function describeItem(
     tier: definition.inventory?.tierTypeName,
     slot: slotFromBucketHash(definition.inventory?.bucketTypeHash),
     ammoType: ammoTypeLabel(definition.equippingBlock?.ammoType),
-    // For a plug (a perk, trait, or mod) the item's own description IS the mechanic; surface it. Gear
-    // has only flavor text here, which the per-socket `perks` already cover, so leave it off.
-    description: definition.plug ? definition.displayProperties?.description : undefined,
+    // For a plug (a perk, trait, or mod) the item's own description IS the mechanic; surface it —
+    // following the sandbox-perk link for aspects/fragments, whose own description is blank. Gear has
+    // only flavor text here, which the per-socket `perks` already cover, so leave it off.
+    description: definition.plug ? await plugDescription(definition) : undefined,
     set,
     perks,
     stats: namedStats,

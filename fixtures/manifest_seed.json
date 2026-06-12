@@ -27,7 +27,7 @@
       "isAdept": false,
       "screenshot": "/common/destiny2_content/screenshots/347366834.jpg",
       "itemTypeDisplayName": "Hand Cannon",
-      "flavorText": "\"Folding was never an option.\" —Cayde-6",
+      "flavorText": "\"Folding was never an option.\" \u2014Cayde-6",
       "uiItemDisplayStyle": "",
       "itemTypeAndTierDisplayName": "Exotic Hand Cannon",
       "displaySource": "",
@@ -1080,7 +1080,7 @@
       "isAdept": false,
       "screenshot": "/common/destiny2_content/screenshots/943320520.jpg",
       "itemTypeDisplayName": "Helmet",
-      "flavorText": "\"He walked out into the demon light. But at the end he was brighter.\" —Paean to Saint-14",
+      "flavorText": "\"He walked out into the demon light. But at the end he was brighter.\" \u2014Paean to Saint-14",
       "uiItemDisplayStyle": "",
       "itemTypeAndTierDisplayName": "Exotic Helmet",
       "displaySource": "",
@@ -2672,7 +2672,7 @@
       "isAdept": false,
       "screenshot": "/common/destiny2_content/screenshots/1363886209.jpg",
       "itemTypeDisplayName": "Rocket Launcher",
-      "flavorText": "“If there is beauty in destruction, why not also in its delivery?” — Feizel Crux",
+      "flavorText": "\u201cIf there is beauty in destruction, why not also in its delivery?\u201d \u2014 Feizel Crux",
       "uiItemDisplayStyle": "",
       "itemTypeAndTierDisplayName": "Exotic Rocket Launcher",
       "displaySource": "",
@@ -5813,7 +5813,7 @@
       "isAdept": false,
       "screenshot": "/common/destiny2_content/screenshots/2907129557.jpg",
       "itemTypeDisplayName": "Hand Cannon",
-      "flavorText": "\"Can't outrun the sunrise.\" —Liu Feng",
+      "flavorText": "\"Can't outrun the sunrise.\" \u2014Liu Feng",
       "uiItemDisplayStyle": "",
       "itemTypeAndTierDisplayName": "Exotic Hand Cannon",
       "displaySource": "",
@@ -7414,7 +7414,7 @@
       "isAdept": false,
       "screenshot": "/common/destiny2_content/screenshots/3211806999.jpg",
       "itemTypeDisplayName": "Sniper Rifle",
-      "flavorText": "\"Shame. Guilt. Fear. We all bear them. Gather your regrets, purge them as best you can. Let your enemies feel the weight of your burdens.\" —Ada-1",
+      "flavorText": "\"Shame. Guilt. Fear. We all bear them. Gather your regrets, purge them as best you can. Let your enemies feel the weight of your burdens.\" \u2014Ada-1",
       "uiItemDisplayStyle": "",
       "itemTypeAndTierDisplayName": "Exotic Sniper Rifle",
       "displaySource": "",
@@ -7930,7 +7930,7 @@
       },
       "tooltipNotifications": [
         {
-          "displayString": "These trait columns can be enhanced once requirements have been met:\n\n• To upgrade left column traits, Tier 2 weapon enhancements are required.\n• To upgrade right column traits, Tier 3 weapon enhancements are required.",
+          "displayString": "These trait columns can be enhanced once requirements have been met:\n\n\u2022 To upgrade left column traits, Tier 2 weapon enhancements are required.\n\u2022 To upgrade right column traits, Tier 3 weapon enhancements are required.",
           "displayStyle": "ui_display_style_crafting"
         }
       ],
@@ -10309,6 +10309,15 @@
       "index": 11820,
       "redacted": false,
       "blacklisted": false
+    }
+  },
+  {
+    "table": "DestinySandboxPerkDefinition",
+    "hash": 3438846199,
+    "json": {
+      "displayProperties": {
+        "description": "Overcharge your grenade, making it deadlier and more effective. Grants an additional grenade charge."
+      }
     }
   }
 ]
