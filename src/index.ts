@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { loadManifest } from "./bungie/manifest.js";
+import { loadManifest } from "./bungie/manifest_db.js";
 import { registerKnowledgeResources, registerKnowledgeTools } from "./knowledge/index.js";
 import { registerTools } from "./tools/index.js";
 

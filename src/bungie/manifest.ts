@@ -1,11 +1,5 @@
-import { existsSync } from "node:fs";
-import { mkdir, writeFile } from "node:fs/promises";
-import { join } from "node:path";
-import AdmZip from "adm-zip";
-import { DatabaseSync, type StatementSync } from "node:sqlite";
-import { MANIFEST_DIR } from "../setup/config.js";
 import type { Element, ItemCategory } from "../schemas.js";
-import { bungieFetch } from "./client.js";
+import { allDefinitions, findDefinition, getDefinition } from "./manifest_db.js";
 
 export interface ItemInfo {
   name: string;
@@ -67,17 +61,6 @@ export function ammoTypeLabel(ammoType: number | undefined): string | undefined 
   return ammoType === undefined ? undefined : AMMO_TYPE[ammoType];
 }
 
-// Force the manifest to download and open up front, so a missing or unreadable manifest fails
-// loudly at startup instead of surfacing as a cryptic error on the first gear tool call.
-export async function loadManifest(): Promise<void> {
-  await db();
-}
-
-// Every definition is local, so resolving one by hash is a point query rather than a network call.
-export async function getDefinition<T>(entityType: string, hash: number): Promise<T> {
-  return definition<T>(await db(), entityType, hash) ?? ({} as T);
-}
-
 export function itemDefinition(hash: number): Promise<ItemDefinition> {
   return getDefinition<ItemDefinition>(ITEM_TABLE, hash);
 }
@@ -89,13 +72,13 @@ export async function statName(hash: number): Promise<string> {
 }
 
 export async function itemName(hash: number): Promise<string> {
-  const item = definition<RawItem>(await db(), ITEM_TABLE, hash);
+  const item = await findDefinition<RawItem>(ITEM_TABLE, hash);
 
   return item?.displayProperties?.name ?? `Unknown item ${hash >>> 0}`;
 }
 
 export async function itemInfo(hash: number): Promise<ItemInfo | undefined> {
-  const item = definition<RawItem>(await db(), ITEM_TABLE, hash);
+  const item = await findDefinition<RawItem>(ITEM_TABLE, hash);
   const name = item?.displayProperties?.name;
 
   if (!name) {
@@ -111,7 +94,7 @@ export async function itemInfo(hash: number): Promise<ItemInfo | undefined> {
 }
 
 export async function itemMeta(hash: number): Promise<ItemMeta | undefined> {
-  const item = definition<RawItem>(await db(), ITEM_TABLE, hash);
+  const item = await findDefinition<RawItem>(ITEM_TABLE, hash);
   const name = item?.displayProperties?.name;
 
   if (!name) {
@@ -175,16 +158,18 @@ export async function artifactPerkText(
 }
 
 export async function loadoutName(hash: number): Promise<string> {
-  const loadout = definition<NameDefinition>(await db(), "DestinyLoadoutNameDefinition", hash);
+  const loadout = await findDefinition<NameDefinition>("DestinyLoadoutNameDefinition", hash);
 
   return loadout?.displayProperties?.name ?? loadout?.name ?? "Unnamed loadout";
 }
 
 export async function collectibleSource(collectibleHash: number): Promise<string | undefined> {
-  return (
-    definition<CollectibleDefinition>(await db(), "DestinyCollectibleDefinition", collectibleHash)
-      ?.sourceString || undefined
+  const collectible = await findDefinition<CollectibleDefinition>(
+    "DestinyCollectibleDefinition",
+    collectibleHash,
   );
+
+  return collectible?.sourceString || undefined;
 }
 
 // Prefer the highest rarity, then a candidate that actually has a Collections source.
@@ -192,7 +177,7 @@ export async function findItemByName(name: string): Promise<number | undefined> 
   if (!nameIndexPromise) {
     nameIndexPromise = (async () => {
       try {
-        return buildNameIndex(await db());
+        return buildNameIndex();
       } catch (error) {
         nameIndexPromise = null;
         throw error;
@@ -249,7 +234,7 @@ export async function searchItems(
   if (!catalogPromise) {
     catalogPromise = (async () => {
       try {
-        return buildCatalog(await db());
+        return buildCatalog();
       } catch (error) {
         catalogPromise = null;
         throw error;
@@ -301,11 +286,6 @@ export async function searchItems(
 }
 
 const ITEM_TABLE = "DestinyInventoryItemDefinition";
-
-interface ManifestMeta {
-  version: string;
-  mobileWorldContentPaths: Record<string, string>;
-}
 
 interface RawItem {
   displayProperties?: { name?: string };
@@ -382,100 +362,6 @@ function elementOf(item: RawItem): string | undefined {
   );
 }
 
-let metaPromise: Promise<{ versionDir: string; mobilePath: string }> | null = null;
-
-function meta() {
-  if (!metaPromise) {
-    metaPromise = (async () => {
-      try {
-        const data = await bungieFetch<ManifestMeta>("/Destiny2/Manifest/", { auth: false });
-
-        return {
-          versionDir: join(MANIFEST_DIR, data.version),
-          mobilePath: data.mobileWorldContentPaths.en,
-        };
-      } catch (error) {
-        // Don't memoize a failed fetch — let the next caller retry rather than poisoning the cache.
-        metaPromise = null;
-        throw error;
-      }
-    })();
-  }
-
-  return metaPromise;
-}
-
-// Bungie ships the manifest as a zipped SQLite database; download and unpack it once per
-// version so every definition is queryable by hash without holding the table in memory.
-async function ensureDatabaseFile(versionDir: string, mobilePath: string): Promise<string> {
-  const dbPath = join(versionDir, "world.sqlite");
-
-  if (existsSync(dbPath)) {
-    return dbPath;
-  }
-
-  const response = await fetch(`https://www.bungie.net${mobilePath}`);
-
-  if (!response.ok) {
-    throw new Error(`[destiny2-mcp] Failed to download manifest database (${response.status})`);
-  }
-
-  const archive = new AdmZip(Buffer.from(await response.arrayBuffer()));
-  const [entry] = archive.getEntries();
-
-  await mkdir(versionDir, { recursive: true });
-  await writeFile(dbPath, entry.getData());
-  return dbPath;
-}
-
-let dbPromise: Promise<DatabaseSync> | null = null;
-
-function db() {
-  if (!dbPromise) {
-    dbPromise = (async () => {
-      try {
-        // An explicit database path skips the version lookup, letting tests and offline runs read a
-        // local manifest without the network round-trip to /Destiny2/Manifest/.
-        const override = process.env.DESTINY2_MANIFEST_DB;
-
-        if (override) {
-          return new DatabaseSync(override, { readOnly: true });
-        }
-
-        const { versionDir, mobilePath } = await meta();
-        const dbPath = await ensureDatabaseFile(versionDir, mobilePath);
-
-        return new DatabaseSync(dbPath, { readOnly: true });
-      } catch (error) {
-        dbPromise = null;
-        throw error;
-      }
-    })();
-  }
-
-  return dbPromise;
-}
-
-// The SQLite id column stores each hash as a signed 32-bit integer.
-function toId(hash: number): number {
-  return hash | 0;
-}
-
-const statements = new Map<string, StatementSync>();
-
-function definition<T>(connection: DatabaseSync, table: string, hash: number): T | undefined {
-  let statement = statements.get(table);
-
-  if (!statement) {
-    statement = connection.prepare(`SELECT json FROM ${table} WHERE id = ?`);
-    statements.set(table, statement);
-  }
-
-  const row = statement.get(toId(hash)) as { json: string } | undefined;
-
-  return row ? (JSON.parse(row.json) as T) : undefined;
-}
-
 interface ArtifactPerkDefinition {
   displayProperties?: { name?: string; description?: string };
   perks?: { perkHash: number }[];
@@ -487,13 +373,11 @@ let nameIndexPromise: Promise<
 
 // Resolving a name to a hash means scanning the whole item table once; cache the index for
 // the process lifetime. Names repeat across rarities and reissues, so keep every candidate.
-function buildNameIndex(connection: DatabaseSync) {
+async function buildNameIndex() {
   const index = new Map<string, { hash: number; tier?: string; collectibleHash?: number }[]>();
-  const rows = connection.prepare(`SELECT id, json FROM ${ITEM_TABLE}`).iterate();
 
-  for (const { id, json } of rows as IterableIterator<{ id: number; json: string }>) {
-    const item = JSON.parse(json) as RawItem;
-    const name = item.displayProperties?.name;
+  for await (const { hash, def } of allDefinitions<RawItem>(ITEM_TABLE)) {
+    const name = def.displayProperties?.name;
 
     if (!name) {
       continue;
@@ -503,9 +387,9 @@ function buildNameIndex(connection: DatabaseSync) {
     const candidates = index.get(key) ?? [];
 
     candidates.push({
-      hash: id >>> 0,
-      tier: item.inventory?.tierTypeName,
-      collectibleHash: item.collectibleHash,
+      hash,
+      tier: def.inventory?.tierTypeName,
+      collectibleHash: def.collectibleHash,
     });
     index.set(key, candidates);
   }
@@ -532,28 +416,26 @@ let catalogPromise: Promise<CatalogEntry[]> | null = null;
 
 // Searching by attribute means scanning the whole item table once; cache the catalog for the
 // process lifetime, mirroring the name index. Skip rows without a display name (dummies, redacted).
-function buildCatalog(connection: DatabaseSync): CatalogEntry[] {
+async function buildCatalog(): Promise<CatalogEntry[]> {
   const catalog: CatalogEntry[] = [];
-  const rows = connection.prepare(`SELECT id, json FROM ${ITEM_TABLE}`).iterate();
 
-  for (const { id, json } of rows as IterableIterator<{ id: number; json: string }>) {
-    const item = JSON.parse(json) as RawItem;
-    const name = item.displayProperties?.name;
+  for await (const { hash, def } of allDefinitions<RawItem>(ITEM_TABLE)) {
+    const name = def.displayProperties?.name;
 
     if (!name) {
       continue;
     }
 
     catalog.push({
-      hash: id >>> 0,
+      hash,
       name,
-      tier: item.inventory?.tierTypeName,
-      type: item.itemTypeDisplayName || undefined,
-      element: elementOf(item),
-      slot: slotFromBucketHash(item.inventory?.bucketTypeHash),
-      ammoType: ammoTypeLabel(item.equippingBlock?.ammoType),
-      itemType: item.itemType,
-      collectibleHash: item.collectibleHash,
+      tier: def.inventory?.tierTypeName,
+      type: def.itemTypeDisplayName || undefined,
+      element: elementOf(def),
+      slot: slotFromBucketHash(def.inventory?.bucketTypeHash),
+      ammoType: ammoTypeLabel(def.equippingBlock?.ammoType),
+      itemType: def.itemType,
+      collectibleHash: def.collectibleHash,
     });
   }
 
