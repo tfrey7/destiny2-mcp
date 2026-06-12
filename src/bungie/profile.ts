@@ -110,6 +110,9 @@ export interface ProfileResponse {
   characterProgressions?: { data?: Record<string, { seasonalArtifact?: SeasonalArtifact }> };
   profileInventory?: { data?: ItemBucket };
   profileCollectibles?: { data?: { collectibles?: Record<string, { state: number }> } };
+  characterCollectibles?: {
+    data?: Record<string, { collectibles?: Record<string, { state: number }> }>;
+  };
   profilePlugSets?: PlugSets;
   characterPlugSets?: { data?: Record<string, { plugs?: Record<string, ReusablePlug[]> }> };
   itemComponents?: {

@@ -1,6 +1,6 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { acquisitionFor, ownedCollectibles } from "../bungie/acquisition.js";
+import { acquisitionFor, ownedGear } from "../bungie/acquisition.js";
 import { findItemByName } from "../bungie/manifest.js";
 import { json } from "./response.js";
 
@@ -13,7 +13,7 @@ export function registerHowToAcquire(server: McpServer): void {
       inputSchema: { items: z.array(z.string()).min(1) },
     },
     async ({ items }) => {
-      const owned = await ownedCollectibles();
+      const owned = await ownedGear();
       const result = await Promise.all(
         items.map(async (name) => {
           const hash = await findItemByName(name);
