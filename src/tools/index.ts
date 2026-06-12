@@ -5,6 +5,7 @@ import { registerEquipItems } from "./equip_items.js";
 import { registerEquipLoadout } from "./equip_loadout.js";
 import { registerGetArtifact } from "./get_artifact.js";
 import { registerGetEquipped } from "./get_equipped.js";
+import { registerGetTriumphs } from "./get_triumphs.js";
 import { registerHowToAcquire } from "./how_to_acquire.js";
 import { registerInsertPlug } from "./insert_plug.js";
 import { registerInspectItem } from "./inspect_item.js";
@@ -15,6 +16,7 @@ import { registerListLoadouts } from "./list_loadouts.js";
 import { registerLogin } from "./login.js";
 import { registerLogout } from "./logout.js";
 import { registerSearchItems } from "./search_items.js";
+import { registerSearchRecords } from "./search_records.js";
 import { registerShowArtifact } from "./show_artifact.js";
 import { registerShowEquipped } from "./show_equipped.js";
 import { registerShowLoadout } from "./show_loadout.js";
@@ -39,6 +41,8 @@ export function registerTools(server: McpServer): void {
   registerSearchItems(server);
   registerGetArtifact(server);
   registerShowArtifact(server);
+  registerGetTriumphs(server);
+  registerSearchRecords(server);
 
   registerEquipLoadout(server);
   registerSnapshotLoadout(server);
