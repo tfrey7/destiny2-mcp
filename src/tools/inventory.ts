@@ -1,12 +1,15 @@
 import {
+  categoryOf,
   gearTierFromPlugs,
   isArmorBucket,
+  isPostmaster,
   itemMeta,
   itemName,
   itemSetName,
   slotFromBucketHash,
 } from "../bungie/manifest.js";
 import { type DestinyItem, type ProfileResponse } from "../bungie/profile.js";
+import type { ItemCategory } from "../schemas.js";
 
 export function instanceMap(profile: ProfileResponse): Map<string, number> {
   const map = new Map<string, number>();
@@ -57,9 +60,13 @@ export interface InventoryItem {
   slot?: string;
   element?: string;
   type?: string;
+  category?: ItemCategory;
   tier?: string;
   gearTier?: number;
   setName?: string;
+  // Set only when the item is sitting in the Postmaster — uncollected mail, not equippable or
+  // transferable until pulled. Undefined for normal on-character or vault inventory.
+  inPostmaster?: boolean;
 }
 
 // Carries the manifest attributes (element/type/tier/set) that list_inventory filters and projects
@@ -85,10 +92,13 @@ export async function inventoryItems(
         slot: slotFromBucketHash(meta?.bucketHash),
         element: meta?.element,
         type: meta?.type || undefined,
+        category: meta ? categoryOf(meta) : undefined,
         // "Basic" is the manifest default for unranked junk; drop it so the field stays signal.
         tier: meta?.rarity && meta.rarity !== "Basic" ? meta.rarity : undefined,
         gearTier: plugs ? await gearTierFromPlugs(plugs) : undefined,
         setName: meta?.setHash ? await itemSetName(meta.setHash) : undefined,
+        // The live bucket — not the definition's home bucket — is what reveals an item is in the inbox.
+        inPostmaster: isPostmaster(item.bucketHash) ? true : undefined,
       };
     }),
   );

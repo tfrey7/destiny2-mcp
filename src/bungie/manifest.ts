@@ -12,6 +12,9 @@ export interface ItemMeta {
   name: string;
   rarity: string;
   type: string;
+  // The numeric DestinyItemType (3 = weapon, 2 = armor, …); the coarse category classifier keys off
+  // it, the way searchItems does, so weapon/armor can't drift between the two tools.
+  itemType?: number;
   element?: string;
   bucketHash: number;
   // The armor set this piece belongs to, if any. Set bonuses live on the set, not the piece.
@@ -77,6 +80,11 @@ export function isGearBucket(bucketHash: number | undefined): boolean {
 // per-instance socket walk to armor and spares it the weapons/ghosts/ships that can never carry one.
 export function isArmorBucket(bucketHash: number | undefined): boolean {
   return bucketHash !== undefined && ARMOR_BUCKETS.has(bucketHash);
+}
+
+// True when an item's live bucket is the Postmaster — i.e. it's uncollected mail, not on-person gear.
+export function isPostmaster(bucketHash: number | undefined): boolean {
+  return bucketHash === POSTMASTER_BUCKET;
 }
 
 // The ammo a weapon draws from, or undefined when None / not a weapon.
@@ -157,6 +165,7 @@ export async function itemMeta(hash: number): Promise<ItemMeta | undefined> {
     name,
     rarity: item.inventory?.tierTypeName ?? "Basic",
     type: item.itemTypeDisplayName ?? "",
+    itemType: item.itemType,
     element: elementOf(item),
     bucketHash: item.inventory?.bucketTypeHash ?? 0,
     setHash: item.equippingBlock?.equipableItemSetHash || undefined,
@@ -348,7 +357,6 @@ export async function searchItems(
   const name = filters.name?.toLowerCase();
   const type = filters.type?.toLowerCase();
   const set = filters.set?.toLowerCase();
-  const inCategory = filters.category ? CATEGORY_MATCHES[filters.category] : undefined;
   const setNameOf = (entry: CatalogEntry) =>
     entry.setHash ? setNames.get(entry.setHash) : undefined;
 
@@ -373,7 +381,7 @@ export async function searchItems(
       return false;
     }
 
-    if (inCategory && !inCategory(entry)) {
+    if (filters.category && !inCategoryGroup(entry, filters.category)) {
       return false;
     }
 
@@ -452,6 +460,11 @@ const WEAPON_SLOT_BY_BUCKET: Record<number, string> = {
 // legs, class item). With the three weapon buckets above, these are the buckets holding gear that
 // transfers freely between a character and the vault — unlike subclass, postmaster, or cosmetic buckets.
 const ARMOR_BUCKETS = new Set([3448274439, 3551918588, 14239492, 20886954, 1585787867]);
+
+// The Lost Items (Postmaster) bucket. Bungie returns its contents inside CharacterInventories, so an
+// item's *current* bucket — not its definition's home bucket — is the only signal that it's sitting in
+// the inbox rather than the player's actual loadout. Such items can't be equipped or vaulted directly.
+const POSTMASTER_BUCKET = 215593132;
 
 // DestinyAmmunitionType enum: 0 = None (non-weapon), 1 = Primary, 2 = Special, 3 = Heavy.
 const AMMO_TYPE: Record<number, string> = {
@@ -538,20 +551,64 @@ async function buildNameIndex() {
   return index;
 }
 
-const isShader = (entry: CatalogEntry) => entry.type === "Shader";
-const isEmblem = (entry: CatalogEntry) => entry.type === "Emblem";
+interface Categorizable {
+  itemType?: number;
+  type?: string;
+}
+
 // Universal/transmog ornaments carry no dedicated category hash (just the generic Mods category), so
 // the item type display name ("Weapon Ornament", "Hunter Universal Ornament", …) is the reliable signal.
-const isOrnament = (entry: CatalogEntry) => Boolean(entry.type?.includes("Ornament"));
+const isOrnament = (item: Categorizable) => Boolean(item.type?.includes("Ornament"));
 
-const CATEGORY_MATCHES: Record<ItemCategory, (entry: CatalogEntry) => boolean> = {
-  weapon: (entry) => entry.itemType === 3,
-  armor: (entry) => entry.itemType === 2,
-  shader: isShader,
-  emblem: isEmblem,
-  ornament: isOrnament,
-  cosmetic: (entry) => isShader(entry) || isEmblem(entry) || isOrnament(entry),
-};
+// The specific category an item belongs to (never "cosmetic" — that is a query umbrella, not a thing an
+// item is). Weapon/armor key off the numeric DestinyItemType; the cosmetic kinds off the type name.
+export function categoryOf(item: Categorizable): ItemCategory | undefined {
+  if (item.itemType === 3) {
+    return "weapon";
+  }
+
+  if (item.itemType === 2) {
+    return "armor";
+  }
+
+  if (item.type === "Shader") {
+    return "shader";
+  }
+
+  if (item.type === "Emblem") {
+    return "emblem";
+  }
+
+  if (isOrnament(item)) {
+    return "ornament";
+  }
+
+  // Weapon/armor perks, enhanced perks, origin traits, and intrinsic frames are all plug items whose
+  // type name carries "Trait" or "Intrinsic" — the reliable signal, since they share itemType 19 with
+  // shaders, emotes, and mods. Excludes the noisier "…Perk" kinds (artifact/clan/seasonal/deprecated).
+  if (item.type && (item.type.includes("Trait") || item.type.includes("Intrinsic"))) {
+    return "perk";
+  }
+
+  return undefined;
+}
+
+// Whether a resolved category satisfies a requested filter category, expanding the "cosmetic" umbrella
+// to its member kinds. The single source of truth for that umbrella, so the two tools can't diverge.
+export function categoryInGroup(
+  category: ItemCategory | undefined,
+  requested: ItemCategory,
+): boolean {
+  if (requested === "cosmetic") {
+    return category === "shader" || category === "emblem" || category === "ornament";
+  }
+
+  return category === requested;
+}
+
+export function inCategoryGroup(item: Categorizable, requested: ItemCategory): boolean {
+  return categoryInGroup(categoryOf(item), requested);
+}
 
 let catalogPromise: Promise<CatalogEntry[]> | null = null;
 

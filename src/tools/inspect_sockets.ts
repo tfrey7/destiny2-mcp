@@ -66,7 +66,14 @@ export function registerInspectSockets(server: McpServer): void {
             const entry = entries[index];
             const categoryHash = categoryHashes.get(index);
             const currentHash = live.plugHash ?? entry?.singleInitialItemHash;
-            const allHashes = await availablePlugHashes(index, livePlugs, entry, plugSets);
+
+            // A socket can be visible yet disabled — a fragment slot past the capacity the equipped
+            // aspects grant, or a mod socket lacking energy. Nothing can go in until it's enabled, so
+            // report no insertable plugs; offering them invites a rejected insert_plug.
+            const enabled = live.isEnabled !== false;
+            const allHashes = enabled
+              ? await availablePlugHashes(index, livePlugs, entry, plugSets)
+              : [];
             const cap = socketIndex === undefined ? PLUGS_PER_SOCKET : allHashes.length;
             const available = await Promise.all(allHashes.slice(0, cap).map(plugView));
 
@@ -74,6 +81,7 @@ export function registerInspectSockets(server: McpServer): void {
               socketIndex: index,
               category: categoryHash ? await socketCategoryName(categoryHash) : undefined,
               current: currentHash ? await plugView(currentHash) : undefined,
+              ...(enabled ? {} : { enabled: false }),
               ...(available.length ? { available } : {}),
               ...(allHashes.length > available.length
                 ? { moreAvailable: allHashes.length - available.length }

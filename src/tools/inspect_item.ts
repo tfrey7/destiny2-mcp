@@ -17,7 +17,7 @@ export function registerInspectItem(server: McpServer): void {
     "inspect_item",
     {
       description:
-        "Inspect a single item's mechanics: its perks and mods with current in-game descriptions, named stats, element, rarity tier, power, gear tier (the 1-5 Edge of Fate quality scale, armor only — only resolved for an owned instance), and armor set with its set-bonus perks. Pass an itemInstanceId (from list_inventory / get_equipped) to read the actual rolled perks on that copy — including a subclass's equipped aspects and fragments. Pass an itemHash for an item you don't own (its intrinsic and default perks). This is the source of truth for reasoning about builds and synergies.",
+        "Inspect a single item's mechanics: its perks and mods with current in-game descriptions, named stats, element, rarity tier, power, gear tier (the 1-5 Edge of Fate quality scale, armor only — only resolved for an owned instance), and armor set with its set-bonus perks. Pass an itemInstanceId (from list_inventory / get_equipped) to read the actual rolled perks on that copy — including a subclass's equipped aspects and fragments. Pass an itemHash for an item you don't own (its intrinsic and default perks). For a perk, trait, or mod itemHash (resolve one by name with search_items category:perk), this returns that plug's own description — what the perk actually does. This is the source of truth for reasoning about builds and synergies.",
       inputSchema: {
         itemInstanceId: z.string().optional(),
         itemHash: z.number().int().optional(),
@@ -46,7 +46,12 @@ export function registerInspectItem(server: McpServer): void {
         const sockets = profile.itemComponents?.sockets?.data?.[itemInstanceId]?.sockets ?? [];
         const stats = profile.itemComponents?.stats?.data?.[itemInstanceId]?.stats ?? {};
         const plugHashes = sockets
-          .filter((socket) => socket.isVisible !== false && socket.plugHash !== undefined)
+          .filter(
+            (socket) =>
+              socket.isVisible !== false &&
+              socket.isEnabled !== false &&
+              socket.plugHash !== undefined,
+          )
           .map((socket) => socket.plugHash as number);
 
         const [described, gearTier] = await Promise.all([
@@ -136,6 +141,9 @@ async function describeItem(
     tier: definition.inventory?.tierTypeName,
     slot: slotFromBucketHash(definition.inventory?.bucketTypeHash),
     ammoType: ammoTypeLabel(definition.equippingBlock?.ammoType),
+    // For a plug (a perk, trait, or mod) the item's own description IS the mechanic; surface it. Gear
+    // has only flavor text here, which the per-socket `perks` already cover, so leave it off.
+    description: definition.plug ? definition.displayProperties?.description : undefined,
     set,
     perks,
     stats: namedStats,

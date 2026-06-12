@@ -40,5 +40,6 @@ export const itemCategorySchema = z.enum([
   "emblem",
   "ornament",
   "cosmetic",
+  "perk",
 ]);
 export type ItemCategory = z.infer<typeof itemCategorySchema>;

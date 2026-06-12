@@ -118,6 +118,13 @@ function locate(profile: ProfileResponse, itemId: string): Location | undefined 
   return vaultItem ? { item: vaultItem } : undefined;
 }
 
+// The definition hash for an owned instance, read from the live profile. transfer_item needs this hash
+// but a caller rarely has it: the manifest's catalog hash can differ from a reissued instance's, so
+// resolving from the profile (the way equip_item does) is the only reliable source.
+export function itemHashFor(profile: ProfileResponse, itemId: string): number | undefined {
+  return locate(profile, itemId)?.item.itemHash;
+}
+
 // A non-equipped copy of the same item already sitting in the character's inventory. Copies share a
 // definition hash and therefore a bucket, so one of these is exactly what occupies a full destination.
 function inventoryDuplicate(

@@ -7911,6 +7911,127 @@
   },
   {
     "table": "DestinyInventoryItemDefinition",
+    "hash": 3425386926,
+    "json": {
+      "displayProperties": {
+        "description": "Kills with this weapon temporarily grant increased damage. Stacks 3x.",
+        "name": "Rampage",
+        "icon": "/common/destiny2_content/icons/8976ead57430e4f5f8af1b3005de4f83.png",
+        "iconHash": 2114560282,
+        "iconSequences": [
+          {
+            "frames": ["/common/destiny2_content/icons/8976ead57430e4f5f8af1b3005de4f83.png"]
+          },
+          {
+            "frames": ["/common/destiny2_content/icons/ce365e8aad150ff355fc07a14ed336df.png"]
+          }
+        ],
+        "hasIcon": true
+      },
+      "tooltipNotifications": [
+        {
+          "displayString": "These trait columns can be enhanced once requirements have been met:\n\n• To upgrade left column traits, Tier 2 weapon enhancements are required.\n• To upgrade right column traits, Tier 3 weapon enhancements are required.",
+          "displayStyle": "ui_display_style_crafting"
+        }
+      ],
+      "backgroundColor": {
+        "colorHash": 0,
+        "red": 0,
+        "green": 0,
+        "blue": 0,
+        "alpha": 0
+      },
+      "isFeaturedItem": false,
+      "isHolofoil": false,
+      "isAdept": false,
+      "itemTypeDisplayName": "Trait",
+      "flavorText": "",
+      "uiItemDisplayStyle": "",
+      "itemTypeAndTierDisplayName": "Common Trait",
+      "displaySource": "",
+      "tooltipStyle": "build",
+      "action": {
+        "verbName": "Dismantle",
+        "verbDescription": "",
+        "isPositive": false,
+        "requiredCooldownSeconds": 0,
+        "requiredItems": [],
+        "progressionRewards": [],
+        "actionTypeLabel": "shard",
+        "rewardSheetHash": 0,
+        "rewardItemHash": 0,
+        "rewardSiteHash": 0,
+        "requiredCooldownHash": 0,
+        "deleteOnAction": true,
+        "consumeEntireStack": false,
+        "useOnAcquire": false
+      },
+      "inventory": {
+        "maxStackSize": 1,
+        "bucketTypeHash": 1469714392,
+        "recoveryBucketTypeHash": 215593132,
+        "tierTypeHash": 3340296461,
+        "isInstanceItem": false,
+        "nonTransferrableOriginal": false,
+        "tierTypeName": "Common",
+        "tierType": 2,
+        "expirationTooltip": "",
+        "expiredInActivityMessage": "",
+        "expiredInOrbitMessage": "",
+        "suppressExpirationWhenObjectivesComplete": true
+      },
+      "plug": {
+        "insertionRules": [],
+        "plugCategoryIdentifier": "frames",
+        "plugCategoryHash": 7906839,
+        "onActionRecreateSelf": false,
+        "actionRewardSiteHash": 0,
+        "actionRewardItemOverrideHash": 0,
+        "insertionMaterialRequirementHash": 0,
+        "previewItemOverrideHash": 0,
+        "enabledMaterialRequirementHash": 0,
+        "enabledRules": [],
+        "uiPlugLabel": "",
+        "plugStyle": 0,
+        "plugAvailability": 0,
+        "alternateUiPlugLabel": "",
+        "alternatePlugStyle": 0,
+        "isDummyPlug": false,
+        "parentItemOverride": {
+          "additionalEquipRequirementsDisplayStrings": []
+        },
+        "applyStatsToSocketOwnerItem": false
+      },
+      "acquireRewardSiteHash": 0,
+      "acquireUnlockHash": 0,
+      "investmentStats": [],
+      "perks": [
+        {
+          "requirementDisplayString": "",
+          "perkHash": 2763822767,
+          "perkVisibility": 0
+        }
+      ],
+      "allowActions": true,
+      "doesPostmasterPullHaveSideEffects": false,
+      "nonTransferrable": true,
+      "itemCategoryHashes": [3708671066, 610365472, 59],
+      "specialItemType": 0,
+      "itemType": 19,
+      "itemSubType": 0,
+      "classType": 3,
+      "breakerType": 0,
+      "equippable": false,
+      "defaultDamageType": 0,
+      "isWrapper": false,
+      "hash": 3425386926,
+      "index": 4299,
+      "redacted": false,
+      "blacklisted": false
+    }
+  },
+  {
+    "table": "DestinyInventoryItemDefinition",
     "hash": 3628991658,
     "json": {
       "displayProperties": {
@@ -8442,6 +8563,32 @@
       "index": 28425,
       "redacted": false,
       "blacklisted": false
+    }
+  },
+  {
+    "table": "DestinyInventoryItemDefinition",
+    "hash": 3678620846,
+    "json": {
+      "displayProperties": {
+        "description": "",
+        "name": "Sunbracers",
+        "hasIcon": true
+      },
+      "collectibleHash": 4044800495,
+      "itemTypeDisplayName": "Gauntlets",
+      "flavorText": "The light of dawn burns in the hands of the worthy.",
+      "itemTypeAndTierDisplayName": "Exotic Gauntlets",
+      "inventory": {
+        "maxStackSize": 1,
+        "bucketTypeHash": 3551918588,
+        "tierTypeHash": 2759499571,
+        "tierTypeName": "Exotic",
+        "tierType": 6
+      },
+      "classType": 2,
+      "itemType": 2,
+      "itemSubType": 21,
+      "equippable": true
     }
   },
   {
@@ -10050,28 +10197,118 @@
   },
   {
     "table": "DestinyInventoryItemDefinition",
-    "hash": 3678620846,
+    "hash": 3988215619,
     "json": {
       "displayProperties": {
-        "description": "",
-        "name": "Sunbracers",
+        "description": "Damaging an enemy with this weapon has a small chance to reload the magazine and increase movement speed while aiming down sights. Bows receive faster draw speed and swords receive faster charge rate while this perk is active.",
+        "name": "Veist Stinger",
+        "icon": "/common/destiny2_content/icons/74c8d92641cdd221a65ccc0b0d131d45.png",
+        "iconHash": 3988215619,
+        "iconSequences": [
+          {
+            "frames": ["/common/destiny2_content/icons/74c8d92641cdd221a65ccc0b0d131d45.png"]
+          },
+          {
+            "frames": ["/common/destiny2_content/icons/412a49cc3ce4fba057e1080e11152955.png"]
+          }
+        ],
         "hasIcon": true
       },
-      "collectibleHash": 4044800495,
-      "itemTypeDisplayName": "Gauntlets",
-      "flavorText": "The light of dawn burns in the hands of the worthy.",
-      "itemTypeAndTierDisplayName": "Exotic Gauntlets",
+      "tooltipNotifications": [],
+      "backgroundColor": {
+        "colorHash": 0,
+        "red": 0,
+        "green": 0,
+        "blue": 0,
+        "alpha": 0
+      },
+      "isFeaturedItem": false,
+      "isHolofoil": false,
+      "isAdept": false,
+      "itemTypeDisplayName": "Origin Trait",
+      "flavorText": "",
+      "uiItemDisplayStyle": "",
+      "itemTypeAndTierDisplayName": "Common Origin Trait",
+      "displaySource": "",
+      "tooltipStyle": "build",
+      "action": {
+        "verbName": "Dismantle",
+        "verbDescription": "",
+        "isPositive": false,
+        "requiredCooldownSeconds": 0,
+        "requiredItems": [],
+        "progressionRewards": [],
+        "actionTypeLabel": "shard",
+        "rewardSheetHash": 0,
+        "rewardItemHash": 0,
+        "rewardSiteHash": 0,
+        "requiredCooldownHash": 0,
+        "deleteOnAction": true,
+        "consumeEntireStack": false,
+        "useOnAcquire": false
+      },
       "inventory": {
         "maxStackSize": 1,
-        "bucketTypeHash": 3551918588,
-        "tierTypeHash": 2759499571,
-        "tierTypeName": "Exotic",
-        "tierType": 6
+        "bucketTypeHash": 1469714392,
+        "recoveryBucketTypeHash": 215593132,
+        "tierTypeHash": 3340296461,
+        "isInstanceItem": false,
+        "nonTransferrableOriginal": false,
+        "tierTypeName": "Common",
+        "tierType": 2,
+        "expirationTooltip": "",
+        "expiredInActivityMessage": "",
+        "expiredInOrbitMessage": "",
+        "suppressExpirationWhenObjectivesComplete": true
       },
-      "classType": 2,
-      "itemType": 2,
-      "itemSubType": 21,
-      "equippable": true
+      "plug": {
+        "insertionRules": [],
+        "plugCategoryIdentifier": "origins",
+        "plugCategoryHash": 164955586,
+        "onActionRecreateSelf": false,
+        "actionRewardSiteHash": 0,
+        "actionRewardItemOverrideHash": 0,
+        "insertionMaterialRequirementHash": 0,
+        "previewItemOverrideHash": 0,
+        "enabledMaterialRequirementHash": 0,
+        "enabledRules": [],
+        "uiPlugLabel": "",
+        "plugStyle": 0,
+        "plugAvailability": 0,
+        "alternateUiPlugLabel": "",
+        "alternatePlugStyle": 0,
+        "isDummyPlug": false,
+        "parentItemOverride": {
+          "additionalEquipRequirementsDisplayStrings": []
+        },
+        "applyStatsToSocketOwnerItem": false
+      },
+      "acquireRewardSiteHash": 0,
+      "acquireUnlockHash": 0,
+      "investmentStats": [],
+      "perks": [
+        {
+          "requirementDisplayString": "",
+          "perkHash": 1697350647,
+          "perkVisibility": 0
+        }
+      ],
+      "allowActions": true,
+      "doesPostmasterPullHaveSideEffects": false,
+      "nonTransferrable": true,
+      "itemCategoryHashes": [59, 2779167812, 610365472],
+      "specialItemType": 0,
+      "itemType": 19,
+      "itemSubType": 0,
+      "classType": 3,
+      "breakerType": 0,
+      "equippable": false,
+      "defaultDamageType": 0,
+      "isWrapper": false,
+      "hash": 3988215619,
+      "index": 11820,
+      "redacted": false,
+      "blacklisted": false
     }
   }
 ]

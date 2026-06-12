@@ -31,7 +31,13 @@ const CURATED_NAMES = [
   "Celestial Nighthawk",
   "Orpheus Rig",
   "Helm of Saint-14",
+  "Sunbracers",
 ];
+
+// Perks/traits live in a different itemType (19) than gear, so the fixture seeds a couple explicitly to
+// cover the `perk` search category and inspect_item's plug-description path: an origin trait and a classic
+// weapon trait. The base (non-enhanced) copy is chosen so the seeded description is deterministic.
+const CURATED_PERKS = ["Veist Stinger", "Rampage"];
 
 const DAMAGE_TYPE: Record<number, string> = {
   1: "Kinetic",
@@ -101,6 +107,28 @@ function resolveByName(connection: DatabaseSync, name: string): SeedRow | undefi
   return { table: ITEM_TABLE, hash: row.id >>> 0, json: JSON.parse(row.json) };
 }
 
+// Resolve a perk/trait name to its base copy: a plug item (itemType 19) whose type name carries "Trait"
+// or "Intrinsic", preferring the lowest rarity so the enhanced (Uncommon) variant doesn't win.
+function resolvePerkByName(connection: DatabaseSync, name: string): SeedRow | undefined {
+  const row = connection
+    .prepare(
+      `SELECT id, json FROM ${ITEM_TABLE}
+       WHERE lower(json_extract(json, '$.displayProperties.name')) = lower(?)
+         AND json_extract(json, '$.itemType') = 19
+         AND (json_extract(json, '$.itemTypeDisplayName') LIKE '%Trait%'
+              OR json_extract(json, '$.itemTypeDisplayName') LIKE '%Intrinsic%')
+       ORDER BY (json_extract(json, '$.inventory.tierTypeName') = 'Common') DESC, id ASC
+       LIMIT 1`,
+    )
+    .get(name) as { id: number; json: string } | undefined;
+
+  if (!row) {
+    return undefined;
+  }
+
+  return { table: ITEM_TABLE, hash: row.id >>> 0, json: JSON.parse(row.json) };
+}
+
 function summarize(item: SeedRow): string {
   const raw = item.json as RawItem;
   const tier = raw.inventory?.tierTypeName ?? "?";
@@ -124,6 +152,18 @@ async function main(): Promise<void> {
     }
 
     console.log(`[destiny2-mcp] ${summarize(item)} ${name} (${item.hash})`);
+    seed.push(item);
+  }
+
+  for (const name of CURATED_PERKS) {
+    const item = resolvePerkByName(connection, name);
+
+    if (!item) {
+      console.warn(`[destiny2-mcp] Perk not found in manifest: ${name}`);
+      continue;
+    }
+
+    console.log(`[destiny2-mcp] perk    ${name} (${item.hash})`);
     seed.push(item);
   }
 
