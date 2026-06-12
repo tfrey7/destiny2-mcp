@@ -16,7 +16,8 @@ respect, and how to reason when helping a player.
   `scripts/ornaments/build_index.ts`. Every ornament is captioned natively for its own class; a `set`
   stem present in more than one class is flagged `crossClass`, and class-exclusive otherwise.
   `apply_ornament` equips a result on a character's worn armor (slot → equipped piece → ornament socket →
-  unlock check → insert); the shared socket-resolution lives in `src/bungie/sockets.ts`.
+  unlock check → insert), and `apply_ornament_set` applies several at once, skipping any not owned/equippable
+  with a reason; the shared socket-resolution lives in `src/bungie/sockets.ts`.
 - `src/tools/shaders/` — `find_shaders`: color-scheme search ("rusted copper", "dark red and gold").
   Shaders have no screenshot — only a swatch icon — and no applied-to-armor preview exists anywhere, so
   `data/shaders.json` is a vision-captioned palette index (colors/warmth/brightness/finish) keyed by
