@@ -11,7 +11,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "auth": "tsx src/auth-cli.ts",
+    "auth": "tsx src/setup/auth-cli.ts",
     "start": "tsx src/index.ts",
     "scrape:builds": "tsx scripts/scrape-builds.ts"
   },

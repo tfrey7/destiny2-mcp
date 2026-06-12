@@ -3,11 +3,12 @@ import { randomBytes } from "node:crypto";
 import { createServer } from "node:https";
 import { resolveCert } from "./certs.js";
 import { AUTHORIZE_URL, CALLBACK_PORT, credentials, REDIRECT_URI } from "./config.js";
-import { exchangeCode } from "./bungie/auth.js";
+import { exchangeCode } from "../bungie/auth.js";
 
 function openBrowser(url: string): void {
   const opener =
     process.platform === "darwin" ? "open" : process.platform === "win32" ? "start" : "xdg-open";
+
   exec(`${opener} "${url}"`);
 }
 
@@ -25,12 +26,14 @@ async function main(): Promise<void> {
   await new Promise<void>((resolve, reject) => {
     const server = createServer({ key: tls.key, cert: tls.cert }, (request, response) => {
       const url = new URL(request.url ?? "/", REDIRECT_URI);
+
       if (url.pathname !== "/callback") {
         response.writeHead(404).end();
         return;
       }
 
       const code = url.searchParams.get("code");
+
       if (url.searchParams.get("state") !== state || !code) {
         response
           .writeHead(400)

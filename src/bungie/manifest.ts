@@ -3,7 +3,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import AdmZip from "adm-zip";
 import Database from "better-sqlite3";
-import { MANIFEST_DIR } from "../config.js";
+import { MANIFEST_DIR } from "../setup/config.js";
 import { bungieFetch } from "./client.js";
 
 const ITEM_TABLE = "DestinyInventoryItemDefinition";
@@ -148,6 +148,7 @@ function meta() {
   if (!metaPromise) {
     metaPromise = (async () => {
       const data = await bungieFetch<ManifestMeta>("/Destiny2/Manifest/", { auth: false });
+
       return {
         versionDir: join(MANIFEST_DIR, data.version),
         mobilePath: data.mobileWorldContentPaths.en,
@@ -161,17 +162,20 @@ function meta() {
 // version so every definition is queryable by hash without holding the table in memory.
 async function ensureDatabaseFile(versionDir: string, mobilePath: string): Promise<string> {
   const dbPath = join(versionDir, "world.sqlite");
+
   if (existsSync(dbPath)) {
     return dbPath;
   }
 
   const response = await fetch(`https://www.bungie.net${mobilePath}`);
+
   if (!response.ok) {
     throw new Error(`[destiny2-mcp] Failed to download manifest database (${response.status})`);
   }
 
   const archive = new AdmZip(Buffer.from(await response.arrayBuffer()));
   const [entry] = archive.getEntries();
+
   await mkdir(versionDir, { recursive: true });
   await writeFile(dbPath, entry.getData());
   return dbPath;
@@ -184,6 +188,7 @@ function db() {
     dbPromise = (async () => {
       const { versionDir, mobilePath } = await meta();
       const dbPath = await ensureDatabaseFile(versionDir, mobilePath);
+
       return new Database(dbPath, { readonly: true, fileMustExist: true });
     })();
   }
@@ -199,11 +204,13 @@ const statements = new Map<string, Database.Statement>();
 
 function definition<T>(connection: Database.Database, table: string, hash: number): T | undefined {
   let statement = statements.get(table);
+
   if (!statement) {
     statement = connection.prepare(`SELECT json FROM ${table} WHERE id = ?`);
     statements.set(table, statement);
   }
   const row = statement.get(toId(hash)) as { json: string } | undefined;
+
   return row ? (JSON.parse(row.json) as T) : undefined;
 }
 
@@ -218,17 +225,20 @@ export function itemDefinition(hash: number): Promise<ItemDefinition> {
 
 export async function statName(hash: number): Promise<string> {
   const stat = await getDefinition<StatDefinition>("DestinyStatDefinition", hash);
+
   return stat.displayProperties?.name ?? `Stat ${hash >>> 0}`;
 }
 
 export async function itemName(hash: number): Promise<string> {
   const item = definition<RawItem>(await db(), ITEM_TABLE, hash);
+
   return item?.displayProperties?.name ?? `Unknown item ${hash >>> 0}`;
 }
 
 export async function itemInfo(hash: number): Promise<ItemInfo | undefined> {
   const item = definition<RawItem>(await db(), ITEM_TABLE, hash);
   const name = item?.displayProperties?.name;
+
   if (!name) {
     return undefined;
   }
@@ -243,6 +253,7 @@ export async function itemInfo(hash: number): Promise<ItemInfo | undefined> {
 export async function itemMeta(hash: number): Promise<ItemMeta | undefined> {
   const item = definition<RawItem>(await db(), ITEM_TABLE, hash);
   const name = item?.displayProperties?.name;
+
   if (!name) {
     return undefined;
   }
@@ -258,6 +269,7 @@ export async function itemMeta(hash: number): Promise<ItemMeta | undefined> {
 
 export async function socketCategoryName(hash: number): Promise<string> {
   const category = await getDefinition<NameDefinition>("DestinySocketCategoryDefinition", hash);
+
   return category.displayProperties?.name ?? `Socket category ${hash >>> 0}`;
 }
 
@@ -268,11 +280,13 @@ export async function plugSetItemHashes(plugSetHash: number): Promise<number[]> 
     "DestinyPlugSetDefinition",
     plugSetHash,
   );
+
   return (plugSet.reusablePlugItems ?? []).map((plug) => plug.plugItemHash);
 }
 
 export async function artifactName(hash: number): Promise<string> {
   const artifact = await getDefinition<NameDefinition>("DestinyArtifactDefinition", hash);
+
   return artifact.displayProperties?.name ?? `Artifact ${hash >>> 0}`;
 }
 
@@ -287,22 +301,26 @@ export async function artifactPerkText(
 ): Promise<{ name: string; description: string }> {
   const item = await getDefinition<ArtifactPerkDefinition>(ITEM_TABLE, itemHash);
   const name = item.displayProperties?.name ?? `Perk ${itemHash >>> 0}`;
+
   if (item.displayProperties?.description) {
     return { name, description: item.displayProperties.description };
   }
 
   const perkHash = item.perks?.[0]?.perkHash;
+
   if (perkHash === undefined) {
     return { name, description: "" };
   }
   const sandbox = await getDefinition<
     NameDefinition & { displayProperties?: { description?: string } }
   >("DestinySandboxPerkDefinition", perkHash);
+
   return { name, description: sandbox.displayProperties?.description ?? "" };
 }
 
 export async function loadoutName(hash: number): Promise<string> {
   const loadout = definition<NameDefinition>(await db(), "DestinyLoadoutNameDefinition", hash);
+
   return loadout?.displayProperties?.name ?? loadout?.name ?? "Unnamed loadout";
 }
 
@@ -322,15 +340,18 @@ let nameIndexPromise: Promise<
 function buildNameIndex(connection: Database.Database) {
   const index = new Map<string, { hash: number; tier?: string; collectibleHash?: number }[]>();
   const rows = connection.prepare(`SELECT id, json FROM ${ITEM_TABLE}`).iterate();
+
   for (const { id, json } of rows as IterableIterator<{ id: number; json: string }>) {
     const item = JSON.parse(json) as RawItem;
     const name = item.displayProperties?.name;
+
     if (!name) {
       continue;
     }
 
     const key = name.toLowerCase();
     const candidates = index.get(key) ?? [];
+
     candidates.push({
       hash: id >>> 0,
       tier: item.inventory?.tierTypeName,
@@ -347,12 +368,14 @@ export async function findItemByName(name: string): Promise<number | undefined> 
     nameIndexPromise = (async () => buildNameIndex(await db()))();
   }
   const candidates = (await nameIndexPromise).get(name.toLowerCase());
+
   if (!candidates?.length) {
     return undefined;
   }
 
   return [...candidates].sort((a, b) => {
     const tier = (TIER_RANK[b.tier ?? ""] ?? 0) - (TIER_RANK[a.tier ?? ""] ?? 0);
+
     if (tier !== 0) {
       return tier;
     }
@@ -405,9 +428,11 @@ let catalogPromise: Promise<CatalogEntry[]> | null = null;
 function buildCatalog(connection: Database.Database): CatalogEntry[] {
   const catalog: CatalogEntry[] = [];
   const rows = connection.prepare(`SELECT id, json FROM ${ITEM_TABLE}`).iterate();
+
   for (const { id, json } of rows as IterableIterator<{ id: number; json: string }>) {
     const item = JSON.parse(json) as RawItem;
     const name = item.displayProperties?.name;
+
     if (!name) {
       continue;
     }
@@ -436,8 +461,10 @@ export interface SearchResult {
 // Names repeat across reissues; keep the copy with a Collections source so its hash chains into how_to_acquire.
 function dedupeByName(entries: CatalogEntry[]): CatalogEntry[] {
   const byName = new Map<string, CatalogEntry>();
+
   for (const entry of entries) {
     const existing = byName.get(entry.name);
+
     if (!existing || (!existing.collectibleHash && entry.collectibleHash)) {
       byName.set(entry.name, entry);
     }
@@ -476,6 +503,7 @@ export async function searchItems(filters: SearchFilters): Promise<SearchResult>
 
   const sorted = dedupeByName(matches).sort((a, b) => {
     const tier = (TIER_RANK[b.tier ?? ""] ?? 0) - (TIER_RANK[a.tier ?? ""] ?? 0);
+
     if (tier !== 0) {
       return tier;
     }
@@ -483,5 +511,6 @@ export async function searchItems(filters: SearchFilters): Promise<SearchResult>
   });
 
   const limit = filters.limit ?? 50;
+
   return { count: sorted.length, truncated: sorted.length > limit, items: sorted.slice(0, limit) };
 }

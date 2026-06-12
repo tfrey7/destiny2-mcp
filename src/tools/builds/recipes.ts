@@ -1,5 +1,5 @@
 import { readFile } from "node:fs/promises";
-import { BUILDS_FILE } from "../../config.js";
+import { BUILDS_FILE } from "../../setup/config.js";
 
 // The shape DIM's loadout_share API returns. We keep it intact as the canonical, hash-based
 // recipe; socketOverrides on the subclass item encode its super/aspects/fragments/abilities.

@@ -45,6 +45,7 @@ function mkcertCert(): Cert {
 // Fallback for hosts without mkcert: a throwaway cert no one trusts, so the browser warns.
 function selfsignedCert(): Cert {
   const pems = selfsigned.generate([{ name: "commonName", value: "127.0.0.1" }], { days: 365 });
+
   return { key: pems.private, cert: pems.cert, trusted: false };
 }
 

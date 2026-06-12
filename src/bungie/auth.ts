@@ -1,5 +1,5 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { credentials, DATA_DIR, TOKEN_URL, TOKENS_PATH } from "../config.js";
+import { credentials, DATA_DIR, TOKEN_URL, TOKENS_PATH } from "../setup/config.js";
 
 interface StoredTokens {
   accessToken: string;
@@ -34,6 +34,7 @@ async function writeTokens(tokens: StoredTokens): Promise<void> {
 
 function toStored(response: TokenResponse): StoredTokens {
   const now = Date.now();
+
   return {
     accessToken: response.access_token,
     refreshToken: response.refresh_token,
@@ -66,12 +67,14 @@ async function postToken(params: Record<string, string>): Promise<TokenResponse>
 
 export async function exchangeCode(code: string): Promise<StoredTokens> {
   const tokens = toStored(await postToken({ grant_type: "authorization_code", code }));
+
   await writeTokens(tokens);
   return tokens;
 }
 
 export async function getAccessToken(): Promise<string> {
   const tokens = await readTokens();
+
   if (!tokens) {
     throw new Error("[destiny2-mcp] Not authenticated. Run `npm run auth` to log in.");
   }
@@ -87,6 +90,7 @@ export async function getAccessToken(): Promise<string> {
   const refreshed = toStored(
     await postToken({ grant_type: "refresh_token", refresh_token: tokens.refreshToken }),
   );
+
   await writeTokens(refreshed);
   return refreshed.accessToken;
 }
