@@ -229,8 +229,12 @@ export interface SearchFilters {
   type?: string;
   tier?: string;
   category?: ItemCategory;
+  owned?: boolean;
   limit?: number;
 }
+
+// Ownership lives in the player's account, not the manifest, so the caller supplies the lookup.
+export type OwnershipLookup = (entry: { name: string; collectibleHash?: number }) => boolean;
 
 export interface SearchResult {
   count: number;
@@ -238,7 +242,10 @@ export interface SearchResult {
   items: CatalogEntry[];
 }
 
-export async function searchItems(filters: SearchFilters): Promise<SearchResult> {
+export async function searchItems(
+  filters: SearchFilters,
+  isOwned?: OwnershipLookup,
+): Promise<SearchResult> {
   if (!catalogPromise) {
     catalogPromise = (async () => {
       try {
@@ -274,6 +281,10 @@ export async function searchItems(filters: SearchFilters): Promise<SearchResult>
     }
 
     if (inCategory && !inCategory(entry)) {
+      return false;
+    }
+
+    if (filters.owned !== undefined && isOwned && isOwned(entry) !== filters.owned) {
       return false;
     }
 
