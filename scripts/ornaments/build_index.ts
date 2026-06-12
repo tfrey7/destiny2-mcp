@@ -1,22 +1,22 @@
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
-import { homedir } from "node:os";
 import { dirname, join } from "node:path";
-import { DatabaseSync } from "node:sqlite";
 import { fileURLToPath } from "node:url";
 
-// Merges the vision captions produced for Warlock universal ornaments (one JSON file per workflow batch
-// under .cache/ornaments/captions/) with the live manifest, resolving each set's Hunter and Titan
-// counterparts by name stem + slot so a caption can be applied to any class. Writes the committed index
-// the find_ornaments tool reads at runtime.
+// Merges the vision captions for all three classes' universal ornaments (one JSON file per workflow batch
+// under .cache/ornaments/captions/ for Warlock and captions-ht/ for Hunter+Titan) into the committed
+// index the find_ornaments tool reads. Each ornament is captioned natively for its own class; a set is
+// flagged crossClass when its name stem appears for more than one class, and class-exclusive otherwise.
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
-const CAPTIONS_DIR = join(ROOT, "..", "..", ".cache", "ornaments", "captions");
+const CACHE = join(ROOT, "..", "..", ".cache", "ornaments");
+const WARLOCK_CAPTIONS = join(CACHE, "captions");
+const HT_CAPTIONS = join(CACHE, "captions-ht");
+const HT_LIST = join(CACHE, "hunter-titan.json");
 const OUT_FILE = join(ROOT, "..", "..", "data", "ornaments.json");
-const MANIFEST_DIR = join(homedir(), ".destiny2-mcp", "manifest");
-const ITEM_TABLE = "DestinyInventoryItemDefinition";
 
 type Slot = "helmet" | "arms" | "chest" | "legs" | "class";
+type ClassName = "Warlock" | "Hunter" | "Titan";
 
 interface Caption {
   hash: string;
@@ -28,177 +28,97 @@ interface Caption {
 }
 
 interface OrnamentEntry extends Caption {
+  class: ClassName;
   set: string;
-  hunterHash: string | null;
-  titanHash: string | null;
+  crossClass: boolean;
 }
 
-// A set's slot is named with a recognizable noun; the same noun set works for all three classes (the
-// class item differs — Bond / Cloak / Mark — which is itself the signal for the class slot).
-const SLOT_NOUNS: [Slot, RegExp][] = [
-  ["class", /\b(Bond|Cloak|Mark|Wings)\b/i],
-  [
-    "helmet",
-    /\b(Helm|Helmet|Hood|Mask|Cowl|Crown|Cover|Casque|Visage|Hat|Gaze|Crest|Coronet|Diadem|Headpiece|Horns?)\b/i,
-  ],
-  [
-    "arms",
-    /\b(Gauntlets|Grips|Gloves|Wraps|Bracers|Hold|Grasps|Claws|Gauntlet|Mitts|Vambraces|Sleeves|Arms)\b/i,
-  ],
-  [
-    "chest",
-    /\b(Robes|Vest|Plate|Chest|Mantle|Vestments|Shell|Harness|Cuirass|Garb|Tabard|Overcoat|Jacket|Coat|Mail|Robe|Tunic|Raiment)\b/i,
-  ],
-  [
-    "legs",
-    /\b(Legs|Boots|Greaves|Strides|Steps|Treads|Pants|Leggings|Walkers|Hooves|Sandals|Soles|Hightops|Shoes|Legguards|Riders|Skirt)\b/i,
-  ],
+const SLOT_NOUNS: RegExp[] = [
+  /\b(Bond|Cloak|Mark|Wings)\b/i,
+  /\b(Helm|Helmet|Hood|Mask|Cowl|Crown|Cover|Casque|Visage|Hat|Gaze|Crest|Coronet|Diadem|Headpiece|Horns?)\b/i,
+  /\b(Gauntlets|Grips|Gloves|Wraps|Bracers|Hold|Grasps|Claws|Gauntlet|Mitts|Vambraces|Sleeves|Arms)\b/i,
+  /\b(Robes|Vest|Plate|Chest|Mantle|Vestments|Shell|Harness|Cuirass|Garb|Tabard|Overcoat|Jacket|Coat|Mail|Robe|Tunic|Raiment)\b/i,
+  /\b(Legs|Boots|Greaves|Strides|Steps|Treads|Pants|Leggings|Walkers|Hooves|Sandals|Soles|Hightops|Shoes|Legguards|Riders|Skirt)\b/i,
 ];
 
-const slotOf = (name: string): Slot | null => {
-  for (const [slot, pattern] of SLOT_NOUNS) {
-    if (pattern.test(name)) {
-      return slot;
-    }
-  }
-
-  return null;
-};
-
-// Strip the slot noun and possessives so "Aedile's Bond" and "Aedile's Cloak" collapse to the same set
-// key. What remains is the set's distinguishing name, shared across classes.
-const ALL_NOUNS = new RegExp(SLOT_NOUNS.map(([, p]) => p.source).join("|"), "gi");
+// Strip the slot noun, the embedded class word, and possessives so a set's pieces collapse to one key
+// shared across classes ("Deadlands Cover" / "Deadlands Mask" / "Deadlands Helm" -> "deadlands").
+const ALL_NOUNS = new RegExp(SLOT_NOUNS.map((pattern) => pattern.source).join("|"), "gi");
 
 const setKey = (name: string): string =>
   name
     .replace(ALL_NOUNS, " ")
-    .replace(/\b(Warlock|Hunter|Titan)\b/gi, " ") // some sets embed the class in the name
+    .replace(/\b(Warlock|Hunter|Titan)\b/gi, " ")
     .replace(/'s\b/gi, " ")
     .replace(/[^a-z0-9 ]/gi, " ")
     .replace(/\s+/g, " ")
     .trim()
     .toLowerCase();
 
-interface RawItem {
-  displayProperties?: { name?: string };
-  itemTypeDisplayName?: string;
-}
-
-function manifestDatabasePath(): string {
-  if (!existsSync(MANIFEST_DIR)) {
-    throw new Error(
-      `[destiny2-mcp] No manifest at ${MANIFEST_DIR} — run the server once to download it`,
-    );
-  }
-
-  for (const versionDir of readdirSync(MANIFEST_DIR)) {
-    const candidate = join(MANIFEST_DIR, versionDir, "world.sqlite");
-
-    if (existsSync(candidate)) {
-      return candidate;
-    }
-  }
-
-  throw new Error(`[destiny2-mcp] No world.sqlite found under ${MANIFEST_DIR}`);
-}
-
-function loadCaptions(): Caption[] {
+function loadCaptions(dir: string): Caption[] {
   const captions: Caption[] = [];
 
-  for (const file of readdirSync(CAPTIONS_DIR)) {
+  for (const file of readdirSync(dir)) {
     if (!/^batch-\d+\.json$/.test(file)) {
       continue;
     }
 
-    const batch = JSON.parse(readFileSync(join(CAPTIONS_DIR, file), "utf8")) as Caption[];
-
-    captions.push(...batch);
+    captions.push(...(JSON.parse(readFileSync(join(dir, file), "utf8")) as Caption[]));
   }
 
   return captions;
 }
 
-// Index every Hunter / Titan universal ornament by "set key + slot" so a Warlock caption resolves to its
-// counterpart on the other two classes.
-function crossClassIndex(
-  connection: DatabaseSync,
-): Map<string, { Hunter?: string; Titan?: string }> {
-  const index = new Map<string, { Hunter?: string; Titan?: string }>();
-  const rows = connection.prepare(`SELECT id, json FROM ${ITEM_TABLE}`).all() as {
-    id: number;
-    json: string;
-  }[];
+async function main(): Promise<void> {
+  const htClass = new Map(
+    (JSON.parse(readFileSync(HT_LIST, "utf8")) as { hash: string; class: ClassName }[]).map(
+      (item) => [item.hash, item.class],
+    ),
+  );
 
-  for (const row of rows) {
-    const item = JSON.parse(row.json) as RawItem;
-    const type = item.itemTypeDisplayName ?? "";
-    const klass =
-      type === "Hunter Universal Ornament"
-        ? "Hunter"
-        : type === "Titan Universal Ornament"
-          ? "Titan"
-          : null;
+  const tagged: Omit<OrnamentEntry, "crossClass">[] = [];
 
-    if (!klass) {
-      continue;
-    }
-
-    const name = item.displayProperties?.name ?? "";
-    const slot = slotOf(name);
-
-    if (!slot) {
-      continue;
-    }
-
-    const key = `${setKey(name)}|${slot}`;
-    const entry = index.get(key) ?? {};
-
-    entry[klass] = String(row.id >>> 0);
-    index.set(key, entry);
+  for (const caption of loadCaptions(WARLOCK_CAPTIONS)) {
+    tagged.push({ ...caption, class: "Warlock", set: setKey(caption.name) });
   }
 
-  return index;
-}
+  for (const caption of loadCaptions(HT_CAPTIONS)) {
+    const className = htClass.get(caption.hash);
 
-async function main(): Promise<void> {
-  const captions = loadCaptions();
-  const connection = new DatabaseSync(manifestDatabasePath(), { readOnly: true });
-  const crossClass = crossClassIndex(connection);
-
-  connection.close();
-
-  let hunterMatched = 0;
-  let titanMatched = 0;
-
-  const ornaments: OrnamentEntry[] = captions.map((caption) => {
-    const set = setKey(caption.name);
-    const counterpart = crossClass.get(`${set}|${caption.slot}`) ?? {};
-
-    if (counterpart.Hunter) {
-      hunterMatched++;
+    if (className) {
+      tagged.push({ ...caption, class: className, set: setKey(caption.name) });
     }
+  }
 
-    if (counterpart.Titan) {
-      titanMatched++;
-    }
+  const stemClasses = new Map<string, Set<ClassName>>();
 
-    return {
-      ...caption,
-      set,
-      hunterHash: counterpart.Hunter ?? null,
-      titanHash: counterpart.Titan ?? null,
-    };
-  });
+  for (const ornament of tagged) {
+    const classes = stemClasses.get(ornament.set) ?? new Set<ClassName>();
 
-  ornaments.sort((a, b) => a.name.localeCompare(b.name));
+    classes.add(ornament.class);
+    stemClasses.set(ornament.set, classes);
+  }
+
+  const ornaments: OrnamentEntry[] = tagged.map((ornament) => ({
+    ...ornament,
+    crossClass: (stemClasses.get(ornament.set)?.size ?? 1) > 1,
+  }));
+
+  ornaments.sort((a, b) => a.name.localeCompare(b.name) || a.class.localeCompare(b.class));
 
   await mkdir(dirname(OUT_FILE), { recursive: true });
   await writeFile(OUT_FILE, `${JSON.stringify({ ornaments }, null, 2)}\n`);
 
-  console.log(`[destiny2-mcp] Wrote ${ornaments.length} Warlock ornaments to ${OUT_FILE}`);
-  console.log(
-    `[destiny2-mcp] Cross-class: Hunter ${hunterMatched}/${ornaments.length}, Titan ${titanMatched}/${ornaments.length}`,
-  );
+  const byClass: Record<string, number> = {};
+
+  for (const ornament of ornaments) {
+    byClass[ornament.class] = (byClass[ornament.class] ?? 0) + 1;
+  }
+
+  const exclusive = ornaments.filter((ornament) => !ornament.crossClass).length;
+
+  console.log(`[destiny2-mcp] Wrote ${ornaments.length} ornaments to ${OUT_FILE}`, byClass);
+  console.log(`[destiny2-mcp] Class-exclusive entries: ${exclusive}`);
 }
 
 await main();

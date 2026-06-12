@@ -7,13 +7,13 @@ export type OrnamentSlot = "helmet" | "arms" | "chest" | "legs" | "class";
 export interface Ornament {
   hash: string;
   name: string;
+  class: ClassName;
   slot: OrnamentSlot;
   look: string;
   tags: string[];
   themes: string[];
   set: string;
-  hunterHash: string | null;
-  titanHash: string | null;
+  crossClass: boolean;
 }
 
 export interface OrnamentMatch {
@@ -22,6 +22,7 @@ export interface OrnamentMatch {
   look: string;
   themes: string[];
   tags: string[];
+  crossClass: boolean;
   plugItemHash: number;
   score: number;
 }
@@ -38,12 +39,6 @@ export async function loadOrnaments(): Promise<Ornament[]> {
   return cache;
 }
 
-async function readOrnaments(): Promise<Ornament[]> {
-  const raw = await readFile(ORNAMENTS_FILE, "utf8");
-
-  return (JSON.parse(raw) as OrnamentsFile).ornaments;
-}
-
 export async function findOrnaments(
   query: string,
   options: { className: ClassName; slot?: OrnamentSlot; limit: number },
@@ -53,13 +48,11 @@ export async function findOrnaments(
   const matches: OrnamentMatch[] = [];
 
   for (const ornament of ornaments) {
-    if (options.slot && ornament.slot !== options.slot) {
+    if (ornament.class !== options.className) {
       continue;
     }
 
-    const plugHash = hashForClass(ornament, options.className);
-
-    if (!plugHash) {
+    if (options.slot && ornament.slot !== options.slot) {
       continue;
     }
 
@@ -75,7 +68,8 @@ export async function findOrnaments(
       look: ornament.look,
       themes: ornament.themes,
       tags: ornament.tags,
-      plugItemHash: Number(plugHash),
+      crossClass: ornament.crossClass,
+      plugItemHash: Number(ornament.hash),
       score: points,
     });
   }
@@ -85,18 +79,10 @@ export async function findOrnaments(
   return matches.slice(0, options.limit);
 }
 
-// Captions were generated on the Warlock model; a set's look carries to Hunter/Titan only where the set
-// name matched at build time, so those classes return null for unmatched sets rather than a wrong piece.
-function hashForClass(ornament: Ornament, className: ClassName): string | null {
-  if (className === "Warlock") {
-    return ornament.hash;
-  }
+async function readOrnaments(): Promise<Ornament[]> {
+  const raw = await readFile(ORNAMENTS_FILE, "utf8");
 
-  if (className === "Hunter") {
-    return ornament.hunterHash;
-  }
-
-  return ornament.titanHash;
+  return (JSON.parse(raw) as OrnamentsFile).ornaments;
 }
 
 // Themes are the deliberate aesthetic labels, so they weigh heaviest; tags next; a bare mention in the
