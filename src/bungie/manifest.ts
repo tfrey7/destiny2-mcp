@@ -135,6 +135,11 @@ const TIER_RANK: Record<string, number> = {
   Common: 0,
 };
 
+// Comparator: higher tier first. Returns 0 for equal tiers so callers can chain a tiebreaker with `||`.
+function compareByTier(a: { tier?: string }, b: { tier?: string }): number {
+  return (TIER_RANK[b.tier ?? ""] ?? 0) - (TIER_RANK[a.tier ?? ""] ?? 0);
+}
+
 // Weapons carry their element in defaultDamageType; subclasses leave it 0 and use talentGrid.hudDamageType.
 function elementOf(item: RawItem): string | undefined {
   return (
@@ -406,15 +411,9 @@ export async function findItemByName(name: string): Promise<number | undefined> 
     return undefined;
   }
 
-  return [...candidates].sort((a, b) => {
-    const tier = (TIER_RANK[b.tier ?? ""] ?? 0) - (TIER_RANK[a.tier ?? ""] ?? 0);
+  const owned = (entry: { collectibleHash?: number }): number => (entry.collectibleHash ? 1 : 0);
 
-    if (tier !== 0) {
-      return tier;
-    }
-
-    return Number(Boolean(b.collectibleHash)) - Number(Boolean(a.collectibleHash));
-  })[0].hash;
+  return [...candidates].sort((a, b) => compareByTier(a, b) || owned(b) - owned(a))[0].hash;
 }
 
 const isShader = (entry: CatalogEntry) => entry.type === "Shader";
@@ -548,15 +547,9 @@ export async function searchItems(filters: SearchFilters): Promise<SearchResult>
     return true;
   });
 
-  const sorted = dedupeByName(matches).sort((a, b) => {
-    const tier = (TIER_RANK[b.tier ?? ""] ?? 0) - (TIER_RANK[a.tier ?? ""] ?? 0);
-
-    if (tier !== 0) {
-      return tier;
-    }
-
-    return a.name.localeCompare(b.name);
-  });
+  const sorted = dedupeByName(matches).sort(
+    (a, b) => compareByTier(a, b) || a.name.localeCompare(b.name),
+  );
 
   const limit = filters.limit ?? 50;
 

@@ -1,8 +1,18 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { itemMeta, type ItemMeta } from "../bungie/manifest.js";
-import { ClassType, Component, getProfile } from "../bungie/profile.js";
+import { ClassType, Component, type DestinyCharacter, getProfile } from "../bungie/profile.js";
 import { card, json } from "./response.js";
+
+function mostRecentlyPlayed(
+  characters: Record<string, DestinyCharacter>,
+): DestinyCharacter | undefined {
+  return Object.values(characters).reduce<DestinyCharacter | undefined>(
+    (latest, character) =>
+      character.dateLastPlayed > (latest?.dateLastPlayed ?? "") ? character : latest,
+    undefined,
+  );
+}
 
 export function registerShowEquipped(server: McpServer): void {
   server.registerTool(
@@ -18,9 +28,7 @@ export function registerShowEquipped(server: McpServer): void {
 
       const id =
         characterId ??
-        Object.values(profile.characters?.data ?? {}).sort((a, b) =>
-          (b.dateLastPlayed ?? "").localeCompare(a.dateLastPlayed ?? ""),
-        )[0]?.characterId ??
+        mostRecentlyPlayed(profile.characters?.data ?? {})?.characterId ??
         Object.keys(equipment)[0];
       const bucket = id ? equipment[id] : undefined;
 
