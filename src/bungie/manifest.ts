@@ -1,5 +1,5 @@
 import type { Element, ItemCategory } from "../schemas.js";
-import { allDefinitions, findDefinition, getDefinition } from "./manifest_db.js";
+import { allDefinitions, findDefinition, getDefinition, onManifestSwap } from "./manifest_db.js";
 
 export interface ItemInfo {
   name: string;
@@ -554,6 +554,11 @@ const CATEGORY_MATCHES: Record<ItemCategory, (entry: CatalogEntry) => boolean> =
 };
 
 let catalogPromise: Promise<CatalogEntry[]> | null = null;
+
+onManifestSwap(() => {
+  nameIndexPromise = null;
+  catalogPromise = null;
+});
 
 // Searching by attribute means scanning the whole item table once; cache the catalog for the
 // process lifetime, mirroring the name index. Skip rows without a display name (dummies, redacted).
