@@ -16,6 +16,7 @@ import { registerListInventory } from "./list_inventory.js";
 import { registerListLoadouts } from "./list_loadouts.js";
 import { registerLogin } from "./login.js";
 import { registerLogout } from "./logout.js";
+import { registerFindOrnaments } from "./ornaments/index.js";
 import { registerPullFromPostmaster } from "./pull_from_postmaster.js";
 import { registerSearchItems } from "./search_items.js";
 import { registerSearchRecords } from "./search_records.js";
@@ -41,6 +42,7 @@ export function registerTools(server: McpServer): void {
   registerInspectSockets(server);
   registerHowToAcquire(server);
   registerSearchItems(server);
+  registerFindOrnaments(server);
   registerGetArtifact(server);
   registerShowArtifact(server);
   registerGetTriumphs(server);

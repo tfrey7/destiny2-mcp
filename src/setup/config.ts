@@ -21,6 +21,8 @@ const packageRoot = join(fileURLToPath(import.meta.url), "..", "..", "..");
 
 export const BUILDS_FILE = join(packageRoot, "data", "builds.json");
 
+export const ORNAMENTS_FILE = join(packageRoot, "data", "ornaments.json");
+
 export function credentials() {
   return {
     apiKey: credential("apiKey", "BUNGIE_API_KEY"),

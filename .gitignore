@@ -20,3 +20,6 @@ yarn-error.log*
 oauth.txt
 
 .DS_Store
+
+# Ornament enrichment cache (downloaded screenshots + intermediate captions)
+.cache/

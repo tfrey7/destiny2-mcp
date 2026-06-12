@@ -10,6 +10,11 @@ respect, and how to reason when helping a player.
 - `src/tools/read.ts` / `write.ts` — the MCP tools. Read tools project manifest + profile data; write
   tools equip/transfer gear.
 - `src/tools/builds/` — `find_builds` / `import_build` logic and synergy recipes.
+- `src/tools/ornaments/` — `find_ornaments`: aesthetic search ("cowboy", "robot") over universal armor
+  ornaments. The manifest has no visual signal (every ornament's text is identical boilerplate), so
+  `data/ornaments.json` is a vision-captioned index keyed by item hash — regenerate it with
+  `scripts/ornaments/build_index.ts`. Captioned on the Warlock model; Hunter/Titan resolve by set-name
+  match where it exists.
 - `src/bungie/` — the API client, OAuth, the SQLite manifest reader (`manifest.ts`), and profile/account
   fetches. `manifest.ts` is the source of truth for an item's `slot`, `element`, `tier`, `ammoType`.
 - `src/knowledge/` — `get_build_knowledge`. Curated, qualitative build knowledge as code
