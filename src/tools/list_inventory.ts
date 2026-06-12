@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { ClassType, Component, getProfile } from "../bungie/profile.js";
+import { elementSchema, tierSchema } from "../schemas.js";
 import { inventoryItems, type InventoryItem } from "./inventory.js";
 import { json } from "./response.js";
 
@@ -13,11 +14,9 @@ export function registerListInventory(server: McpServer): void {
       inputSchema: {
         characterId: z.string().optional(),
         search: z.string().optional(),
-        element: z
-          .enum(["Kinetic", "Arc", "Solar", "Void", "Stasis", "Strand", "Prismatic"])
-          .optional(),
+        element: elementSchema.optional(),
         type: z.string().optional(),
-        tier: z.enum(["Exotic", "Legendary", "Rare", "Uncommon", "Common"]).optional(),
+        tier: tierSchema.optional(),
         summary: z.boolean().optional(),
         limit: z.number().int().min(1).max(500).optional(),
       },

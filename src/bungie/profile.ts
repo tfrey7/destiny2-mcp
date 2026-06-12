@@ -1,3 +1,4 @@
+import type { ClassName, Element } from "../schemas.js";
 import { bungieFetch } from "./client.js";
 
 export const Component = {
@@ -14,13 +15,13 @@ export const Component = {
   Collectibles: 800,
 } as const;
 
-export const ClassType: Record<number, string> = {
+export const ClassType: Record<number, ClassName> = {
   0: "Titan",
   1: "Hunter",
   2: "Warlock",
 };
 
-export const DamageType: Record<number, string> = {
+export const DamageType: Record<number, Element> = {
   1: "Kinetic",
   2: "Arc",
   3: "Solar",

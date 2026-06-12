@@ -4,6 +4,7 @@ import { join } from "node:path";
 import AdmZip from "adm-zip";
 import { DatabaseSync, type StatementSync } from "node:sqlite";
 import { MANIFEST_DIR } from "../setup/config.js";
+import type { Element, ItemCategory } from "../schemas.js";
 import { bungieFetch } from "./client.js";
 
 const ITEM_TABLE = "DestinyInventoryItemDefinition";
@@ -76,7 +77,7 @@ export interface ItemDefinition {
   stats?: { stats?: Record<string, { value?: number }> };
 }
 
-const DAMAGE_TYPE: Record<number, string> = {
+const DAMAGE_TYPE: Record<number, Element> = {
   1: "Kinetic",
   2: "Arc",
   3: "Solar",
@@ -415,8 +416,6 @@ export async function findItemByName(name: string): Promise<number | undefined> 
     return Number(Boolean(b.collectibleHash)) - Number(Boolean(a.collectibleHash));
   })[0].hash;
 }
-
-export type ItemCategory = "weapon" | "armor" | "shader" | "emblem" | "ornament" | "cosmetic";
 
 const isShader = (entry: CatalogEntry) => entry.type === "Shader";
 const isEmblem = (entry: CatalogEntry) => entry.type === "Emblem";

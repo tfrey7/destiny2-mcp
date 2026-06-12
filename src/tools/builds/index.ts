@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { itemMeta, itemName, loadoutName, type ItemMeta } from "../../bungie/manifest.js";
 import { Component, getProfile } from "../../bungie/profile.js";
+import { classNameSchema, subclassSchema } from "../../schemas.js";
 import { renderLoadoutCardText } from "../../format/loadout/index.js";
 import { ownedItemsByHash } from "./logic.js";
 import { loadBuilds, type BuildRecipe, type DimItem } from "./recipes.js";
@@ -53,8 +54,8 @@ export function registerBuildTools(server: McpServer): void {
       description:
         "Search popular community Destiny 2 builds scraped from builders.gg (DIM loadouts). Optionally filter by class and subclass. Renders each build as a text loadout card, plus a shareId index to pass to import_build.",
       inputSchema: {
-        className: z.enum(["Titan", "Hunter", "Warlock"]).optional(),
-        subclass: z.enum(["Prismatic", "Solar", "Arc", "Void", "Stasis", "Strand"]).optional(),
+        className: classNameSchema.optional(),
+        subclass: subclassSchema.optional(),
       },
     },
     async ({ className, subclass }) => {
