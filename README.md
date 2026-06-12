@@ -82,7 +82,7 @@ Then call `list_characters` and `list_loadouts`.
 **Build-crafting:** `get_build_knowledge`, `find_builds`, `import_build`
 **Visual cards:** `show_equipped`, `show_loadout`
 **Write:** `equip_loadout`, `equip_item`, `equip_items`, `transfer_item`,
-`snapshot_loadout`, `update_loadout_identifiers`
+`pull_from_postmaster`, `snapshot_loadout`, `update_loadout_identifiers`
 
 `inspect_item` reads one item's real rolled perks, mods, stats, and element with
 current in-game descriptions (works on a subclass too). `get_build_knowledge`
