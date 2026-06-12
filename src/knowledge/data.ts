@@ -24,7 +24,12 @@ Procedure:
    adds an extra cast). The exotic is usually what turns a fair loop into an oppressive one.
 4. Pick weapons whose perks either feed the verb (apply it on hit) or exploit it (bonus damage
    into debuffed/affected targets). Match the weapon's element to the subclass for surge mods.
-5. Close the loop with armor mods (Armor Charge economy, ability regen, orb generation).
+5. Close the loop with mods — and retune BOTH the weapon and the armor mods to the loadout; never
+   inherit whatever was slotted before. Armor mods drive the Armor Charge economy, ability regen, and
+   orb generation; weapon mods and the masterwork tune handling, reload, and ammo. When a loadout's
+   elements or weapons change, the old mods usually no longer fit — an ammo-generation, scavenger, or
+   surge mod for an element you no longer carry is dead weight (e.g. Void ammo mods with no Void weapon
+   equipped). Audit every mod slot and match it to the engine, elements, and abilities actually running.
 
 Always ground the build in reality: list_inventory to see what the player owns, and inspect_item
 on candidate weapons/armor and on the equipped subclass to read the actual rolled perks, aspects,
@@ -53,6 +58,12 @@ Exotic limit — at most ONE exotic weapon AND ONE exotic armor piece equipped a
 are independent: an exotic armor piece does not block an exotic weapon. Before recommending a weapon for
 a slot, check whether an exotic weapon is already equipped in ANY weapon slot; if one is, the pick must
 be Legendary unless the player is willing to drop the existing exotic.
+The limit is also a FLOOR, not just a ceiling: a finished loadout should always fill both — one exotic
+weapon AND one exotic armor piece. Those two slots are free power with no opportunity cost against each
+other, so leaving either empty is a strict waste. Never present a completed loadout with an exotic slot
+empty; if a build has exotic armor but a Legendary in every weapon slot, recommend an exotic weapon to
+fill it (matching the subclass element where possible), and likewise add exotic armor if only the weapon
+slot is used.
 
 Ammo types — Primary (infinite), Special (scarce), Heavy. Power-slot weapons are Heavy; Kinetic and
 Energy weapons are Primary or Special. Running Special in both Kinetic and Energy makes them compete for
