@@ -23,6 +23,8 @@ export const BUILDS_FILE = join(packageRoot, "data", "builds.json");
 
 export const ORNAMENTS_FILE = join(packageRoot, "data", "ornaments.json");
 
+export const SHADERS_FILE = join(packageRoot, "data", "shaders.json");
+
 export function credentials() {
   return {
     apiKey: credential("apiKey", "BUNGIE_API_KEY"),

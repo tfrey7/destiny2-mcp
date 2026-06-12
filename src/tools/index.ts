@@ -19,6 +19,7 @@ import { registerLogout } from "./logout.js";
 import { registerFindOrnaments } from "./ornaments/index.js";
 import { registerPullFromPostmaster } from "./pull_from_postmaster.js";
 import { registerSearchItems } from "./search_items.js";
+import { registerFindShaders } from "./shaders/index.js";
 import { registerSearchRecords } from "./search_records.js";
 import { registerShowArtifact } from "./show_artifact.js";
 import { registerShowEquipped } from "./show_equipped.js";
@@ -43,6 +44,7 @@ export function registerTools(server: McpServer): void {
   registerHowToAcquire(server);
   registerSearchItems(server);
   registerFindOrnaments(server);
+  registerFindShaders(server);
   registerGetArtifact(server);
   registerShowArtifact(server);
   registerGetTriumphs(server);
