@@ -47,8 +47,14 @@ function mkcertCert(): Cert {
 }
 
 // Fallback for hosts without mkcert: a throwaway cert no one trusts, so the browser warns.
+// keySize must be >= 2048: selfsigned defaults to a 1024-bit RSA key, which OpenSSL 3.x (bundled
+// with current Node, notably on Windows) rejects at its default security level — the TLS handshake
+// dies before the browser opens with "error:0A00018F:SSL routines::ee key too small".
 function selfsignedCert(): Cert {
-  const pems = selfsigned.generate([{ name: "commonName", value: "127.0.0.1" }], { days: 365 });
+  const pems = selfsigned.generate([{ name: "commonName", value: "127.0.0.1" }], {
+    days: 365,
+    keySize: 2048,
+  });
 
   return { key: pems.private, cert: pems.cert, trusted: false };
 }
