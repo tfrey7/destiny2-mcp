@@ -9,10 +9,13 @@ export const Component = {
   CharacterEquipment: 205,
   CharacterLoadouts: 206,
   ItemInstances: 300,
+  ItemObjectives: 301,
   ItemStats: 304,
   ItemSockets: 305,
   ItemReusablePlugs: 310,
+  PresentationNodes: 700,
   Collectibles: 800,
+  Records: 900,
 } as const;
 
 export const ClassType: Record<number, ClassName> = {
@@ -88,6 +91,46 @@ export interface ItemSocket {
   isVisible?: boolean;
 }
 
+// Per-objective live progress, shared by records (component 900), presentation nodes (700), and
+// instanced item objectives (301). `complete` and `progress`/`completionValue` are authoritative;
+// the objective's human label comes from DestinyObjectiveDefinition, not this payload.
+export interface ObjectiveProgress {
+  objectiveHash: number;
+  progress?: number;
+  completionValue?: number;
+  complete?: boolean;
+  visible?: boolean;
+}
+
+// A Triumph's live state: a DestinyRecordState bitmask plus its objectives' progress.
+export interface RecordComponentState {
+  state: number;
+  objectives?: ObjectiveProgress[];
+  intervalsRedeemedCount?: number;
+}
+
+// A records component, whether account-wide (profileRecords) or per-character (characterRecords).
+// The account-wide copy also carries the running Triumph score and the root nodes of the seal and
+// category trees.
+export interface RecordsComponent {
+  records?: Record<string, RecordComponentState>;
+  score?: number;
+  activeScore?: number;
+  legacyScore?: number;
+  lifetimeScore?: number;
+  recordCategoriesRootNodeHash?: number;
+  recordSealsRootNodeHash?: number;
+}
+
+// A presentation node's live rollup: how many of its leaves are complete (progressValue /
+// completionValue), and an optional gating objective when the node tracks one.
+export interface PresentationNodeState {
+  state: number;
+  objective?: ObjectiveProgress;
+  progressValue?: number;
+  completionValue?: number;
+}
+
 export interface ReusablePlug {
   plugItemHash: number;
   canInsert?: boolean;
@@ -107,11 +150,18 @@ export interface ProfileResponse {
   };
   profilePlugSets?: PlugSets;
   characterPlugSets?: { data?: Record<string, { plugs?: Record<string, ReusablePlug[]> }> };
+  profileRecords?: { data?: RecordsComponent };
+  characterRecords?: { data?: Record<string, RecordsComponent> };
+  profilePresentationNodes?: { data?: { nodes?: Record<string, PresentationNodeState> } };
+  characterPresentationNodes?: {
+    data?: Record<string, { nodes?: Record<string, PresentationNodeState> }>;
+  };
   itemComponents?: {
     instances?: { data?: Record<string, ItemInstance> };
     stats?: { data?: Record<string, { stats?: Record<string, { value?: number }> }> };
     sockets?: { data?: Record<string, { sockets?: ItemSocket[] }> };
     reusablePlugs?: { data?: Record<string, { plugs?: Record<string, ReusablePlug[]> }> };
+    objectives?: { data?: Record<string, { objectives?: ObjectiveProgress[] }> };
   };
 }
 
