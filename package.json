@@ -14,9 +14,11 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "auth": "tsx src/setup/auth-cli.ts",
+    "auth": "tsx src/setup/auth_cli.ts",
     "start": "tsx src/index.ts",
-    "scrape:builds": "tsx scripts/scrape-builds.ts"
+    "scrape:builds": "tsx scripts/scrape_builds.ts",
+    "extract:test_manifest": "tsx scripts/extract_test_manifest.ts",
+    "test": "vitest run"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",
@@ -34,7 +36,8 @@
     "prettier": "^3.8.4",
     "tsx": "^4.22.4",
     "typescript": "^5.5.3",
-    "typescript-eslint": "^8.61.0"
+    "typescript-eslint": "^8.61.0",
+    "vitest": "^4.1.8"
   },
   "private": true
 }

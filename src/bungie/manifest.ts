@@ -201,6 +201,14 @@ function db() {
   if (!dbPromise) {
     dbPromise = (async () => {
       try {
+        // An explicit database path skips the version lookup, letting tests and offline runs read a
+        // local manifest without the network round-trip to /Destiny2/Manifest/.
+        const override = process.env.DESTINY2_MANIFEST_DB;
+
+        if (override) {
+          return new DatabaseSync(override, { readOnly: true });
+        }
+
         const { versionDir, mobilePath } = await meta();
         const dbPath = await ensureDatabaseFile(versionDir, mobilePath);
 
