@@ -10,6 +10,7 @@ import { registerHowToAcquire } from "./how_to_acquire.js";
 import { registerInsertPlug } from "./insert_plug.js";
 import { registerInspectItem } from "./inspect_item.js";
 import { registerInspectSockets } from "./inspect_sockets.js";
+import { registerListActiveQuests } from "./list_active_quests.js";
 import { registerListCharacters } from "./list_characters.js";
 import { registerListInventory } from "./list_inventory.js";
 import { registerListLoadouts } from "./list_loadouts.js";
@@ -43,6 +44,7 @@ export function registerTools(server: McpServer): void {
   registerShowArtifact(server);
   registerGetTriumphs(server);
   registerSearchRecords(server);
+  registerListActiveQuests(server);
 
   registerEquipLoadout(server);
   registerSnapshotLoadout(server);
