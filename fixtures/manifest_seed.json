@@ -10047,5 +10047,31 @@
       "redacted": false,
       "blacklisted": false
     }
+  },
+  {
+    "table": "DestinyInventoryItemDefinition",
+    "hash": 3678620846,
+    "json": {
+      "displayProperties": {
+        "description": "",
+        "name": "Sunbracers",
+        "hasIcon": true
+      },
+      "collectibleHash": 4044800495,
+      "itemTypeDisplayName": "Gauntlets",
+      "flavorText": "The light of dawn burns in the hands of the worthy.",
+      "itemTypeAndTierDisplayName": "Exotic Gauntlets",
+      "inventory": {
+        "maxStackSize": 1,
+        "bucketTypeHash": 3551918588,
+        "tierTypeHash": 2759499571,
+        "tierTypeName": "Exotic",
+        "tierType": 6
+      },
+      "classType": 2,
+      "itemType": 2,
+      "itemSubType": 21,
+      "equippable": true
+    }
   }
 ]

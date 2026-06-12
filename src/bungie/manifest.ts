@@ -61,6 +61,11 @@ export function ammoTypeLabel(ammoType: number | undefined): string | undefined 
   return ammoType === undefined ? undefined : AMMO_TYPE[ammoType];
 }
 
+// The class an armor piece is restricted to, or "Any" for class-agnostic gear; undefined when absent.
+export function classTypeLabel(classType: number | undefined): string | undefined {
+  return classType === undefined ? undefined : CLASS_TYPE[classType];
+}
+
 export function itemDefinition(hash: number): Promise<ItemDefinition> {
   return getDefinition<ItemDefinition>(ITEM_TABLE, hash);
 }
@@ -204,6 +209,7 @@ export interface CatalogEntry {
   element?: string;
   slot?: string;
   ammoType?: string;
+  classType?: string;
   itemType?: number;
   collectibleHash?: number;
 }
@@ -214,6 +220,7 @@ export interface SearchFilters {
   type?: string;
   tier?: string;
   category?: ItemCategory;
+  class?: string;
   owned?: boolean;
   limit?: number;
 }
@@ -269,6 +276,11 @@ export async function searchItems(
       return false;
     }
 
+    // "Any" gear (class items, class-agnostic exotics) is usable on every class, so it survives a class filter.
+    if (filters.class && entry.classType !== filters.class && entry.classType !== "Any") {
+      return false;
+    }
+
     if (filters.owned !== undefined && isOwned && isOwned(entry) !== filters.owned) {
       return false;
     }
@@ -296,6 +308,7 @@ interface RawItem {
   talentGrid?: { hudDamageType?: number };
   equippingBlock?: { ammoType?: number };
   inventory?: { tierTypeName?: string; bucketTypeHash?: number };
+  classType?: number;
 }
 
 interface CollectibleDefinition {
@@ -338,6 +351,14 @@ const AMMO_TYPE: Record<number, string> = {
   1: "Primary",
   2: "Special",
   3: "Heavy",
+};
+
+// DestinyClass enum: 0 = Titan, 1 = Hunter, 2 = Warlock, 3 = Any (non-class-restricted, e.g. weapons).
+const CLASS_TYPE: Record<number, string> = {
+  0: "Titan",
+  1: "Hunter",
+  2: "Warlock",
+  3: "Any",
 };
 
 const TIER_RANK: Record<string, number> = {
@@ -434,6 +455,7 @@ async function buildCatalog(): Promise<CatalogEntry[]> {
       element: elementOf(def),
       slot: slotFromBucketHash(def.inventory?.bucketTypeHash),
       ammoType: ammoTypeLabel(def.equippingBlock?.ammoType),
+      classType: classTypeLabel(def.classType),
       itemType: def.itemType,
       collectibleHash: def.collectibleHash,
     });

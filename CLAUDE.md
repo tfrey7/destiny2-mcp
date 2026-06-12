@@ -30,10 +30,13 @@ client gets them — not buried in a doc. The load-bearing ones, which recommend
 See the `loadout` topic for the full statement. When changing these rules, edit the knowledge section —
 that is canonical — not just this file.
 
-**Invariant:** the attribute fields the tools emit (`slot`, `element`, `tier`, `ammoType`) must stay
-consistent with the `loadout` knowledge section. `get_equipped`, `list_inventory`, `search_items`, and
-`inspect_item` all surface `element` and `tier` precisely so element-matching and the exotic limit can be
-checked without guesswork. Don't add a tool that returns gear without them.
+**Invariant:** the attribute fields the tools emit (`slot`, `element`, `tier`, `ammoType`, `classType`)
+must stay consistent with the `loadout` knowledge section. `get_equipped`, `list_inventory`,
+`search_items`, and `inspect_item` all surface `element` and `tier` precisely so element-matching and the
+exotic limit can be checked without guesswork. `search_items` also surfaces `classType` on results (and
+filters by `class`) so armor — exotic armor especially — can be narrowed to a single-class account the way
+element narrows weapons; class is to armor what element is to weapons. Don't add a tool that returns gear
+without them.
 
 ## Helping a player
 
