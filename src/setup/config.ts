@@ -1,5 +1,6 @@
+import { existsSync } from "node:fs";
 import { homedir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { config as loadEnv } from "dotenv";
 
@@ -17,7 +18,27 @@ export const TOKENS_PATH = join(DATA_DIR, "tokens.json");
 export const MANIFEST_DIR = join(DATA_DIR, "manifest");
 export const CERT_DIR = join(DATA_DIR, "certs");
 
-const packageRoot = join(fileURLToPath(import.meta.url), "..", "..", "..");
+// Walk up from this module to the nearest dir holding package.json. Anchoring on a marker file
+// (not a fixed number of "..") keeps data/ resolvable across every layout: tsx-from-src, the
+// multi-file tsc dist/, and the single-file esbuild bundle the .mcpb ships (where this module is
+// no longer three levels deep). package.json sits at the package root in all three.
+const packageRoot = findPackageRoot(dirname(fileURLToPath(import.meta.url)));
+
+function findPackageRoot(start: string): string {
+  for (let dir = start; ; ) {
+    if (existsSync(join(dir, "package.json"))) {
+      return dir;
+    }
+
+    const parent = dirname(dir);
+
+    if (parent === dir) {
+      return start; // hit the filesystem root without a match — fall back
+    }
+
+    dir = parent;
+  }
+}
 
 export const BUILDS_FILE = join(packageRoot, "data", "builds.json");
 

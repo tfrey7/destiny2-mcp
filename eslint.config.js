@@ -3,7 +3,7 @@ import prettier from "eslint-config-prettier";
 import promise from "eslint-plugin-promise";
 import unicorn from "eslint-plugin-unicorn";
 
-export default tseslint.config({ ignores: ["dist/"] }, prettier, {
+export default tseslint.config({ ignores: ["dist/", "release/"] }, prettier, {
   files: ["src/**/*.ts", "scripts/**/*.ts"],
   extends: [tseslint.configs.base],
   plugins: { promise, unicorn },

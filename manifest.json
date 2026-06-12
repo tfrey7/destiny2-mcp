@@ -11,10 +11,10 @@
   },
   "server": {
     "type": "node",
-    "entry_point": "server/dist/index.js",
+    "entry_point": "server/index.js",
     "mcp_config": {
       "command": "node",
-      "args": ["${__dirname}/server/dist/index.js"]
+      "args": ["${__dirname}/server/index.js"]
     }
   },
   "tools_generated": true,
