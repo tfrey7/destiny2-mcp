@@ -17,6 +17,7 @@ export async function ownedCollectibles(): Promise<Set<number>> {
   const collectibles = profile.profileCollectibles?.data?.collectibles ?? {};
 
   const owned = new Set<number>();
+
   for (const [hash, { state }] of Object.entries(collectibles)) {
     if ((state & NOT_ACQUIRED) === 0) {
       owned.add(Number(hash));
@@ -27,11 +28,13 @@ export async function ownedCollectibles(): Promise<Set<number>> {
 
 export async function acquisitionFor(itemHash: number, owned?: Set<number>): Promise<Acquisition> {
   const info = await itemInfo(itemHash);
+
   if (!info) {
     return { name: `Unknown item ${itemHash >>> 0}` };
   }
 
   const acquisition: Acquisition = { name: info.name, tier: info.tier, itemType: info.itemType };
+
   if (info.collectibleHash) {
     acquisition.source = await collectibleSource(info.collectibleHash);
     if (owned) {
@@ -45,5 +48,6 @@ export async function acquisitionFor(itemHash: number, owned?: Set<number>): Pro
 // the account already owns it, fetching the account's Collections state once for the batch.
 export async function acquisitionForMany(itemHashes: number[]): Promise<Acquisition[]> {
   const owned = await ownedCollectibles();
+
   return Promise.all(itemHashes.map((hash) => acquisitionFor(hash, owned)));
 }

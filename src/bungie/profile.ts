@@ -139,6 +139,7 @@ export async function getPrimaryMembership(): Promise<Membership> {
   const memberships = data.destinyMemberships;
 
   let chosen = memberships.find((m) => m.membershipId === data.primaryMembershipId);
+
   if (!chosen) {
     chosen = memberships.find((m) => m.crossSaveOverride === m.membershipType);
   }
@@ -159,6 +160,7 @@ export async function getPrimaryMembership(): Promise<Membership> {
 export async function getProfile(components: number[]): Promise<ProfileResponse> {
   const { membershipType, destinyMembershipId } = await getPrimaryMembership();
   const query = components.join(",");
+
   return bungieFetch<ProfileResponse>(
     `/Destiny2/${membershipType}/Profile/${destinyMembershipId}/?components=${query}`,
   );

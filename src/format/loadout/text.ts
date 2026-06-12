@@ -18,6 +18,7 @@ function nameCell(row: CardRow): string {
     row.rarity === "Exotic"
       ? `${truncate(row.name, NAME_WIDTH - 2)} ${EXOTIC_MARK}`
       : truncate(row.name, NAME_WIDTH);
+
   return pad(name, NAME_WIDTH);
 }
 

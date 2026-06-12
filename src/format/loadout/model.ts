@@ -53,6 +53,7 @@ export function cardModel(card: LoadoutCard): CardModel {
   const sections: CardSection[] = [];
 
   const weapons = inSection(card.items, "WEAPONS");
+
   if (weapons.length > 0) {
     sections.push({
       label: "WEAPONS",
@@ -66,17 +67,21 @@ export function cardModel(card: LoadoutCard): CardModel {
   }
 
   const armor = inSection(card.items, "ARMOR");
+
   const armorRows: CardRow[] = armor.map((item) => ({
     name: item.name,
     rarity: item.rarity,
     middle: BUCKET[item.bucketHash].label,
   }));
+
   if (!armor.some((item) => item.bucketHash === CLASS_ITEM_BUCKET)) {
     armorRows.push({ name: "—", rarity: "Basic", middle: "Class item", empty: true });
   }
+
   sections.push({ label: "ARMOR", rows: armorRows });
 
   const subclass = inSection(card.items, "SUBCLASS")[0];
+
   if (subclass) {
     sections.push({
       label: "SUBCLASS",

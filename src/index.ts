@@ -13,4 +13,5 @@ registerBuildTools(server);
 registerKnowledgeTools(server);
 
 const transport = new StdioServerTransport();
+
 await server.connect(transport);

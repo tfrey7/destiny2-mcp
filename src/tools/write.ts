@@ -18,6 +18,7 @@ function ok(message: string, response: unknown) {
 
 async function action(path: string, body: Record<string, unknown>): Promise<unknown> {
   const { membershipType } = await getPrimaryMembership();
+
   return bungieFetch(path, { method: "POST", body: { ...body, membershipType } });
 }
 
@@ -49,17 +50,20 @@ function locate(profile: ProfileResponse, itemId: string): Location | undefined 
 
   for (const [characterId, bucket] of Object.entries(profile.characterEquipment?.data ?? {})) {
     const item = find(bucket.items);
+
     if (item) {
       return { item, characterId };
     }
   }
   for (const [characterId, bucket] of Object.entries(profile.characterInventories?.data ?? {})) {
     const item = find(bucket.items);
+
     if (item) {
       return { item, characterId };
     }
   }
   const vaultItem = find(profile.profileInventory?.data?.items);
+
   return vaultItem ? { item: vaultItem } : undefined;
 }
 
@@ -72,6 +76,7 @@ function inventoryDuplicate(
   excludeItemId: string,
 ): DestinyItem | undefined {
   const items = profile.characterInventories?.data?.[characterId]?.items ?? [];
+
   return items.find((item) => item.itemHash === itemHash && item.itemInstanceId !== excludeItemId);
 }
 
@@ -85,6 +90,7 @@ async function ensureOnCharacter(
   itemId: string,
 ): Promise<string> {
   const location = locate(profile, itemId);
+
   if (!location) {
     throw new Error(
       `[destiny2-mcp] No item with instance id ${itemId} found in any inventory, equipment, or the vault.`,
@@ -112,6 +118,7 @@ async function ensureOnCharacter(
     }
 
     const duplicate = inventoryDuplicate(profile, characterId, itemHash, itemId);
+
     if (!duplicate?.itemInstanceId) {
       throw new Error(
         `[destiny2-mcp] The destination bucket for ${name} is full and holds no duplicate to evict. ` +
@@ -147,6 +154,7 @@ export function registerWriteTools(server: McpServer): void {
         characterId,
         loadoutIndex,
       });
+
       return ok(`Equipped loadout ${loadoutIndex} on character ${characterId}.`, response);
     },
   );
@@ -166,6 +174,7 @@ export function registerWriteTools(server: McpServer): void {
         characterId,
         loadoutIndex,
       });
+
       return ok(
         `Snapshotted current gear into loadout ${loadoutIndex} on character ${characterId}.`,
         response,
@@ -194,6 +203,7 @@ export function registerWriteTools(server: McpServer): void {
         colorHash,
         iconHash,
       });
+
       return ok(
         `Updated identifiers for loadout ${loadoutIndex} on character ${characterId}.`,
         response,
@@ -215,6 +225,7 @@ export function registerWriteTools(server: McpServer): void {
       const profile = await getProfile(TRANSFER_COMPONENTS);
       const note = await ensureOnCharacter(profile, characterId, itemId);
       const response = await action("/Destiny2/Actions/Items/EquipItem/", { characterId, itemId });
+
       return ok(`${note}Equipped item ${itemId} on character ${characterId}.`, response);
     },
   );
@@ -240,6 +251,7 @@ export function registerWriteTools(server: McpServer): void {
         characterId,
         itemIds,
       });
+
       return ok(
         `${notes.join("")}Equipped ${itemIds.length} item(s) on character ${characterId}.`,
         response,
@@ -269,6 +281,7 @@ export function registerWriteTools(server: McpServer): void {
         itemId,
         characterId,
       });
+
       return ok(
         `Inserted plug ${plugItemHash} into socket ${socketIndex} of item ${itemId}.`,
         response,
@@ -298,6 +311,7 @@ export function registerWriteTools(server: McpServer): void {
         stackSize,
       });
       const direction = transferToVault ? "to vault" : "to character";
+
       return ok(`Transferred item ${itemId} ${direction}.`, response);
     },
   );
@@ -326,18 +340,21 @@ export function registerWriteTools(server: McpServer): void {
       // concurrent item actions — a burst would draw ThrottleLimitExceeded rather than finish faster.
       const results: { characterId: string; item: string; status: string; reason?: string }[] = [];
       let vaulted = 0;
+
       for (const [id, bucket] of entries) {
         for (const item of bucket.items) {
           if (!item.itemInstanceId || !isGearBucket(item.bucketHash)) {
             continue;
           }
           const name = await itemName(item.itemHash);
+
           try {
             await transfer(id, item.itemInstanceId, item.itemHash, true);
             vaulted += 1;
             results.push({ characterId: id, item: name, status: "vaulted" });
           } catch (error) {
             const reason = error instanceof BungieError ? error.errorStatus : String(error);
+
             results.push({ characterId: id, item: name, status: "failed", reason });
           }
         }
@@ -345,6 +362,7 @@ export function registerWriteTools(server: McpServer): void {
 
       const scope = characterId ? `character ${characterId}` : "all characters";
       const failures = results.length - vaulted;
+
       return ok(
         `Vaulted ${vaulted} unequipped item(s) from ${scope}${failures ? `; ${failures} failed.` : "."}`,
         results,

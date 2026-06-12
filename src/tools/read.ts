@@ -80,6 +80,7 @@ async function inventoryItems(items: DestinyItem[]): Promise<InventoryItem[]> {
   return Promise.all(
     items.map(async (item) => {
       const meta = await itemMeta(item.itemHash);
+
       return {
         name: meta?.name ?? (await itemName(item.itemHash)),
         itemInstanceId: item.itemInstanceId,
@@ -101,8 +102,10 @@ async function describePerks(
 
   const seen = new Set<string>();
   const perks: { name: string; description: string }[] = [];
+
   for (const definition of definitions) {
     const name = definition.displayProperties?.name;
+
     if (!name || seen.has(name)) {
       continue;
     }
@@ -120,6 +123,7 @@ async function describeStats(
       async ([hash, stat]) => [await statName(Number(hash)), stat.value ?? 0] as const,
     ),
   );
+
   return Object.fromEntries(entries);
 }
 
@@ -130,6 +134,7 @@ async function describeItem(
 ) {
   const definition = await itemDefinition(itemHash);
   const [perks, namedStats] = await Promise.all([describePerks(plugHashes), describeStats(stats)]);
+
   return {
     name: definition.displayProperties?.name ?? `Item ${itemHash >>> 0}`,
     type: definition.itemTypeDisplayName,
@@ -161,6 +166,7 @@ async function describeArtifact(artifact: SeasonalArtifact) {
           .filter((perk) => perk.isVisible !== false)
           .map(async (perk) => {
             const { name, description } = await artifactPerkText(perk.itemHash);
+
             return { name, description, active: perk.isActive };
           }),
       ),
@@ -181,6 +187,7 @@ const PLUGS_PER_SOCKET = 16;
 
 function categoryHashByIndex(categories: SocketCategoryEntry[]): Map<number, number> {
   const map = new Map<number, number>();
+
   for (const category of categories) {
     for (const index of category.socketIndexes) {
       map.set(index, category.socketCategoryHash);
@@ -198,6 +205,7 @@ function mergedPlugSets(profile: ProfileResponse): Map<number, ReusablePlug[]> {
       sets.set(Number(hash), list);
     }
   };
+
   add(profile.profilePlugSets?.data?.plugs);
   for (const character of Object.values(profile.characterPlugSets?.data ?? {})) {
     add(character.plugs);
@@ -215,11 +223,13 @@ async function availablePlugHashes(
   plugSets: Map<number, ReusablePlug[]>,
 ): Promise<number[]> {
   const live = livePlugs[String(socketIndex)];
+
   if (entry?.randomizedPlugSetHash !== undefined && live?.length) {
     return live.filter((plug) => plug.canInsert !== false).map((plug) => plug.plugItemHash);
   }
   if (entry?.reusablePlugSetHash !== undefined) {
     const set = plugSets.get(entry.reusablePlugSetHash);
+
     if (set?.length) {
       return set.filter((plug) => plug.canInsert).map((plug) => plug.plugItemHash);
     }
@@ -256,6 +266,7 @@ export function registerReadTools(server: McpServer): void {
         light: character.light,
         lastPlayed: character.dateLastPlayed,
       }));
+
       return json(characters);
     },
   );
@@ -297,6 +308,7 @@ export function registerReadTools(server: McpServer): void {
           ),
         })),
       );
+
       return json(result);
     },
   );
@@ -321,6 +333,7 @@ export function registerReadTools(server: McpServer): void {
       const loadoutData = profile.characterLoadouts?.data ?? {};
       const id = characterId ?? Object.keys(loadoutData)[0];
       const loadout = loadoutData[id]?.loadouts[loadoutIndex];
+
       if (!loadout) {
         return json({ error: `No loadout at index ${loadoutIndex} for character ${id}` });
       }
@@ -363,6 +376,7 @@ export function registerReadTools(server: McpServer): void {
           equipped: await inventoryItems(bucket.items),
         })),
       );
+
       return json(result);
     },
   );
@@ -385,6 +399,7 @@ export function registerReadTools(server: McpServer): void {
         )[0]?.characterId ??
         Object.keys(equipment)[0];
       const bucket = id ? equipment[id] : undefined;
+
       if (!bucket) {
         return json({ error: `No equipped gear for character ${id}` });
       }
@@ -452,14 +467,17 @@ export function registerReadTools(server: McpServer): void {
         const all = [...charGroups.flatMap((group) => group.items), ...vaultItems];
         const tally = (key: keyof InventoryItem) => {
           const counts: Record<string, number> = {};
+
           for (const item of all) {
             const value = item[key];
+
             if (typeof value === "string") {
               counts[value] = (counts[value] ?? 0) + 1;
             }
           }
           return counts;
         };
+
         return json({
           total: all.length,
           byElement: tally("element"),
@@ -475,12 +493,14 @@ export function registerReadTools(server: McpServer): void {
       let budget = cap;
       const take = (items: InventoryItem[]) => {
         const slice = items.slice(0, Math.max(0, budget));
+
         budget -= slice.length;
         return slice;
       };
 
       const characters = charGroups.map((group) => ({ ...group, items: take(group.items) }));
       const vault = take(vaultItems);
+
       return json({
         total,
         truncated: total > cap,
@@ -516,6 +536,7 @@ export function registerReadTools(server: McpServer): void {
         ]);
 
         const hash = instanceMap(profile).get(itemInstanceId);
+
         if (!hash) {
           throw new Error(`[destiny2-mcp] No item found for instance ${itemInstanceId}.`);
         }
@@ -528,6 +549,7 @@ export function registerReadTools(server: McpServer): void {
           .map((socket) => socket.plugHash as number);
 
         const described = await describeItem(hash, plugHashes, stats);
+
         return json({
           ...described,
           element: instance?.damageType ? DamageType[instance.damageType] : undefined,
@@ -545,6 +567,7 @@ export function registerReadTools(server: McpServer): void {
         .filter((plugHash): plugHash is number => plugHash !== undefined && plugHash !== 0);
 
       const described = await describeItem(itemHash, plugHashes, definition.stats?.stats ?? {});
+
       return json({
         ...described,
         element: definition.defaultDamageType
@@ -579,6 +602,7 @@ export function registerReadTools(server: McpServer): void {
       ]);
 
       const hash = instanceMap(profile).get(itemInstanceId);
+
       if (!hash) {
         throw new Error(`[destiny2-mcp] No item found for instance ${itemInstanceId}.`);
       }
@@ -633,12 +657,14 @@ export function registerReadTools(server: McpServer): void {
       const result = await Promise.all(
         items.map(async (name) => {
           const hash = await findItemByName(name);
+
           if (hash === undefined) {
             return { name, note: "No item with this exact name in the manifest." };
           }
           return acquisitionFor(hash, owned);
         }),
       );
+
       return json(result);
     },
   );
@@ -672,6 +698,7 @@ export function registerReadTools(server: McpServer): void {
         ammoType: item.ammoType,
         itemHash: item.hash,
       }));
+
       return json({ count, truncated, items: result });
     },
   );
@@ -686,6 +713,7 @@ export function registerReadTools(server: McpServer): void {
     async () => {
       const profile = await getProfile([Component.CharacterProgressions]);
       const artifact = seasonalArtifact(profile);
+
       if (!artifact) {
         return json({ error: "No seasonal artifact found on this account." });
       }
@@ -703,6 +731,7 @@ export function registerReadTools(server: McpServer): void {
     async () => {
       const profile = await getProfile([Component.CharacterProgressions]);
       const artifact = seasonalArtifact(profile);
+
       if (!artifact) {
         return json({ error: "No seasonal artifact found on this account." });
       }

@@ -22,6 +22,7 @@ async function buildCard(build: BuildRecipe): Promise<TextBlock> {
   const items = (
     await Promise.all(build.loadout.equipped.map((item) => itemMeta(item.hash)))
   ).filter((meta): meta is ItemMeta => meta !== undefined);
+
   return {
     type: "text",
     text: renderLoadoutCardText({
@@ -70,6 +71,7 @@ export function registerBuildTools(server: McpServer): void {
         subclass: build.subclass,
         dimLink: build.dimLink,
       }));
+
       return cardsAndJson(cards, { scrapedAt, count: index.length, builds: index });
     },
   );
@@ -84,6 +86,7 @@ export function registerBuildTools(server: McpServer): void {
     async ({ shareId }) => {
       const { builds } = await loadBuilds();
       const build = builds.find((b) => b.shareId === shareId);
+
       if (!build) {
         return json({ error: `No build with shareId ${shareId}. Use find_builds to list them.` });
       }
@@ -100,6 +103,7 @@ export function registerBuildTools(server: McpServer): void {
           .filter((item) => !item.socketOverrides)
           .map(async (item) => {
             const owned = ownedByHash.get(item.hash);
+
             return {
               name: await itemName(item.hash),
               owned: owned !== undefined,

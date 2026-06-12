@@ -12,5 +12,12 @@ export default tseslint.config({ ignores: ["dist/"] }, prettier, {
     curly: ["error", "all"],
     "@typescript-eslint/consistent-type-imports": "error",
     "promise/prefer-await-to-then": "error",
+    // Require a blank line after a variable-declaration group before the next
+    // statement, but allow consecutive declarations to stay grouped.
+    "padding-line-between-statements": [
+      "error",
+      { blankLine: "always", prev: ["const", "let", "var"], next: "*" },
+      { blankLine: "any", prev: ["const", "let", "var"], next: ["const", "let", "var"] },
+    ],
   },
 });

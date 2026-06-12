@@ -35,6 +35,7 @@ function boxLine(content: string): string {
 
 function perkLine(perk: ArtifactPerkView): string {
   const mark = perk.active ? ACTIVE_MARK : INACTIVE_MARK;
+
   return boxLine(`  ${mark} ${truncate(perk.name, PERK_NAME_WIDTH)}`);
 }
 

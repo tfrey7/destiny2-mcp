@@ -27,6 +27,7 @@ function listUrl(className: string, popular: boolean, page: number): string {
     "q[view]": "by_build",
     page: String(page),
   });
+
   params.set("q[sort]", popular ? "likes" : "date_added");
   if (popular) {
     params.set("q[top]", "true");
@@ -36,6 +37,7 @@ function listUrl(className: string, popular: boolean, page: number): string {
 
 async function fetchPage(url: string): Promise<string> {
   const response = await fetch(url, { headers: { "User-Agent": USER_AGENT } });
+
   if (!response.ok) {
     throw new Error(`[destiny2-mcp] builders.gg returned ${response.status} for ${url}`);
   }
@@ -49,6 +51,7 @@ function parseCards(html: string, className: string): Card[] {
 
   for (const match of html.matchAll(/href="\/destiny\/dim-builds\/([a-z0-9]+)\/([a-z0-9-]+)"/g)) {
     const [, shareId, slug] = match;
+
     if (seen.has(shareId)) {
       continue;
     }
@@ -56,6 +59,7 @@ function parseCards(html: string, className: string): Card[] {
 
     const window = html.slice(match.index, match.index + 600).replace(/<[^>]+>/g, " ");
     const subclass = window.match(label)?.[1] ?? "Unknown";
+
     cards.push({ shareId, slug, subclass });
   }
 
@@ -66,11 +70,13 @@ async function fetchLoadout(shareId: string): Promise<DimLoadout | null> {
   const response = await fetch(`${DIM_API}?shareId=${shareId}`, {
     headers: { "User-Agent": USER_AGENT },
   });
+
   if (!response.ok) {
     console.warn(`[destiny2-mcp]   ! DIM API ${response.status} for ${shareId}, skipping`);
     return null;
   }
   const data = (await response.json()) as { loadout?: DimLoadout };
+
   return data.loadout ?? null;
 }
 
@@ -84,6 +90,7 @@ async function collectCards(className: string, popular: boolean, limit: number):
       capitalize(className),
     );
     const fresh = pageCards.filter((card) => !seen.has(card.shareId));
+
     if (fresh.length === 0) {
       break;
     }
@@ -104,11 +111,14 @@ async function main(): Promise<void> {
 
   console.log(`[destiny2-mcp] Collecting ${className} builds from builders.gg…`);
   const cards = await collectCards(className, popular, limit);
+
   console.log(`[destiny2-mcp] Found ${cards.length} builds. Resolving DIM loadouts…`);
 
   const builds: BuildRecipe[] = [];
+
   for (const card of cards) {
     const loadout = await fetchLoadout(card.shareId);
+
     if (!loadout) {
       continue;
     }
@@ -126,6 +136,7 @@ async function main(): Promise<void> {
 
   await mkdir(dirname(OUT_FILE), { recursive: true });
   const payload = { source: "builders.gg + dim.gg", scrapedAt: new Date().toISOString(), builds };
+
   await writeFile(OUT_FILE, JSON.stringify(payload, null, 2));
   console.log(`[destiny2-mcp] Wrote ${builds.length} builds to ${OUT_FILE}`);
 }

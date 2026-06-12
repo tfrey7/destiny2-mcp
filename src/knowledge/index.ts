@@ -31,6 +31,7 @@ export function registerKnowledgeTools(server: McpServer): void {
       const matches = buildKnowledge.filter(
         (section) => section.id === term || section.title.toLowerCase().includes(term),
       );
+
       if (matches.length === 0) {
         return {
           content: [{ type: "text" as const, text: `No section "${topic}". Topics: ${topics}.` }],
