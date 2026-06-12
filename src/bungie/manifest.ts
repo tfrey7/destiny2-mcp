@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import AdmZip from "adm-zip";
-import Database from "better-sqlite3";
+import { DatabaseSync, type StatementSync } from "node:sqlite";
 import { MANIFEST_DIR } from "../setup/config.js";
 import { bungieFetch } from "./client.js";
 
@@ -183,7 +183,7 @@ async function ensureDatabaseFile(versionDir: string, mobilePath: string): Promi
   return dbPath;
 }
 
-let dbPromise: Promise<Database.Database> | null = null;
+let dbPromise: Promise<DatabaseSync> | null = null;
 
 function db() {
   if (!dbPromise) {
@@ -191,7 +191,7 @@ function db() {
       const { versionDir, mobilePath } = await meta();
       const dbPath = await ensureDatabaseFile(versionDir, mobilePath);
 
-      return new Database(dbPath, { readonly: true, fileMustExist: true });
+      return new DatabaseSync(dbPath, { readOnly: true });
     })();
   }
 
@@ -203,9 +203,9 @@ function toId(hash: number): number {
   return hash | 0;
 }
 
-const statements = new Map<string, Database.Statement>();
+const statements = new Map<string, StatementSync>();
 
-function definition<T>(connection: Database.Database, table: string, hash: number): T | undefined {
+function definition<T>(connection: DatabaseSync, table: string, hash: number): T | undefined {
   let statement = statements.get(table);
 
   if (!statement) {
@@ -343,7 +343,7 @@ let nameIndexPromise: Promise<
 
 // Resolving a name to a hash means scanning the whole item table once; cache the index for
 // the process lifetime. Names repeat across rarities and reissues, so keep every candidate.
-function buildNameIndex(connection: Database.Database) {
+function buildNameIndex(connection: DatabaseSync) {
   const index = new Map<string, { hash: number; tier?: string; collectibleHash?: number }[]>();
   const rows = connection.prepare(`SELECT id, json FROM ${ITEM_TABLE}`).iterate();
 
@@ -434,7 +434,7 @@ let catalogPromise: Promise<CatalogEntry[]> | null = null;
 
 // Searching by attribute means scanning the whole item table once; cache the catalog for the
 // process lifetime, mirroring the name index. Skip rows without a display name (dummies, redacted).
-function buildCatalog(connection: Database.Database): CatalogEntry[] {
+function buildCatalog(connection: DatabaseSync): CatalogEntry[] {
   const catalog: CatalogEntry[] = [];
   const rows = connection.prepare(`SELECT id, json FROM ${ITEM_TABLE}`).iterate();
 
