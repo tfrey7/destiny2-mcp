@@ -16,6 +16,7 @@ export function registerUpdateLoadoutIdentifiers(server: McpServer): void {
         colorHash: z.number().int().optional(),
         iconHash: z.number().int().optional(),
       },
+      annotations: { readOnlyHint: false, destructiveHint: true },
     },
     async ({ characterId, loadoutIndex, nameHash, colorHash, iconHash }) => {
       const response = await action("/Destiny2/Actions/Loadouts/UpdateLoadoutIdentifiers/", {

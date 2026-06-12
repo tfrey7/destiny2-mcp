@@ -72,6 +72,7 @@ export function registerKnowledgeTools(server: McpServer): void {
       inputSchema: {
         topic: z.string().optional(),
       },
+      annotations: { readOnlyHint: true },
     },
     async ({ topic }) => {
       if (!topic) {

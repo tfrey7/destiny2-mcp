@@ -19,6 +19,7 @@ export function registerVaultInventory(server: McpServer): void {
       inputSchema: {
         characterId: z.string().optional(),
       },
+      annotations: { readOnlyHint: false, destructiveHint: true },
     },
     async ({ characterId }) => {
       const profile = await getProfile([Component.Characters, Component.CharacterInventories]);

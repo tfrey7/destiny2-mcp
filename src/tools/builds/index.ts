@@ -17,6 +17,7 @@ export function registerBuildTools(server: McpServer): void {
         className: classNameSchema.optional(),
         subclass: subclassSchema.optional(),
       },
+      annotations: { readOnlyHint: true },
     },
     async ({ className, subclass }) => {
       const { builds, scrapedAt } = await loadBuilds();
@@ -43,6 +44,7 @@ export function registerBuildTools(server: McpServer): void {
       description:
         "Map a popular build (by shareId from find_builds) onto the gear you own. Renders the build as a text loadout card, then reports which items you already have (with itemInstanceId for equip_items), which are missing, plus the subclass plugs and armor mods to set up manually. This is a plan — it does not change your gear.",
       inputSchema: { shareId: z.string() },
+      annotations: { readOnlyHint: true },
     },
     async ({ shareId }) => {
       const { builds } = await loadBuilds();

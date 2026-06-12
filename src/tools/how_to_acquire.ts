@@ -11,6 +11,7 @@ export function registerHowToAcquire(server: McpServer): void {
       description:
         "Look up how to acquire weapons or armor by name: the in-game source (activity, vendor, etc.), rarity, item type, and whether the account already owns it. Use this to tell the player where to find gear they are missing for a build.",
       inputSchema: { items: z.array(z.string()).min(1) },
+      annotations: { readOnlyHint: true },
     },
     async ({ items }) => {
       const owned = await ownedGear();

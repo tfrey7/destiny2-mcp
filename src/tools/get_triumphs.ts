@@ -10,6 +10,7 @@ export function registerGetTriumphs(server: McpServer): void {
       description:
         "Summarize the player's Triumph standing: total Triumph score (active, legacy, lifetime) plus every seal (title) with its live completion counts and percent. Seals are sorted closest-to-done first, with earned titles last — so this is the source for 'which title should I focus on'. Use search_records to drill into the specific Triumphs inside a seal. Read-only; reflects live account state.",
       inputSchema: {},
+      annotations: { readOnlyHint: true },
     },
     async () => {
       const profile = await getProfile([Component.Records, Component.PresentationNodes]);

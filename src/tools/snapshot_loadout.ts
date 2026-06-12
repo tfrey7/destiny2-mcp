@@ -13,6 +13,7 @@ export function registerSnapshotLoadout(server: McpServer): void {
         characterId: z.string(),
         loadoutIndex: z.number().int().min(0),
       },
+      annotations: { readOnlyHint: false, destructiveHint: true },
     },
     async ({ characterId, loadoutIndex }) => {
       const response = await action("/Destiny2/Actions/Loadouts/SnapshotLoadout/", {

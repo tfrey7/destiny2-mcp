@@ -8,6 +8,7 @@ export function registerLogin(server: McpServer): void {
       description:
         "Authenticate with Bungie. Opens a browser to log in and authorize destiny2-mcp, then stores the OAuth tokens locally so the other tools can read your account. Run this once on first use, or again if a tool reports you are not authenticated.",
       inputSchema: {},
+      annotations: { readOnlyHint: false },
     },
     async () => {
       await runLogin();

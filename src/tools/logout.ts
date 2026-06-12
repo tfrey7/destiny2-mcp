@@ -8,6 +8,7 @@ export function registerLogout(server: McpServer): void {
       description:
         "Log out of Bungie by deleting the locally stored OAuth tokens. The other tools will report you are not authenticated until you run `login` again. This does not revoke the tokens on Bungie's side — remove the app under your Bungie.net authorized apps to do that.",
       inputSchema: {},
+      annotations: { readOnlyHint: false, destructiveHint: true },
     },
     async () => {
       const wasAuthenticated = await clearTokens();

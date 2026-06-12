@@ -11,6 +11,7 @@ export function registerShowEquipped(server: McpServer): void {
       description:
         "Render the currently equipped gear as a text card: weapons, armor, and subclass in aligned columns, with exotics marked and elements named. Defaults to the most recently played character; pass a characterId to choose another. Use this to show a player their current loadout.",
       inputSchema: { characterId: z.string().optional() },
+      annotations: { readOnlyHint: true },
     },
     async ({ characterId }) => {
       const profile = await getProfile([Component.Characters, Component.CharacterEquipment]);

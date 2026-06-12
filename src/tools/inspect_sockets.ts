@@ -31,6 +31,7 @@ export function registerInspectSockets(server: McpServer): void {
         itemInstanceId: z.string(),
         socketIndex: z.number().int().min(0).optional(),
       },
+      annotations: { readOnlyHint: true },
     },
     async ({ itemInstanceId, socketIndex }) => {
       const profile = await getProfile([

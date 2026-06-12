@@ -16,6 +16,7 @@ export function registerTransferItem(server: McpServer): void {
         transferToVault: z.boolean(),
         stackSize: z.number().int().min(1).default(1),
       },
+      annotations: { readOnlyHint: false, destructiveHint: true },
     },
     async ({ characterId, itemId, itemReferenceHash, transferToVault, stackSize }) => {
       const response = await action("/Destiny2/Actions/Items/TransferItem/", {

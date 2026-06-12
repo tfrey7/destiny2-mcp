@@ -14,6 +14,7 @@ export function registerEquipItem(server: McpServer): void {
         characterId: z.string(),
         itemId: z.string(),
       },
+      annotations: { readOnlyHint: false, destructiveHint: true },
     },
     async ({ characterId, itemId }) => {
       const profile = await getProfile(TRANSFER_COMPONENTS);

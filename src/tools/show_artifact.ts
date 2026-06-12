@@ -10,6 +10,7 @@ export function registerShowArtifact(server: McpServer): void {
       description:
         "Render the player's active seasonal artifact as a text card: each tier's perks listed with the chosen ones marked ●. Use this to show a player their artifact at a glance; pair with get_artifact for the perk descriptions.",
       inputSchema: {},
+      annotations: { readOnlyHint: true },
     },
     async () => {
       const profile = await getProfile([Component.CharacterProgressions]);

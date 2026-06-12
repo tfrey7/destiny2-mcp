@@ -22,6 +22,7 @@ export function registerInspectItem(server: McpServer): void {
         itemInstanceId: z.string().optional(),
         itemHash: z.number().int().optional(),
       },
+      annotations: { readOnlyHint: true },
     },
     async ({ itemInstanceId, itemHash }) => {
       if (itemInstanceId) {

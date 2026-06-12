@@ -22,6 +22,7 @@ export function registerListInventory(server: McpServer): void {
         summary: z.boolean().optional(),
         limit: z.number().int().min(1).max(500).optional(),
       },
+      annotations: { readOnlyHint: true },
     },
     async ({ characterId, search, element, type, tier, gearTier, set, summary, limit }) => {
       const profile = await getProfile([

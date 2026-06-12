@@ -11,6 +11,7 @@ export function registerListActiveQuests(server: McpServer): void {
       description:
         "List the quest steps a player is actively working, across all characters. Each quest reports its current step name, the quest line and step position (e.g. '3 of 11'), per-objective progress with the in-game label, overall percent complete, and the reward items for finishing the step — so a caller can judge which quest is closest or most rewarding to finish. There is no durable 'completed quests' list in Destiny; this surfaces in-progress steps only (finished quests leave the inventory and back into a Triumph — use search_records for those). Read-only; reflects live account state.",
       inputSchema: { characterId: z.string().optional() },
+      annotations: { readOnlyHint: true },
     },
     async ({ characterId }) => {
       const profile = await getProfile([

@@ -22,6 +22,7 @@ export function registerSearchItems(server: McpServer): void {
         owned: z.boolean().optional(),
         limit: z.number().int().min(1).max(200).optional(),
       },
+      annotations: { readOnlyHint: true },
     },
     async (filters) => {
       let ownershipLookup: OwnershipLookup | undefined;

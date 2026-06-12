@@ -12,6 +12,7 @@ export function registerShowLoadout(server: McpServer): void {
       description:
         "Render a saved loadout as a text card: weapons, armor, and subclass in aligned columns, with exotics marked and elements named. Defaults to the first character; pass a loadoutIndex (from list_loadouts) to choose a slot.",
       inputSchema: { loadoutIndex: z.number(), characterId: z.string().optional() },
+      annotations: { readOnlyHint: true },
     },
     async ({ loadoutIndex, characterId }) => {
       const profile = await getProfile([

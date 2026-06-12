@@ -16,6 +16,7 @@ export function registerSearchRecords(server: McpServer): void {
         seal: z.string().optional(),
         limit: z.number().int().min(1).max(100).optional(),
       },
+      annotations: { readOnlyHint: true },
     },
     async (filters) => {
       const profile = await getProfile([Component.Records, Component.PresentationNodes]);

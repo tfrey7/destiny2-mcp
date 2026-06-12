@@ -11,6 +11,7 @@ export function registerListLoadouts(server: McpServer): void {
       description:
         "List the saved in-game loadout slots for each character, including loadout index, name, and the items they hold. Use the loadout index with equip_loadout / snapshot_loadout.",
       inputSchema: {},
+      annotations: { readOnlyHint: true },
     },
     async () => {
       const profile = await getProfile([

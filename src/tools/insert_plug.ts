@@ -19,6 +19,7 @@ export function registerInsertPlug(server: McpServer): void {
         socketIndex: z.number().int().min(0),
         plugItemHash: z.number().int(),
       },
+      annotations: { readOnlyHint: false, destructiveHint: true },
     },
     async ({ characterId, itemId, socketIndex, plugItemHash }) => {
       const response = await action("/Destiny2/Actions/Items/InsertSocketPlugFree/", {

@@ -61,6 +61,7 @@ export function registerGetEquipped(server: McpServer): void {
       description:
         "List the currently equipped items for each character. Each item reports its slot, element, type, rarity tier, and gear tier (the 1-5 Edge of Fate scale, armor only), so element matching and the one-exotic-weapon limit can be reasoned about directly — no follow-up inspect_item needed for those attributes. Each character also reports its armor set bonuses: which set perks are active at the current piece count and how many more pieces the next bonus needs.",
       inputSchema: { characterId: z.string().optional() },
+      annotations: { readOnlyHint: true },
     },
     async ({ characterId }) => {
       const profile = await getProfile([

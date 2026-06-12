@@ -10,6 +10,7 @@ export function registerGetArtifact(server: McpServer): void {
       description:
         "Report the player's active seasonal artifact: its name, points spent, and every perk grouped by tier — each marked as chosen or not — with current in-game descriptions. This is the source of truth for which artifact perks (anti-champion mods and build bonuses) are currently active. Read-only: the artifact and its perks are chosen in-game and can't be set through the API.",
       inputSchema: {},
+      annotations: { readOnlyHint: true },
     },
     async () => {
       const profile = await getProfile([Component.CharacterProgressions]);

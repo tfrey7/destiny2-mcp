@@ -9,6 +9,7 @@ export function registerListCharacters(server: McpServer): void {
       description:
         "List the player's Destiny 2 characters with class, power level, and characterId.",
       inputSchema: {},
+      annotations: { readOnlyHint: true },
     },
     async () => {
       const profile = await getProfile([Component.Characters]);
