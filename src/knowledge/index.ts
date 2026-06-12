@@ -1,9 +1,66 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { buildKnowledge } from "./data.js";
 
+const SCHEME = "knowledge";
+
 function render(sections: typeof buildKnowledge): string {
   return sections.map((section) => `## ${section.title}\n\n${section.body}`).join("\n\n");
+}
+
+// The build knowledge is static reference content, so each section is also exposed as a resource —
+// a client can browse or attach a single topic by URI (knowledge://loadout) without the model
+// having to call a tool. The tool below stays for autonomous, model-driven retrieval mid-build;
+// both read from buildKnowledge so data.ts remains the single source of truth.
+export function registerKnowledgeResources(server: McpServer): void {
+  const template = new ResourceTemplate(`${SCHEME}://{topic}`, {
+    list: () => ({
+      resources: buildKnowledge.map((section) => ({
+        name: section.id,
+        uri: `${SCHEME}://${section.id}`,
+        title: section.title,
+        mimeType: "text/markdown" as const,
+      })),
+    }),
+    complete: {
+      topic: (value) =>
+        buildKnowledge
+          .map((section) => section.id)
+          .filter((id) => id.startsWith(value.toLowerCase())),
+    },
+  });
+
+  server.registerResource(
+    "build-knowledge",
+    template,
+    {
+      description:
+        "Curated Destiny 2 build-crafting knowledge, one section per topic. Static reference frozen " +
+        "at the game's end-of-life — pair with the live tools for exact effects and the player's gear.",
+      mimeType: "text/markdown",
+    },
+    (uri, { topic }) => {
+      const id = String(topic).toLowerCase();
+      const section = buildKnowledge.find((candidate) => candidate.id === id);
+
+      if (!section) {
+        throw new Error(
+          `No knowledge section "${topic}". Topics: ${buildKnowledge.map((s) => s.id).join(", ")}.`,
+        );
+      }
+
+      return {
+        contents: [
+          {
+            uri: uri.href,
+            mimeType: "text/markdown" as const,
+            text: render([section]),
+          },
+        ],
+      };
+    },
+  );
 }
 
 export function registerKnowledgeTools(server: McpServer): void {
