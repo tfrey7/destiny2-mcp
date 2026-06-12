@@ -77,7 +77,7 @@ export async function getAccessToken(): Promise<string> {
   const tokens = await readTokens();
 
   if (!tokens) {
-    throw new Error("[destiny2-mcp] Not authenticated. Run `npm run auth` to log in.");
+    throw new Error("[destiny2-mcp] Not authenticated. Run the `login` tool to log in.");
   }
 
   if (tokens.accessExpiresAt - REFRESH_MARGIN_MS > Date.now()) {
@@ -85,7 +85,7 @@ export async function getAccessToken(): Promise<string> {
   }
 
   if (tokens.refreshExpiresAt <= Date.now()) {
-    throw new Error("[destiny2-mcp] Session expired. Run `npm run auth` to log in again.");
+    throw new Error("[destiny2-mcp] Session expired. Run the `login` tool to log in again.");
   }
 
   const refreshed = toStored(

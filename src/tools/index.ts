@@ -12,6 +12,7 @@ import { registerInspectSockets } from "./inspect_sockets.js";
 import { registerListCharacters } from "./list_characters.js";
 import { registerListInventory } from "./list_inventory.js";
 import { registerListLoadouts } from "./list_loadouts.js";
+import { registerLogin } from "./login.js";
 import { registerSearchItems } from "./search_items.js";
 import { registerShowArtifact } from "./show_artifact.js";
 import { registerShowEquipped } from "./show_equipped.js";
@@ -22,6 +23,8 @@ import { registerUpdateLoadoutIdentifiers } from "./update_loadout_identifiers.j
 import { registerVaultInventory } from "./vault_inventory.js";
 
 export function registerTools(server: McpServer): void {
+  registerLogin(server);
+
   registerListCharacters(server);
   registerListLoadouts(server);
   registerShowLoadout(server);

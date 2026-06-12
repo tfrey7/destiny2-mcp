@@ -21,11 +21,20 @@ const packageRoot = join(fileURLToPath(import.meta.url), "..", "..", "..");
 
 export const BUILDS_FILE = join(packageRoot, "data", "builds.json");
 
-export function requireEnv(name: string): string {
-  const value = process.env[name];
+// Baked into the bundle so the .mcpb ships ready-to-run with no per-user secret prompt — the DIM
+// model (see docs/oauth-mcpb-findings.md). These are *app* credentials, not per-user; env vars
+// override them so local dev reads from .env and the real values are pasted in only at bundle time.
+const BAKED_IN = {
+  apiKey: "",
+  clientId: "",
+  clientSecret: "",
+};
+
+function credential(name: keyof typeof BAKED_IN, envName: string): string {
+  const value = process.env[envName] || BAKED_IN[name];
 
   if (!value) {
-    throw new Error(`[destiny2-mcp] Missing required env var ${name}`);
+    throw new Error(`[destiny2-mcp] Missing ${envName} — set it in .env or bake it into config.ts`);
   }
 
   return value;
@@ -33,8 +42,8 @@ export function requireEnv(name: string): string {
 
 export function credentials() {
   return {
-    apiKey: requireEnv("BUNGIE_API_KEY"),
-    clientId: requireEnv("BUNGIE_CLIENT_ID"),
-    clientSecret: requireEnv("BUNGIE_CLIENT_SECRET"),
+    apiKey: credential("apiKey", "BUNGIE_API_KEY"),
+    clientId: credential("clientId", "BUNGIE_CLIENT_ID"),
+    clientSecret: credential("clientSecret", "BUNGIE_CLIENT_SECRET"),
   };
 }

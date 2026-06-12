@@ -1,4 +1,4 @@
-import { BUNGIE_BASE, requireEnv } from "../setup/config.js";
+import { BUNGIE_BASE, credentials } from "../setup/config.js";
 import { getAccessToken } from "./auth.js";
 
 interface BungieEnvelope<T> {
@@ -30,7 +30,7 @@ export class BungieError extends Error {
 export async function bungieFetch<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const { method = "GET", body, auth = true } = options;
 
-  const headers: Record<string, string> = { "X-API-Key": requireEnv("BUNGIE_API_KEY") };
+  const headers: Record<string, string> = { "X-API-Key": credentials().apiKey };
 
   if (auth) {
     headers.Authorization = `Bearer ${await getAccessToken()}`;
