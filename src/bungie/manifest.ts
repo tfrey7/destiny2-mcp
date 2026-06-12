@@ -148,12 +148,18 @@ let metaPromise: Promise<{ versionDir: string; mobilePath: string }> | null = nu
 function meta() {
   if (!metaPromise) {
     metaPromise = (async () => {
-      const data = await bungieFetch<ManifestMeta>("/Destiny2/Manifest/", { auth: false });
+      try {
+        const data = await bungieFetch<ManifestMeta>("/Destiny2/Manifest/", { auth: false });
 
-      return {
-        versionDir: join(MANIFEST_DIR, data.version),
-        mobilePath: data.mobileWorldContentPaths.en,
-      };
+        return {
+          versionDir: join(MANIFEST_DIR, data.version),
+          mobilePath: data.mobileWorldContentPaths.en,
+        };
+      } catch (error) {
+        // Don't memoize a failed fetch — let the next caller retry rather than poisoning the cache.
+        metaPromise = null;
+        throw error;
+      }
     })();
   }
 
@@ -188,14 +194,25 @@ let dbPromise: Promise<DatabaseSync> | null = null;
 function db() {
   if (!dbPromise) {
     dbPromise = (async () => {
-      const { versionDir, mobilePath } = await meta();
-      const dbPath = await ensureDatabaseFile(versionDir, mobilePath);
+      try {
+        const { versionDir, mobilePath } = await meta();
+        const dbPath = await ensureDatabaseFile(versionDir, mobilePath);
 
-      return new DatabaseSync(dbPath, { readOnly: true });
+        return new DatabaseSync(dbPath, { readOnly: true });
+      } catch (error) {
+        dbPromise = null;
+        throw error;
+      }
     })();
   }
 
   return dbPromise;
+}
+
+// Force the manifest to download and open up front, so a missing or unreadable manifest fails
+// loudly at startup instead of surfacing as a cryptic error on the first gear tool call.
+export async function loadManifest(): Promise<void> {
+  await db();
 }
 
 // The SQLite id column stores each hash as a signed 32-bit integer.
@@ -372,7 +389,14 @@ function buildNameIndex(connection: DatabaseSync) {
 // Prefer the highest rarity, then a candidate that actually has a Collections source.
 export async function findItemByName(name: string): Promise<number | undefined> {
   if (!nameIndexPromise) {
-    nameIndexPromise = (async () => buildNameIndex(await db()))();
+    nameIndexPromise = (async () => {
+      try {
+        return buildNameIndex(await db());
+      } catch (error) {
+        nameIndexPromise = null;
+        throw error;
+      }
+    })();
   }
 
   const candidates = (await nameIndexPromise).get(name.toLowerCase());
@@ -485,7 +509,14 @@ function dedupeByName(entries: CatalogEntry[]): CatalogEntry[] {
 
 export async function searchItems(filters: SearchFilters): Promise<SearchResult> {
   if (!catalogPromise) {
-    catalogPromise = (async () => buildCatalog(await db()))();
+    catalogPromise = (async () => {
+      try {
+        return buildCatalog(await db());
+      } catch (error) {
+        catalogPromise = null;
+        throw error;
+      }
+    })();
   }
 
   const catalog = await catalogPromise;
