@@ -1,6 +1,13 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { ammoTypeLabel, itemDefinition, slotFromBucketHash, statName } from "../bungie/manifest.js";
+import {
+  ammoTypeLabel,
+  equipableItemSet,
+  gearTierFromPlugs,
+  itemDefinition,
+  slotFromBucketHash,
+  statName,
+} from "../bungie/manifest.js";
 import { Component, DamageType, getProfile } from "../bungie/profile.js";
 import { instanceMap } from "./inventory.js";
 import { json } from "./response.js";
@@ -10,7 +17,7 @@ export function registerInspectItem(server: McpServer): void {
     "inspect_item",
     {
       description:
-        "Inspect a single item's mechanics: its perks and mods with current in-game descriptions, named stats, element, tier, and power. Pass an itemInstanceId (from list_inventory / get_equipped) to read the actual rolled perks on that copy — including a subclass's equipped aspects and fragments. Pass an itemHash for an item you don't own (its intrinsic and default perks). This is the source of truth for reasoning about builds and synergies.",
+        "Inspect a single item's mechanics: its perks and mods with current in-game descriptions, named stats, element, rarity tier, power, gear tier (the 1-5 Edge of Fate quality scale, armor only — only resolved for an owned instance), and armor set with its set-bonus perks. Pass an itemInstanceId (from list_inventory / get_equipped) to read the actual rolled perks on that copy — including a subclass's equipped aspects and fragments. Pass an itemHash for an item you don't own (its intrinsic and default perks). This is the source of truth for reasoning about builds and synergies.",
       inputSchema: {
         itemInstanceId: z.string().optional(),
         itemHash: z.number().int().optional(),
@@ -41,12 +48,16 @@ export function registerInspectItem(server: McpServer): void {
           .filter((socket) => socket.isVisible !== false && socket.plugHash !== undefined)
           .map((socket) => socket.plugHash as number);
 
-        const described = await describeItem(hash, plugHashes, stats);
+        const [described, gearTier] = await Promise.all([
+          describeItem(hash, plugHashes, stats),
+          gearTierFromPlugs(plugHashes),
+        ]);
 
         return json({
           ...described,
           element: instance?.damageType ? DamageType[instance.damageType] : undefined,
           power: instance?.primaryStat?.value,
+          gearTier,
         });
       }
 
@@ -111,7 +122,12 @@ async function describeItem(
   stats: Record<string, { value?: number }>,
 ) {
   const definition = await itemDefinition(itemHash);
-  const [perks, namedStats] = await Promise.all([describePerks(plugHashes), describeStats(stats)]);
+  const setHash = definition.equippingBlock?.equipableItemSetHash;
+  const [perks, namedStats, set] = await Promise.all([
+    describePerks(plugHashes),
+    describeStats(stats),
+    setHash ? equipableItemSet(setHash) : undefined,
+  ]);
 
   return {
     name: definition.displayProperties?.name ?? `Item ${itemHash >>> 0}`,
@@ -119,6 +135,7 @@ async function describeItem(
     tier: definition.inventory?.tierTypeName,
     slot: slotFromBucketHash(definition.inventory?.bucketTypeHash),
     ammoType: ammoTypeLabel(definition.equippingBlock?.ammoType),
+    set,
     perks,
     stats: namedStats,
   };

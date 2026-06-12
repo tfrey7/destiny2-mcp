@@ -10,12 +10,13 @@ export function registerSearchItems(server: McpServer): void {
     "search_items",
     {
       description:
-        "Search the full Destiny 2 item catalog (the manifest, not the player's inventory) by attribute. Filter by any combination of name substring, element, item type (e.g. 'Trace Rifle'), tier, and category. Use this to enumerate gear that matches criteria — e.g. every exotic Strand weapon, or every shader matching a theme — rather than answering from memory. Pass owned:false to keep only gear the account has never acquired, or owned:true for gear it owns — ownership accounts for both held inventory and Collections, so it is the right signal for 'what am I missing' (don't diff inventory by hand). For armor, pass class (Warlock/Titan/Hunter) to keep only that class's gear plus class-agnostic pieces — the right way to narrow exotic armor to a single-class account. The cosmetic categories (shader, emblem, ornament, or cosmetic for all three) surface looks a player can apply; each result's itemHash is the plugItemHash for insert_plug (shaders/ornaments) or feeds how_to_acquire and inspect_item.",
+        "Search the full Destiny 2 item catalog (the manifest, not the player's inventory) by attribute. Filter by any combination of name substring, element, item type (e.g. 'Trace Rifle'), rarity tier, armor set name, and category. Use this to enumerate gear that matches criteria — e.g. every exotic Strand weapon, every piece of an armor set, or every shader matching a theme — rather than answering from memory. Note: gear tier (the 1-5 scale) is per-instance, not a catalog attribute, so filter that with list_inventory instead. Pass owned:false to keep only gear the account has never acquired, or owned:true for gear it owns — ownership accounts for both held inventory and Collections, so it is the right signal for 'what am I missing' (don't diff inventory by hand). For armor, pass class (Warlock/Titan/Hunter) to keep only that class's gear plus class-agnostic pieces — the right way to narrow exotic armor to a single-class account. The cosmetic categories (shader, emblem, ornament, or cosmetic for all three) surface looks a player can apply; each result's itemHash is the plugItemHash for insert_plug (shaders/ornaments) or feeds how_to_acquire and inspect_item.",
       inputSchema: {
         name: z.string().optional(),
         element: elementSchema.optional(),
         type: z.string().optional(),
         tier: tierSchema.optional(),
+        set: z.string().optional(),
         category: itemCategorySchema.optional(),
         class: classNameSchema.optional(),
         owned: z.boolean().optional(),
@@ -40,6 +41,7 @@ export function registerSearchItems(server: McpServer): void {
         slot: item.slot,
         ammoType: item.ammoType,
         classType: item.classType,
+        set: item.setName,
         itemHash: item.hash,
         ...(filters.owned !== undefined && { owned: filters.owned }),
       }));

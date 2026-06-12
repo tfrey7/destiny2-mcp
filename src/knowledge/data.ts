@@ -56,7 +56,24 @@ be Legendary unless the player is willing to drop the existing exotic.
 
 Ammo types — Primary (infinite), Special (scarce), Heavy. Power-slot weapons are Heavy; Kinetic and
 Energy weapons are Primary or Special. Running Special in both Kinetic and Energy makes them compete for
-the same scarce ammo, which is a real cost to weigh when planning a loadout.`,
+the same scarce ammo, which is a real cost to weigh when planning a loadout.
+
+Two scales both called "tier" — do not conflate them:
+- RARITY (Common, Uncommon, Rare, Legendary, Exotic) — how the exotic limit and most build talk read
+  "tier". This is what get_equipped / list_inventory / inspect_item report as \`tier\`.
+- GEAR TIER (1-5) — the Edge of Fate quality scale on armor. Higher tier = a larger stat budget. It is
+  per-instance (two copies of the same armor can differ) and reported as \`gearTier\`, only on owned
+  gear. Read as the current masterwork level: it equals the drop tier once a piece is fully upgraded,
+  and a lower number on an un-upgraded piece means upgrade headroom, not a worse drop. Legacy
+  (pre-tier) armor has no gearTier. When comparing two same-slot armor pieces, prefer the higher gear
+  tier for its bigger stat budget — but never over the exotic/set/stat-spread needs of the build.
+
+Armor set bonuses — most modern armor belongs to a SET, and equipping multiple pieces of the same set
+unlocks set perks (typically a 2-piece and a 4-piece bonus). get_equipped reports each character's
+set-bonus progress: which perks are active now and how many more pieces the next one needs. inspect_item
+and list_inventory report a piece's \`set\`. Guidance: completing a 2- or 4-piece bonus is often worth
+more than a marginal stat or gear-tier gain, so when a player is one piece away from a strong set perk,
+say so. Set bonuses are armor-only; weapons have no set. Legacy armor belongs to no set.`,
   },
   {
     id: "cosmetics",

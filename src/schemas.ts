@@ -21,8 +21,14 @@ export type Element = z.infer<typeof elementSchema>;
 export const subclassSchema = z.enum(["Prismatic", "Solar", "Arc", "Void", "Stasis", "Strand"]);
 export type Subclass = z.infer<typeof subclassSchema>;
 
+// Rarity — the long-standing Common→Exotic scale (manifest `inventory.tierTypeName`). Named `tier`
+// across the tools for historical reasons; do NOT confuse it with gear tier below.
 export const tierSchema = z.enum(["Exotic", "Legendary", "Rare", "Uncommon", "Common"]);
 export type Tier = z.infer<typeof tierSchema>;
+
+// Gear tier — the Edge of Fate 1-5 quality scale, distinct from rarity. It is per-instance (decoded
+// from the masterwork plug socketed on a specific copy), so only owned items report it.
+export const gearTierSchema = z.number().int().min(1).max(5);
 
 export const classNameSchema = z.enum(["Titan", "Hunter", "Warlock"]);
 export type ClassName = z.infer<typeof classNameSchema>;

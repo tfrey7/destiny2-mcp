@@ -1,0 +1,1297 @@
+[
+  {
+    "table": "DestinyEquipableItemSetDefinition",
+    "hash": 2151917545,
+    "json": {
+      "displayProperties": {
+        "description": "",
+        "name": "Thriving Survivor",
+        "iconHash": 0,
+        "hasIcon": false
+      },
+      "setItems": [
+        2419726011, 365930261, 3358389096, 1953372754, 828189485, 3917237407, 3093390809, 537150100,
+        2891930926, 2838384481, 690430270, 3781374706, 123224963, 1616916151, 1109812632
+      ],
+      "setPerks": [
+        {
+          "requiredSetCount": 2,
+          "sandboxPerkHash": 681117218
+        },
+        {
+          "requiredSetCount": 4,
+          "sandboxPerkHash": 681117219
+        }
+      ],
+      "hash": 2151917545,
+      "index": 18,
+      "redacted": false,
+      "blacklisted": false
+    }
+  },
+  {
+    "table": "DestinyInventoryItemDefinition",
+    "hash": 788990506,
+    "json": {
+      "displayProperties": {
+        "description": "Upgrade this armor to improve its 3 lowest stats by 1, up to a maximum of 5 in each when upgraded to a Masterwork.",
+        "name": "Upgrade Armor",
+        "icon": "/common/destiny2_content/icons/171c66ca05570c05c95b262ac24d761f.jpg",
+        "iconHash": 3160068751,
+        "hasIcon": true
+      },
+      "tooltipNotifications": [],
+      "iconWatermark": "/common/destiny2_content/icons/d23f74b7eb2332857a3e39309cf946fb.png",
+      "backgroundColor": {
+        "colorHash": 0,
+        "red": 0,
+        "green": 0,
+        "blue": 0,
+        "alpha": 0
+      },
+      "isFeaturedItem": false,
+      "isHolofoil": false,
+      "isAdept": false,
+      "itemTypeDisplayName": "",
+      "flavorText": "",
+      "uiItemDisplayStyle": "",
+      "itemTypeAndTierDisplayName": "",
+      "displaySource": "",
+      "tooltipStyle": "vendor_action",
+      "action": {
+        "verbName": "Dismantle",
+        "verbDescription": "",
+        "isPositive": true,
+        "requiredCooldownSeconds": 0,
+        "requiredItems": [],
+        "progressionRewards": [],
+        "rewardSheetHash": 0,
+        "rewardItemHash": 0,
+        "rewardSiteHash": 0,
+        "requiredCooldownHash": 0,
+        "deleteOnAction": true,
+        "consumeEntireStack": false,
+        "useOnAcquire": false
+      },
+      "inventory": {
+        "maxStackSize": 1,
+        "bucketTypeHash": 3313201758,
+        "recoveryBucketTypeHash": 215593132,
+        "tierTypeHash": 4008398120,
+        "isInstanceItem": false,
+        "nonTransferrableOriginal": false,
+        "tierTypeName": "Legendary",
+        "tierType": 5,
+        "expirationTooltip": "",
+        "expiredInActivityMessage": "",
+        "expiredInOrbitMessage": "",
+        "suppressExpirationWhenObjectivesComplete": true
+      },
+      "plug": {
+        "insertionRules": [
+          {
+            "failureMessage": "Requires Guardian Rank 4: Modify Armor"
+          }
+        ],
+        "plugCategoryIdentifier": "v460.plugs.armor.masterworks",
+        "plugCategoryHash": 2198080209,
+        "onActionRecreateSelf": false,
+        "actionRewardSiteHash": 0,
+        "actionRewardItemOverrideHash": 0,
+        "insertionMaterialRequirementHash": 317133567,
+        "previewItemOverrideHash": 0,
+        "enabledMaterialRequirementHash": 0,
+        "enabledRules": [],
+        "uiPlugLabel": "",
+        "plugStyle": 0,
+        "plugAvailability": 2,
+        "alternateUiPlugLabel": "",
+        "alternatePlugStyle": 0,
+        "isDummyPlug": false,
+        "parentItemOverride": {
+          "additionalEquipRequirementsDisplayStrings": []
+        },
+        "energyCapacity": {
+          "capacityValue": 10,
+          "energyTypeHash": 4069572561,
+          "energyType": 3
+        },
+        "applyStatsToSocketOwnerItem": false
+      },
+      "acquireRewardSiteHash": 0,
+      "acquireUnlockHash": 0,
+      "investmentStats": [
+        {
+          "statTypeHash": 16120457,
+          "value": 10,
+          "isConditionallyActive": false
+        },
+        {
+          "statTypeHash": 2996146975,
+          "value": 1,
+          "isConditionallyActive": true
+        },
+        {
+          "statTypeHash": 392767087,
+          "value": 1,
+          "isConditionallyActive": true
+        },
+        {
+          "statTypeHash": 1735777505,
+          "value": 1,
+          "isConditionallyActive": true
+        },
+        {
+          "statTypeHash": 144602215,
+          "value": 1,
+          "isConditionallyActive": true
+        },
+        {
+          "statTypeHash": 1943323491,
+          "value": 1,
+          "isConditionallyActive": true
+        },
+        {
+          "statTypeHash": 4244567218,
+          "value": 1,
+          "isConditionallyActive": true
+        }
+      ],
+      "perks": [],
+      "allowActions": true,
+      "doesPostmasterPullHaveSideEffects": false,
+      "nonTransferrable": false,
+      "itemCategoryHashes": [59, 141186804],
+      "specialItemType": 0,
+      "itemType": 19,
+      "itemSubType": 0,
+      "classType": 3,
+      "breakerType": 0,
+      "equippable": false,
+      "defaultDamageType": 0,
+      "isWrapper": false,
+      "hash": 788990506,
+      "index": 16513,
+      "redacted": false,
+      "blacklisted": false
+    }
+  },
+  {
+    "table": "DestinyInventoryItemDefinition",
+    "hash": 788990510,
+    "json": {
+      "displayProperties": {
+        "description": "Upgrade this armor to a Masterwork, improving its 3 lowest stats by 1.",
+        "name": "Upgrade Armor",
+        "icon": "/common/destiny2_content/icons/171c66ca05570c05c95b262ac24d761f.jpg",
+        "iconHash": 3160068747,
+        "hasIcon": true
+      },
+      "tooltipNotifications": [],
+      "iconWatermark": "/common/destiny2_content/icons/e393be8164fbe21a6f338bfe519ce31b.png",
+      "backgroundColor": {
+        "colorHash": 0,
+        "red": 0,
+        "green": 0,
+        "blue": 0,
+        "alpha": 0
+      },
+      "isFeaturedItem": false,
+      "isHolofoil": false,
+      "isAdept": false,
+      "itemTypeDisplayName": "",
+      "flavorText": "",
+      "uiItemDisplayStyle": "",
+      "itemTypeAndTierDisplayName": "",
+      "displaySource": "",
+      "tooltipStyle": "vendor_action",
+      "action": {
+        "verbName": "Dismantle",
+        "verbDescription": "",
+        "isPositive": true,
+        "requiredCooldownSeconds": 0,
+        "requiredItems": [],
+        "progressionRewards": [],
+        "rewardSheetHash": 0,
+        "rewardItemHash": 0,
+        "rewardSiteHash": 0,
+        "requiredCooldownHash": 0,
+        "deleteOnAction": true,
+        "consumeEntireStack": false,
+        "useOnAcquire": false
+      },
+      "inventory": {
+        "maxStackSize": 1,
+        "bucketTypeHash": 3313201758,
+        "recoveryBucketTypeHash": 215593132,
+        "tierTypeHash": 4008398120,
+        "isInstanceItem": false,
+        "nonTransferrableOriginal": false,
+        "tierTypeName": "Legendary",
+        "tierType": 5,
+        "expirationTooltip": "",
+        "expiredInActivityMessage": "",
+        "expiredInOrbitMessage": "",
+        "suppressExpirationWhenObjectivesComplete": true
+      },
+      "plug": {
+        "insertionRules": [
+          {
+            "failureMessage": "Requires Guardian Rank 4: Modify Armor"
+          }
+        ],
+        "plugCategoryIdentifier": "v460.plugs.armor.masterworks",
+        "plugCategoryHash": 2198080209,
+        "onActionRecreateSelf": false,
+        "actionRewardSiteHash": 0,
+        "actionRewardItemOverrideHash": 0,
+        "insertionMaterialRequirementHash": 317133563,
+        "previewItemOverrideHash": 0,
+        "enabledMaterialRequirementHash": 0,
+        "enabledRules": [],
+        "uiPlugLabel": "masterwork",
+        "plugStyle": 1,
+        "plugAvailability": 2,
+        "alternateUiPlugLabel": "",
+        "alternatePlugStyle": 0,
+        "isDummyPlug": false,
+        "parentItemOverride": {
+          "additionalEquipRequirementsDisplayStrings": []
+        },
+        "energyCapacity": {
+          "capacityValue": 10,
+          "energyTypeHash": 4069572561,
+          "energyType": 3
+        },
+        "applyStatsToSocketOwnerItem": false
+      },
+      "acquireRewardSiteHash": 0,
+      "acquireUnlockHash": 0,
+      "investmentStats": [
+        {
+          "statTypeHash": 16120457,
+          "value": 10,
+          "isConditionallyActive": false
+        },
+        {
+          "statTypeHash": 2996146975,
+          "value": 5,
+          "isConditionallyActive": true
+        },
+        {
+          "statTypeHash": 392767087,
+          "value": 5,
+          "isConditionallyActive": true
+        },
+        {
+          "statTypeHash": 1735777505,
+          "value": 5,
+          "isConditionallyActive": true
+        },
+        {
+          "statTypeHash": 144602215,
+          "value": 5,
+          "isConditionallyActive": true
+        },
+        {
+          "statTypeHash": 1943323491,
+          "value": 5,
+          "isConditionallyActive": true
+        },
+        {
+          "statTypeHash": 4244567218,
+          "value": 5,
+          "isConditionallyActive": true
+        }
+      ],
+      "perks": [],
+      "allowActions": true,
+      "doesPostmasterPullHaveSideEffects": false,
+      "nonTransferrable": false,
+      "itemCategoryHashes": [59, 141186804],
+      "specialItemType": 0,
+      "itemType": 19,
+      "itemSubType": 0,
+      "classType": 3,
+      "breakerType": 0,
+      "equippable": false,
+      "defaultDamageType": 0,
+      "isWrapper": false,
+      "hash": 788990510,
+      "index": 16517,
+      "redacted": false,
+      "blacklisted": false
+    }
+  },
+  {
+    "table": "DestinyInventoryItemDefinition",
+    "hash": 902052880,
+    "json": {
+      "displayProperties": {
+        "description": "Upgrade this armor to increase its energy capacity by 1. Fully upgrading this armor will forge a Masterwork, which provides a bonus to all stats.",
+        "name": "Upgrade Armor",
+        "icon": "/common/destiny2_content/icons/171c66ca05570c05c95b262ac24d761f.jpg",
+        "iconHash": 301561645,
+        "hasIcon": true
+      },
+      "tooltipNotifications": [],
+      "iconWatermark": "/common/destiny2_content/icons/b924c3f2612cfec9c60d4dc2c3ec24b9.png",
+      "backgroundColor": {
+        "colorHash": 0,
+        "red": 0,
+        "green": 0,
+        "blue": 0,
+        "alpha": 0
+      },
+      "isFeaturedItem": false,
+      "isHolofoil": false,
+      "isAdept": false,
+      "itemTypeDisplayName": "",
+      "flavorText": "",
+      "uiItemDisplayStyle": "",
+      "itemTypeAndTierDisplayName": "",
+      "displaySource": "",
+      "tooltipStyle": "vendor_action",
+      "action": {
+        "verbName": "Dismantle",
+        "verbDescription": "",
+        "isPositive": true,
+        "requiredCooldownSeconds": 0,
+        "requiredItems": [],
+        "progressionRewards": [],
+        "rewardSheetHash": 0,
+        "rewardItemHash": 0,
+        "rewardSiteHash": 0,
+        "requiredCooldownHash": 0,
+        "deleteOnAction": true,
+        "consumeEntireStack": false,
+        "useOnAcquire": false
+      },
+      "inventory": {
+        "maxStackSize": 1,
+        "bucketTypeHash": 3313201758,
+        "recoveryBucketTypeHash": 215593132,
+        "tierTypeHash": 4008398120,
+        "isInstanceItem": false,
+        "nonTransferrableOriginal": false,
+        "tierTypeName": "Legendary",
+        "tierType": 5,
+        "expirationTooltip": "",
+        "expiredInActivityMessage": "",
+        "expiredInOrbitMessage": "",
+        "suppressExpirationWhenObjectivesComplete": true
+      },
+      "plug": {
+        "insertionRules": [
+          {
+            "failureMessage": "Requires Guardian Rank 4: Modify Armor"
+          }
+        ],
+        "plugCategoryIdentifier": "v460.plugs.armor.masterworks.stat.resistance_2",
+        "plugCategoryHash": 400813043,
+        "onActionRecreateSelf": false,
+        "actionRewardSiteHash": 0,
+        "actionRewardItemOverrideHash": 0,
+        "insertionMaterialRequirementHash": 3588361558,
+        "previewItemOverrideHash": 0,
+        "enabledMaterialRequirementHash": 0,
+        "enabledRules": [],
+        "uiPlugLabel": "masterwork",
+        "plugStyle": 1,
+        "plugAvailability": 2,
+        "alternateUiPlugLabel": "",
+        "alternatePlugStyle": 0,
+        "isDummyPlug": false,
+        "parentItemOverride": {
+          "additionalEquipRequirementsDisplayStrings": []
+        },
+        "energyCapacity": {
+          "capacityValue": 10,
+          "energyTypeHash": 4069572561,
+          "energyType": 3
+        },
+        "applyStatsToSocketOwnerItem": false
+      },
+      "acquireRewardSiteHash": 0,
+      "acquireUnlockHash": 0,
+      "investmentStats": [
+        {
+          "statTypeHash": 16120457,
+          "value": 10,
+          "isConditionallyActive": false
+        },
+        {
+          "statTypeHash": 2996146975,
+          "value": 2,
+          "isConditionallyActive": false
+        },
+        {
+          "statTypeHash": 392767087,
+          "value": 2,
+          "isConditionallyActive": false
+        },
+        {
+          "statTypeHash": 1735777505,
+          "value": 2,
+          "isConditionallyActive": false
+        },
+        {
+          "statTypeHash": 144602215,
+          "value": 2,
+          "isConditionallyActive": false
+        },
+        {
+          "statTypeHash": 1943323491,
+          "value": 2,
+          "isConditionallyActive": false
+        },
+        {
+          "statTypeHash": 4244567218,
+          "value": 2,
+          "isConditionallyActive": false
+        }
+      ],
+      "perks": [],
+      "allowActions": true,
+      "doesPostmasterPullHaveSideEffects": false,
+      "nonTransferrable": false,
+      "itemCategoryHashes": [59],
+      "specialItemType": 0,
+      "itemType": 19,
+      "itemSubType": 0,
+      "classType": 3,
+      "breakerType": 0,
+      "equippable": false,
+      "defaultDamageType": 0,
+      "isWrapper": false,
+      "hash": 902052880,
+      "index": 8484,
+      "redacted": false,
+      "blacklisted": false
+    }
+  },
+  {
+    "table": "DestinyInventoryItemDefinition",
+    "hash": 1980618587,
+    "json": {
+      "displayProperties": {
+        "description": "No mod currently selected.",
+        "name": "Empty Mod Socket",
+        "icon": "/common/destiny2_content/icons/80d2e1a2a76fdea2752beb141084dcf8.jpg",
+        "iconHash": 897685022,
+        "iconSequences": [
+          {
+            "frames": ["/common/destiny2_content/icons/80d2e1a2a76fdea2752beb141084dcf8.jpg"]
+          },
+          {
+            "frames": ["/common/destiny2_content/icons/993edd53399d7b31e6cc4109c9d3aba5.png"]
+          }
+        ],
+        "hasIcon": true
+      },
+      "tooltipNotifications": [],
+      "backgroundColor": {
+        "colorHash": 0,
+        "red": 0,
+        "green": 0,
+        "blue": 0,
+        "alpha": 0
+      },
+      "isFeaturedItem": false,
+      "isHolofoil": false,
+      "isAdept": false,
+      "itemTypeDisplayName": "General Armor Mod",
+      "flavorText": "",
+      "uiItemDisplayStyle": "",
+      "itemTypeAndTierDisplayName": "Common General Armor Mod",
+      "displaySource": "",
+      "tooltipStyle": "vendor_action",
+      "action": {
+        "verbName": "Dismantle",
+        "verbDescription": "",
+        "isPositive": false,
+        "requiredCooldownSeconds": 0,
+        "requiredItems": [],
+        "progressionRewards": [],
+        "actionTypeLabel": "shard",
+        "rewardSheetHash": 0,
+        "rewardItemHash": 0,
+        "rewardSiteHash": 0,
+        "requiredCooldownHash": 0,
+        "deleteOnAction": true,
+        "consumeEntireStack": false,
+        "useOnAcquire": false
+      },
+      "inventory": {
+        "maxStackSize": 1,
+        "bucketTypeHash": 2422292810,
+        "recoveryBucketTypeHash": 0,
+        "tierTypeHash": 3340296461,
+        "isInstanceItem": false,
+        "nonTransferrableOriginal": false,
+        "tierTypeName": "Common",
+        "tierType": 2,
+        "expirationTooltip": "",
+        "expiredInActivityMessage": "",
+        "expiredInOrbitMessage": "",
+        "suppressExpirationWhenObjectivesComplete": true
+      },
+      "plug": {
+        "insertionRules": [
+          {
+            "failureMessage": ""
+          }
+        ],
+        "plugCategoryIdentifier": "enhancements.v2_general",
+        "plugCategoryHash": 2487827355,
+        "onActionRecreateSelf": false,
+        "actionRewardSiteHash": 0,
+        "actionRewardItemOverrideHash": 0,
+        "insertionMaterialRequirementHash": 0,
+        "previewItemOverrideHash": 0,
+        "enabledMaterialRequirementHash": 0,
+        "enabledRules": [
+          {
+            "failureMessage": ""
+          }
+        ],
+        "uiPlugLabel": "",
+        "plugStyle": 0,
+        "plugAvailability": 0,
+        "alternateUiPlugLabel": "",
+        "alternatePlugStyle": 0,
+        "isDummyPlug": false,
+        "parentItemOverride": {
+          "additionalEquipRequirementsDisplayStrings": []
+        },
+        "applyStatsToSocketOwnerItem": false
+      },
+      "acquireRewardSiteHash": 0,
+      "acquireUnlockHash": 0,
+      "investmentStats": [],
+      "perks": [],
+      "allowActions": true,
+      "doesPostmasterPullHaveSideEffects": false,
+      "nonTransferrable": true,
+      "itemCategoryHashes": [59, 4104513227],
+      "specialItemType": 0,
+      "itemType": 19,
+      "itemSubType": 0,
+      "classType": 3,
+      "breakerType": 0,
+      "equippable": false,
+      "defaultDamageType": 0,
+      "isWrapper": false,
+      "hash": 1980618587,
+      "index": 720,
+      "redacted": false,
+      "blacklisted": false
+    }
+  },
+  {
+    "table": "DestinyInventoryItemDefinition",
+    "hash": 2419726011,
+    "json": {
+      "displayProperties": {
+        "description": "",
+        "name": "Thriving Survivor Grips",
+        "icon": "/common/destiny2_content/icons/0f21a432eb2434119f175f1a2392b6a8.jpg",
+        "iconHash": 2419726011,
+        "hasIcon": true
+      },
+      "tooltipNotifications": [],
+      "collectibleHash": 803281061,
+      "iconWatermark": "/common/destiny2_content/icons/95f7754d52d6016fdc445fb62aa7a31e.png",
+      "iconWatermarkShelved": "/common/destiny2_content/icons/6e627f8283368c3c3441b95c38119a45.png",
+      "iconWatermarkFeatured": "/common/destiny2_content/icons/6e627f8283368c3c3441b95c38119a45.png",
+      "backgroundColor": {
+        "colorHash": 0,
+        "red": 0,
+        "green": 0,
+        "blue": 0,
+        "alpha": 0
+      },
+      "isFeaturedItem": false,
+      "isHolofoil": false,
+      "isAdept": false,
+      "screenshot": "/common/destiny2_content/screenshots/2419726011.jpg",
+      "itemTypeDisplayName": "Gauntlets",
+      "flavorText": "Trust only the strength of your own arm.",
+      "uiItemDisplayStyle": "",
+      "itemTypeAndTierDisplayName": "Legendary Gauntlets",
+      "displaySource": "Random Perks: This item cannot be reacquired from Collections.",
+      "action": {
+        "verbName": "Dismantle",
+        "verbDescription": "",
+        "isPositive": false,
+        "requiredCooldownSeconds": 0,
+        "requiredItems": [],
+        "progressionRewards": [],
+        "actionTypeLabel": "shard",
+        "rewardSheetHash": 0,
+        "rewardItemHash": 0,
+        "rewardSiteHash": 0,
+        "requiredCooldownHash": 0,
+        "deleteOnAction": true,
+        "consumeEntireStack": false,
+        "useOnAcquire": false
+      },
+      "inventory": {
+        "maxStackSize": 1,
+        "bucketTypeHash": 3551918588,
+        "recoveryBucketTypeHash": 215593132,
+        "tierTypeHash": 4008398120,
+        "isInstanceItem": true,
+        "nonTransferrableOriginal": false,
+        "tierTypeName": "Legendary",
+        "tierType": 5,
+        "expirationTooltip": "",
+        "expiredInActivityMessage": "",
+        "expiredInOrbitMessage": "",
+        "suppressExpirationWhenObjectivesComplete": true
+      },
+      "stats": {
+        "disablePrimaryStatDisplay": false,
+        "statGroupHash": 548191128,
+        "stats": {
+          "3897883278": {
+            "statHash": 3897883278,
+            "value": 0,
+            "minimum": 0,
+            "maximum": 0,
+            "displayMaximum": 45
+          },
+          "1935470627": {
+            "statHash": 1935470627,
+            "value": 0,
+            "minimum": 0,
+            "maximum": 0,
+            "displayMaximum": 45
+          },
+          "1885944937": {
+            "statHash": 1885944937,
+            "value": 0,
+            "minimum": 0,
+            "maximum": 0,
+            "displayMaximum": 45
+          },
+          "765379354": {
+            "statHash": 765379354,
+            "value": 0,
+            "minimum": 0,
+            "maximum": 0,
+            "displayMaximum": 45
+          }
+        },
+        "hasDisplayableStats": false,
+        "primaryBaseStatHash": 3897883278
+      },
+      "equippingBlock": {
+        "uniqueLabelHash": 0,
+        "equipmentSlotTypeHash": 3551918588,
+        "attributes": 0,
+        "equippingSoundHash": 0,
+        "hornSoundHash": 0,
+        "ammoType": 0,
+        "displayStrings": [""],
+        "equipableItemSetHash": 2151917545
+      },
+      "translationBlock": {
+        "weaponPatternHash": 0,
+        "defaultDyes": [
+          {
+            "channelHash": 662199250,
+            "dyeHash": 2621057309
+          },
+          {
+            "channelHash": 1367384683,
+            "dyeHash": 2522352692
+          },
+          {
+            "channelHash": 218592586,
+            "dyeHash": 3993913299
+          }
+        ],
+        "lockedDyes": [],
+        "customDyes": [],
+        "arrangements": [
+          {
+            "classHash": 0,
+            "artArrangementHash": 2419726011
+          }
+        ],
+        "hasGeometry": true
+      },
+      "preview": {
+        "screenStyle": "screen_style_sockets",
+        "previewVendorHash": 0,
+        "previewActionString": "Details"
+      },
+      "quality": {
+        "itemLevels": [],
+        "qualityLevel": 0,
+        "infusionCategoryName": "3853570272",
+        "infusionCategoryHash": 3853570272,
+        "infusionCategoryHashes": [3853570272],
+        "progressionLevelRequirementHash": 3768955166,
+        "currentVersion": 0,
+        "versions": [
+          {
+            "powerCapHash": 2759499571
+          }
+        ],
+        "displayVersionWatermarkIcons": [
+          "/common/destiny2_content/icons/95f7754d52d6016fdc445fb62aa7a31e.png"
+        ]
+      },
+      "plug": {
+        "insertionRules": [
+          {
+            "failureMessage": ""
+          }
+        ],
+        "plugCategoryIdentifier": "armor_skins_hunter_arms",
+        "plugCategoryHash": 4060972748,
+        "onActionRecreateSelf": false,
+        "actionRewardSiteHash": 0,
+        "actionRewardItemOverrideHash": 0,
+        "insertionMaterialRequirementHash": 0,
+        "previewItemOverrideHash": 0,
+        "enabledMaterialRequirementHash": 0,
+        "enabledRules": [
+          {
+            "failureMessage": ""
+          }
+        ],
+        "uiPlugLabel": "",
+        "plugStyle": 0,
+        "plugAvailability": 0,
+        "alternateUiPlugLabel": "",
+        "alternatePlugStyle": 0,
+        "isDummyPlug": false,
+        "parentItemOverride": {
+          "additionalEquipRequirementsDisplayStrings": []
+        },
+        "applyStatsToSocketOwnerItem": false
+      },
+      "acquireRewardSiteHash": 0,
+      "acquireUnlockHash": 0,
+      "sockets": {
+        "detail": "Details",
+        "socketEntries": [
+          {
+            "socketTypeHash": 1718047805,
+            "singleInitialItemHash": 1980618587,
+            "reusablePlugItems": [],
+            "preventInitializationOnVendorPurchase": false,
+            "preventInitializationWhenVersioning": false,
+            "hidePerksInItemTooltip": false,
+            "plugSources": 13,
+            "reusablePlugSetHash": 731468111,
+            "overridesUiAppearance": false,
+            "defaultVisible": true
+          },
+          {
+            "socketTypeHash": 1108765570,
+            "singleInitialItemHash": 3820147479,
+            "reusablePlugItems": [],
+            "preventInitializationOnVendorPurchase": false,
+            "preventInitializationWhenVersioning": false,
+            "hidePerksInItemTooltip": false,
+            "plugSources": 13,
+            "reusablePlugSetHash": 3899745242,
+            "overridesUiAppearance": false,
+            "defaultVisible": true
+          },
+          {
+            "socketTypeHash": 1108765570,
+            "singleInitialItemHash": 3820147479,
+            "reusablePlugItems": [],
+            "preventInitializationOnVendorPurchase": false,
+            "preventInitializationWhenVersioning": false,
+            "hidePerksInItemTooltip": false,
+            "plugSources": 13,
+            "reusablePlugSetHash": 3899745242,
+            "overridesUiAppearance": false,
+            "defaultVisible": true
+          },
+          {
+            "socketTypeHash": 1108765570,
+            "singleInitialItemHash": 3820147479,
+            "reusablePlugItems": [],
+            "preventInitializationOnVendorPurchase": false,
+            "preventInitializationWhenVersioning": false,
+            "hidePerksInItemTooltip": false,
+            "plugSources": 13,
+            "reusablePlugSetHash": 3899745242,
+            "overridesUiAppearance": false,
+            "defaultVisible": true
+          },
+          {
+            "socketTypeHash": 2321980680,
+            "singleInitialItemHash": 4248210736,
+            "reusablePlugItems": [
+              {
+                "plugItemHash": 1545278261
+              },
+              {
+                "plugItemHash": 3387636832
+              },
+              {
+                "plugItemHash": 3387636833
+              },
+              {
+                "plugItemHash": 412487139
+              },
+              {
+                "plugItemHash": 412487138
+              },
+              {
+                "plugItemHash": 3515978520
+              },
+              {
+                "plugItemHash": 2117628185
+              },
+              {
+                "plugItemHash": 1559478790
+              },
+              {
+                "plugItemHash": 3510413604
+              },
+              {
+                "plugItemHash": 195075337
+              },
+              {
+                "plugItemHash": 195075336
+              },
+              {
+                "plugItemHash": 195075339
+              },
+              {
+                "plugItemHash": 2068046139
+              },
+              {
+                "plugItemHash": 2068046138
+              },
+              {
+                "plugItemHash": 2068046137
+              },
+              {
+                "plugItemHash": 2068046136
+              },
+              {
+                "plugItemHash": 2068046143
+              }
+            ],
+            "preventInitializationOnVendorPurchase": false,
+            "preventInitializationWhenVersioning": false,
+            "hidePerksInItemTooltip": false,
+            "plugSources": 7,
+            "reusablePlugSetHash": 236342179,
+            "overridesUiAppearance": false,
+            "defaultVisible": true
+          },
+          {
+            "socketTypeHash": 1843767421,
+            "singleInitialItemHash": 788990507,
+            "reusablePlugItems": [
+              {
+                "plugItemHash": 788990507
+              },
+              {
+                "plugItemHash": 788990506
+              },
+              {
+                "plugItemHash": 788990505
+              },
+              {
+                "plugItemHash": 788990504
+              },
+              {
+                "plugItemHash": 788990511
+              },
+              {
+                "plugItemHash": 788990510
+              },
+              {
+                "plugItemHash": 2416688578
+              },
+              {
+                "plugItemHash": 2416688577
+              },
+              {
+                "plugItemHash": 2416688576
+              },
+              {
+                "plugItemHash": 2416688583
+              },
+              {
+                "plugItemHash": 2416688582
+              },
+              {
+                "plugItemHash": 1431426107
+              },
+              {
+                "plugItemHash": 1431426104
+              },
+              {
+                "plugItemHash": 1431426105
+              },
+              {
+                "plugItemHash": 1431426110
+              },
+              {
+                "plugItemHash": 1431426111
+              },
+              {
+                "plugItemHash": 1582132964
+              },
+              {
+                "plugItemHash": 1582132967
+              },
+              {
+                "plugItemHash": 1582132966
+              },
+              {
+                "plugItemHash": 1582132961
+              },
+              {
+                "plugItemHash": 1582132960
+              },
+              {
+                "plugItemHash": 3266153493
+              },
+              {
+                "plugItemHash": 3266153494
+              },
+              {
+                "plugItemHash": 3266153495
+              },
+              {
+                "plugItemHash": 3266153488
+              },
+              {
+                "plugItemHash": 3266153489
+              },
+              {
+                "plugItemHash": 1283668726
+              },
+              {
+                "plugItemHash": 1283668725
+              },
+              {
+                "plugItemHash": 1283668724
+              },
+              {
+                "plugItemHash": 1283668723
+              },
+              {
+                "plugItemHash": 1283668722
+              }
+            ],
+            "preventInitializationOnVendorPurchase": false,
+            "preventInitializationWhenVersioning": false,
+            "hidePerksInItemTooltip": false,
+            "plugSources": 3,
+            "reusablePlugSetHash": 3002339980,
+            "overridesUiAppearance": false,
+            "defaultVisible": true
+          },
+          {
+            "socketTypeHash": 2104613635,
+            "singleInitialItemHash": 0,
+            "reusablePlugItems": [],
+            "preventInitializationOnVendorPurchase": false,
+            "preventInitializationWhenVersioning": false,
+            "hidePerksInItemTooltip": false,
+            "plugSources": 0,
+            "randomizedPlugSetHash": 1315181101,
+            "overridesUiAppearance": false,
+            "defaultVisible": false
+          },
+          {
+            "socketTypeHash": 1271523453,
+            "singleInitialItemHash": 0,
+            "reusablePlugItems": [],
+            "preventInitializationOnVendorPurchase": false,
+            "preventInitializationWhenVersioning": false,
+            "hidePerksInItemTooltip": false,
+            "plugSources": 0,
+            "randomizedPlugSetHash": 1947512232,
+            "overridesUiAppearance": false,
+            "defaultVisible": false
+          },
+          {
+            "socketTypeHash": 2212837421,
+            "singleInitialItemHash": 0,
+            "reusablePlugItems": [],
+            "preventInitializationOnVendorPurchase": false,
+            "preventInitializationWhenVersioning": false,
+            "hidePerksInItemTooltip": false,
+            "plugSources": 0,
+            "randomizedPlugSetHash": 3299902496,
+            "overridesUiAppearance": false,
+            "defaultVisible": false
+          },
+          {
+            "socketTypeHash": 3303600813,
+            "singleInitialItemHash": 0,
+            "reusablePlugItems": [],
+            "preventInitializationOnVendorPurchase": false,
+            "preventInitializationWhenVersioning": false,
+            "hidePerksInItemTooltip": false,
+            "plugSources": 0,
+            "randomizedPlugSetHash": 445741600,
+            "overridesUiAppearance": false,
+            "defaultVisible": false
+          },
+          {
+            "socketTypeHash": 1669235414,
+            "singleInitialItemHash": 702981643,
+            "reusablePlugItems": [
+              {
+                "plugItemHash": 215385525
+              },
+              {
+                "plugItemHash": 3770475778
+              },
+              {
+                "plugItemHash": 3770475779
+              }
+            ],
+            "preventInitializationOnVendorPurchase": false,
+            "preventInitializationWhenVersioning": false,
+            "hidePerksInItemTooltip": false,
+            "plugSources": 15,
+            "reusablePlugSetHash": 294325177,
+            "overridesUiAppearance": false,
+            "defaultVisible": true
+          },
+          {
+            "socketTypeHash": 2581339086,
+            "singleInitialItemHash": 2121121504,
+            "reusablePlugItems": [
+              {
+                "plugItemHash": 3122197216
+              },
+              {
+                "plugItemHash": 388618952
+              },
+              {
+                "plugItemHash": 3681082702
+              },
+              {
+                "plugItemHash": 4088823605
+              },
+              {
+                "plugItemHash": 3310526732
+              },
+              {
+                "plugItemHash": 2125798995
+              },
+              {
+                "plugItemHash": 4164883102
+              },
+              {
+                "plugItemHash": 534630542
+              },
+              {
+                "plugItemHash": 311164277
+              },
+              {
+                "plugItemHash": 4210715468
+              },
+              {
+                "plugItemHash": 4020349587
+              },
+              {
+                "plugItemHash": 455024236
+              },
+              {
+                "plugItemHash": 309000506
+              },
+              {
+                "plugItemHash": 1672416975
+              },
+              {
+                "plugItemHash": 1922571986
+              },
+              {
+                "plugItemHash": 4116389173
+              },
+              {
+                "plugItemHash": 4026414261
+              },
+              {
+                "plugItemHash": 673231129
+              },
+              {
+                "plugItemHash": 3946669007
+              },
+              {
+                "plugItemHash": 3554800389
+              },
+              {
+                "plugItemHash": 2244422610
+              },
+              {
+                "plugItemHash": 4030660414
+              },
+              {
+                "plugItemHash": 1510949672
+              },
+              {
+                "plugItemHash": 1879022254
+              },
+              {
+                "plugItemHash": 957763733
+              },
+              {
+                "plugItemHash": 323635379
+              },
+              {
+                "plugItemHash": 3121760799
+              },
+              {
+                "plugItemHash": 691392383
+              },
+              {
+                "plugItemHash": 3284443097
+              },
+              {
+                "plugItemHash": 891771298
+              },
+              {
+                "plugItemHash": 1918710127
+              }
+            ],
+            "preventInitializationOnVendorPurchase": false,
+            "preventInitializationWhenVersioning": false,
+            "hidePerksInItemTooltip": false,
+            "plugSources": 7,
+            "reusablePlugSetHash": 1155052024,
+            "overridesUiAppearance": false,
+            "defaultVisible": true
+          }
+        ],
+        "intrinsicSockets": [
+          {
+            "plugItemHash": 3690882495,
+            "socketTypeHash": 1153257820,
+            "defaultVisible": true
+          }
+        ],
+        "socketCategories": [
+          {
+            "socketCategoryHash": 590099826,
+            "socketIndexes": [0, 1, 2, 3, 5, 11]
+          },
+          {
+            "socketCategoryHash": 1926152773,
+            "socketIndexes": [4, 10]
+          },
+          {
+            "socketCategoryHash": 3154740035,
+            "socketIndexes": [6, 7, 8, 9]
+          }
+        ]
+      },
+      "investmentStats": [
+        {
+          "statTypeHash": 3897883278,
+          "value": 0,
+          "isConditionallyActive": false
+        },
+        {
+          "statTypeHash": 1935470627,
+          "value": 0,
+          "isConditionallyActive": false
+        },
+        {
+          "statTypeHash": 1885944937,
+          "value": 0,
+          "isConditionallyActive": false
+        },
+        {
+          "statTypeHash": 765379354,
+          "value": 0,
+          "isConditionallyActive": true
+        }
+      ],
+      "perks": [],
+      "loreHash": 1722491869,
+      "allowActions": true,
+      "doesPostmasterPullHaveSideEffects": false,
+      "nonTransferrable": false,
+      "itemCategoryHashes": [23, 46, 20],
+      "specialItemType": 0,
+      "itemType": 2,
+      "itemSubType": 27,
+      "classType": 1,
+      "breakerType": 0,
+      "equippable": true,
+      "defaultDamageType": 0,
+      "isWrapper": false,
+      "traitIds": ["item.armor.arms", "releases.v950.dlc"],
+      "traitHashes": [1851377542, 2773025918],
+      "hash": 2419726011,
+      "index": 34828,
+      "redacted": false,
+      "blacklisted": false
+    }
+  },
+  {
+    "table": "DestinySandboxPerkDefinition",
+    "hash": 681117218,
+    "json": {
+      "displayProperties": {
+        "description": "Final blows with grenades grant Heat weapons bonus stability and vent speed and grant Primary ammo weapons bonus stability and reload speed.",
+        "name": "Opening Act",
+        "icon": "/common/destiny2_content/icons/9763eb72bc446b9d9f1b2c2b5efca82d.png",
+        "iconHash": 0,
+        "iconSequences": [
+          {
+            "frames": ["/common/destiny2_content/icons/9763eb72bc446b9d9f1b2c2b5efca82d.png"]
+          },
+          {
+            "frames": ["/common/destiny2_content/icons/7e7c3cb8037055ae39705a734705610d.png"]
+          }
+        ],
+        "hasIcon": true
+      },
+      "isDisplayable": true,
+      "damageType": 0,
+      "hash": 681117218,
+      "index": 5118,
+      "redacted": false,
+      "blacklisted": false
+    }
+  },
+  {
+    "table": "DestinySandboxPerkDefinition",
+    "hash": 681117219,
+    "json": {
+      "displayProperties": {
+        "description": "Multiple final blows with Heat weapons or Primary ammo weapons grant bonuses to weapon and grenade stats and increased ammo generation for Heat weapons and Primary ammo weapons.",
+        "name": "Room Clearing",
+        "icon": "/common/destiny2_content/icons/319e1b357fb1e2b7108f489f792c31ed.png",
+        "iconHash": 0,
+        "iconSequences": [
+          {
+            "frames": ["/common/destiny2_content/icons/319e1b357fb1e2b7108f489f792c31ed.png"]
+          },
+          {
+            "frames": ["/common/destiny2_content/icons/0110524e292bffbd0ae8e1df2376a243.png"]
+          }
+        ],
+        "hasIcon": true
+      },
+      "isDisplayable": true,
+      "damageType": 0,
+      "hash": 681117219,
+      "index": 5119,
+      "redacted": false,
+      "blacklisted": false
+    }
+  }
+]

@@ -14,6 +14,8 @@ export interface ItemMeta {
   type: string;
   element?: string;
   bucketHash: number;
+  // The armor set this piece belongs to, if any. Set bonuses live on the set, not the piece.
+  setHash?: number;
 }
 
 export interface SocketEntry {
@@ -35,9 +37,24 @@ export interface ItemDefinition {
   flavorText?: string;
   inventory?: { tierTypeName?: string; bucketTypeHash?: number };
   defaultDamageType?: number;
-  equippingBlock?: { ammoType?: number };
+  equippingBlock?: { ammoType?: number; equipableItemSetHash?: number };
   sockets?: { socketEntries?: SocketEntry[]; socketCategories?: SocketCategoryEntry[] };
   stats?: { stats?: Record<string, { value?: number }> };
+  // Present only on plug items (the things that go into sockets). The category id distinguishes a
+  // masterwork plug from a mod or shader; investmentStats carry the stat bonuses it grants.
+  plug?: { plugCategoryIdentifier?: string };
+  investmentStats?: { statTypeHash: number; value: number }[];
+}
+
+export interface SetPerk {
+  requiredCount: number;
+  name: string;
+  description: string;
+}
+
+export interface ItemSet {
+  name: string;
+  perks: SetPerk[];
 }
 
 // The equip slot a weapon competes for, or undefined for non-weapons.
@@ -56,6 +73,12 @@ export function isGearBucket(bucketHash: number | undefined): boolean {
   return WEAPON_SLOT_BY_BUCKET[bucketHash] !== undefined || ARMOR_BUCKETS.has(bucketHash);
 }
 
+// True for the five armor equip buckets. Gear tier and set bonuses are armor-only, so this gates the
+// per-instance socket walk to armor and spares it the weapons/ghosts/ships that can never carry one.
+export function isArmorBucket(bucketHash: number | undefined): boolean {
+  return bucketHash !== undefined && ARMOR_BUCKETS.has(bucketHash);
+}
+
 // The ammo a weapon draws from, or undefined when None / not a weapon.
 export function ammoTypeLabel(ammoType: number | undefined): string | undefined {
   return ammoType === undefined ? undefined : AMMO_TYPE[ammoType];
@@ -64,6 +87,30 @@ export function ammoTypeLabel(ammoType: number | undefined): string | undefined 
 // The class an armor piece is restricted to, or "Any" for class-agnostic gear; undefined when absent.
 export function classTypeLabel(classType: number | undefined): string | undefined {
   return classType === undefined ? undefined : CLASS_TYPE[classType];
+}
+
+// Decode an instance's gear tier from the plugs socketed on it. The masterwork plug carries the
+// tier as the bonus it grants to the archetype stats; returns undefined for gear with no tier
+// (legacy armor, or anything that isn't tiered armor). Reads the effective tier — i.e. the current
+// masterwork level — which on a fully upgraded piece equals its drop tier.
+export async function gearTierFromPlugs(plugHashes: number[]): Promise<number | undefined> {
+  for (const hash of plugHashes) {
+    const definition = await itemDefinition(hash);
+
+    if (!definition.plug?.plugCategoryIdentifier?.includes("armor.masterworks")) {
+      continue;
+    }
+
+    const tierStat = definition.investmentStats?.find((stat) =>
+      ARMOR_ARCHETYPE_STATS.has(stat.statTypeHash),
+    );
+
+    if (tierStat) {
+      return tierStat.value;
+    }
+  }
+
+  return undefined;
 }
 
 export function itemDefinition(hash: number): Promise<ItemDefinition> {
@@ -112,6 +159,7 @@ export async function itemMeta(hash: number): Promise<ItemMeta | undefined> {
     type: item.itemTypeDisplayName ?? "",
     element: elementOf(item),
     bucketHash: item.inventory?.bucketTypeHash ?? 0,
+    setHash: item.equippingBlock?.equipableItemSetHash || undefined,
   };
 }
 
@@ -130,6 +178,48 @@ export async function plugSetItemHashes(plugSetHash: number): Promise<number[]> 
   );
 
   return (plugSet.reusablePlugItems ?? []).map((plug) => plug.plugItemHash);
+}
+
+// The name of the armor set a piece belongs to — the cheap lookup for list projections that only
+// need to group pieces, not explain the bonuses.
+export async function itemSetName(setHash: number): Promise<string | undefined> {
+  const set = await getDefinition<EquipableItemSetDefinition>(
+    "DestinyEquipableItemSetDefinition",
+    setHash,
+  );
+
+  return set.displayProperties?.name || undefined;
+}
+
+// The full set: its name plus each bonus and the piece count that unlocks it, with live perk text.
+// This is the armor set-bonus system added late in Destiny 2 — every armor set defines bonuses at
+// (typically) 2 and 4 equipped pieces. Legacy armor belongs to no set and resolves to undefined.
+export async function equipableItemSet(setHash: number): Promise<ItemSet | undefined> {
+  const set = await getDefinition<EquipableItemSetDefinition>(
+    "DestinyEquipableItemSetDefinition",
+    setHash,
+  );
+  const name = set.displayProperties?.name;
+
+  if (!name) {
+    return undefined;
+  }
+
+  const perks = await Promise.all(
+    (set.setPerks ?? []).map(async (perk) => {
+      const sandbox = await getDefinition<{
+        displayProperties?: { name?: string; description?: string };
+      }>("DestinySandboxPerkDefinition", perk.sandboxPerkHash);
+
+      return {
+        requiredCount: perk.requiredSetCount,
+        name: sandbox.displayProperties?.name ?? `Perk ${perk.sandboxPerkHash >>> 0}`,
+        description: sandbox.displayProperties?.description ?? "",
+      };
+    }),
+  );
+
+  return { name, perks };
 }
 
 export async function artifactName(hash: number): Promise<string> {
@@ -212,6 +302,8 @@ export interface CatalogEntry {
   classType?: string;
   itemType?: number;
   collectibleHash?: number;
+  setHash?: number;
+  setName?: string;
 }
 
 export interface SearchFilters {
@@ -221,6 +313,7 @@ export interface SearchFilters {
   tier?: string;
   category?: ItemCategory;
   class?: string;
+  set?: string;
   owned?: boolean;
   limit?: number;
 }
@@ -250,10 +343,14 @@ export async function searchItems(
   }
 
   const catalog = await catalogPromise;
+  const setNames = await setNamesByHash(catalog);
 
   const name = filters.name?.toLowerCase();
   const type = filters.type?.toLowerCase();
+  const set = filters.set?.toLowerCase();
   const inCategory = filters.category ? CATEGORY_MATCHES[filters.category] : undefined;
+  const setNameOf = (entry: CatalogEntry) =>
+    entry.setHash ? setNames.get(entry.setHash) : undefined;
 
   const matches = catalog.filter((entry) => {
     if (name && !entry.name.toLowerCase().includes(name)) {
@@ -269,6 +366,10 @@ export async function searchItems(
     }
 
     if (filters.tier && entry.tier !== filters.tier) {
+      return false;
+    }
+
+    if (set && !setNameOf(entry)?.toLowerCase().includes(set)) {
       return false;
     }
 
@@ -293,8 +394,9 @@ export async function searchItems(
   );
 
   const limit = filters.limit ?? 50;
+  const items = sorted.slice(0, limit).map((entry) => ({ ...entry, setName: setNameOf(entry) }));
 
-  return { count: sorted.length, truncated: sorted.length > limit, items: sorted.slice(0, limit) };
+  return { count: sorted.length, truncated: sorted.length > limit, items };
 }
 
 const ITEM_TABLE = "DestinyInventoryItemDefinition";
@@ -306,7 +408,7 @@ interface RawItem {
   collectibleHash?: number;
   defaultDamageType?: number;
   talentGrid?: { hudDamageType?: number };
-  equippingBlock?: { ammoType?: number };
+  equippingBlock?: { ammoType?: number; equipableItemSetHash?: number };
   inventory?: { tierTypeName?: string; bucketTypeHash?: number };
   classType?: number;
 }
@@ -322,6 +424,11 @@ interface NameDefinition {
 
 interface StatDefinition {
   displayProperties?: { name?: string };
+}
+
+interface EquipableItemSetDefinition {
+  displayProperties?: { name?: string };
+  setPerks?: { requiredSetCount: number; sandboxPerkHash: number }[];
 }
 
 const DAMAGE_TYPE: Record<number, Element> = {
@@ -360,6 +467,19 @@ const CLASS_TYPE: Record<number, string> = {
   2: "Warlock",
   3: "Any",
 };
+
+// The six Armor 3.0 archetype stats (Weapons, Health, Grenade, Super, Class, Melee). An armor
+// masterwork plug ("Upgrade Armor") adds the same value to all six, and that value IS the gear
+// tier (1-5) — Edge of Fate's quality scale, separate from rarity. (Armor Energy Capacity, also on
+// the plug, is a legacy stat fixed at 10, not the tier.) Legacy pre-tier armor has no such plug.
+const ARMOR_ARCHETYPE_STATS = new Set([
+  2996146975, // Weapons
+  392767087, // Health
+  1735777505, // Grenade
+  144602215, // Super
+  1943323491, // Class
+  4244567218, // Melee
+]);
 
 const TIER_RANK: Record<string, number> = {
   Exotic: 4,
@@ -458,10 +578,33 @@ async function buildCatalog(): Promise<CatalogEntry[]> {
       classType: classTypeLabel(def.classType),
       itemType: def.itemType,
       collectibleHash: def.collectibleHash,
+      setHash: def.equippingBlock?.equipableItemSetHash || undefined,
     });
   }
 
   return catalog;
+}
+
+// Set membership is a definition-level attribute (a hash on the piece), but the human-readable set
+// name lives on a separate definition. Resolve every distinct set in the catalog once so search can
+// filter and project by set name without a per-item lookup.
+async function setNamesByHash(catalog: CatalogEntry[]): Promise<Map<number, string>> {
+  const hashes = [
+    ...new Set(catalog.map((entry) => entry.setHash).filter((h): h is number => !!h)),
+  ];
+  const names = new Map<number, string>();
+
+  await Promise.all(
+    hashes.map(async (hash) => {
+      const name = await itemSetName(hash);
+
+      if (name) {
+        names.set(hash, name);
+      }
+    }),
+  );
+
+  return names;
 }
 
 // Names repeat across reissues; keep the copy with a Collections source so its hash chains into how_to_acquire.
