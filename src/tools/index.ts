@@ -13,6 +13,7 @@ import { registerListCharacters } from "./list_characters.js";
 import { registerListInventory } from "./list_inventory.js";
 import { registerListLoadouts } from "./list_loadouts.js";
 import { registerLogin } from "./login.js";
+import { registerLogout } from "./logout.js";
 import { registerSearchItems } from "./search_items.js";
 import { registerShowArtifact } from "./show_artifact.js";
 import { registerShowEquipped } from "./show_equipped.js";
@@ -24,6 +25,7 @@ import { registerVaultInventory } from "./vault_inventory.js";
 
 export function registerTools(server: McpServer): void {
   registerLogin(server);
+  registerLogout(server);
 
   registerListCharacters(server);
   registerListLoadouts(server);

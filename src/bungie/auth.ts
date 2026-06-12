@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { credentials, DATA_DIR, TOKEN_URL, TOKENS_PATH } from "../setup/config.js";
 
 interface StoredTokens {
@@ -71,6 +71,13 @@ export async function exchangeCode(code: string): Promise<StoredTokens> {
 
   await writeTokens(tokens);
   return tokens;
+}
+
+export async function clearTokens(): Promise<boolean> {
+  const tokens = await readTokens();
+
+  await rm(TOKENS_PATH, { force: true });
+  return tokens !== null;
 }
 
 export async function getAccessToken(): Promise<string> {
