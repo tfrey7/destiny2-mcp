@@ -15,6 +15,8 @@ respect, and how to reason when helping a player.
   `data/ornaments.json` is a vision-captioned index keyed by item hash — regenerate it with
   `scripts/ornaments/build_index.ts`. Every ornament is captioned natively for its own class; a `set`
   stem present in more than one class is flagged `crossClass`, and class-exclusive otherwise.
+  `apply_ornament` equips a result on a character's worn armor (slot → equipped piece → ornament socket →
+  unlock check → insert); the shared socket-resolution lives in `src/bungie/sockets.ts`.
 - `src/tools/shaders/` — `find_shaders`: color-scheme search ("rusted copper", "dark red and gold").
   Shaders have no screenshot — only a swatch icon — and no applied-to-armor preview exists anywhere, so
   `data/shaders.json` is a vision-captioned palette index (colors/warmth/brightness/finish) keyed by
