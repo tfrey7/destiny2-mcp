@@ -76,6 +76,42 @@ more than a marginal stat or gear-tier gain, so when a player is one piece away 
 say so. Set bonuses are armor-only; weapons have no set. Legacy armor belongs to no set.`,
   },
   {
+    id: "armor",
+    title: "Armor: the Edge of Fate stat system",
+    body: `What an armor piece actually contributes, once you look past its appearance. The model is
+not "any piece can roll any stats" — three things define a piece, and the player's eye (the look) is
+not one of them.
+
+The six stats and what each governs (read the live values with inspect_item; these are what they do):
+- Weapons — weapon reload speed and handling, plus weapon damage against minor and major combatants.
+- Health — health gained per Orb of Power picked up, and reduced flinch while aiming. This is the
+  survivability stat; it is NOT the old Resilience (there is no flat damage-resist stat anymore).
+- Class — class-ability cooldown and energy gain.
+- Grenade — grenade cooldown and energy gain.
+- Super — Super energy gain.
+- Melee — melee cooldown and energy gain.
+
+Stats are not freely chosen — they come from a piece's ARCHETYPE and its GEAR-TIER budget, not from the
+set it belongs to. Each piece has a dominant stat (its archetype) and a total stat budget set by its gear
+tier (1-5, see the loadout section); tuning mods and the masterwork bonus only nudge stats within that
+budget. So two same-slot pieces are not stat-interchangeable: to chase a stat (e.g. Grenade for an
+ability-spam build) you pick the archetype whose dominant stat is the one you want, at the highest gear
+tier you can get — the set name is irrelevant to that.
+
+A piece's mechanical identity is therefore: archetype (its stat spread) + gear tier (its stat budget) +
+set bonus. Appearance is fully decoupled — universal ornaments (see cosmetics) let any legendary piece
+wear any unlocked look — so never pick armor for how it (or its set) looks, and never infer a piece's
+function from its model. The look travels independently of everything that matters.
+
+Set bonuses are element-neutral UTILITY, not subclass synergy. No set bonus amplifies a subclass verb
+(Devour, Jolt, Ignition, Suspend, Shatter); they grant survivability, ammo economy, or weapon-archetype
+perks that work regardless of subclass. "Match the armor set to your Void/Solar/etc. subclass" is a
+category error — a Solar-flavored set bonus does nothing extra on a Solar subclass, and a neutral one is
+no worse on Void. Choose a set bonus for whether you will actually trigger it given how you play (e.g. a
+damage-resist-on-Orb-pickup bonus on an Orb-heavy build), or split four legendary slots into two 2-piece
+bonuses from different sets to stack two effects. Pick the bonus, not the theme.`,
+  },
+  {
     id: "cosmetics",
     title: "Cosmetics: shaders, ornaments, and emblems",
     body: `How a player changes how their gear looks, separate from what it does. Cosmetics never touch
@@ -311,10 +347,10 @@ subclass engine and exotic that powers it.
   intrinsic champion-stun properties in The Final Shape. As a rule of thumb (confirm in-game or via
   the active artifact): Blind / Jolt / Suppress disrupt Overload; Freeze / Suspend / Scorch-Ignition
   lock down Unstoppable; Radiant weapons and Unraveling / Volatile rounds pierce Barrier.
-- Stats: ability regeneration and effectiveness scale with the character's stats. Build around the
-  one or two stats your engine depends on (the grenade, melee, or class-ability stat) and Resilience
-  for survivability. inspect_item shows the actual current stat names and values — use it rather than
-  assuming, since the exact stat lineup is whatever the live manifest reports.`,
+- Stats: ability regeneration and effectiveness scale with the character's six stats (Weapons, Health,
+  Class, Grenade, Super, Melee — see the armor section for what each governs). Build around the one or
+  two your engine depends on — the Grenade, Melee, or Class stat for an ability loop — plus Health for
+  survivability. inspect_item shows the actual values on a given piece; read them rather than assuming.`,
   },
   {
     id: "recipes",
