@@ -46,7 +46,27 @@ function inSection(items: LoadoutCardItem[], section: Section): LoadoutCardItem[
     .sort((a, b) => (BUCKET[a.bucketHash]?.order ?? 99) - (BUCKET[b.bucketHash]?.order ?? 99));
 }
 
-/** Reduce a loadout to ordered sections and rows — the shared input for every card renderer. */
+/**
+ * Reduce a loadout to ordered sections and rows — the shared input for every card renderer.
+ *
+ * @example
+ * {
+ *   title: "Threadrunner",
+ *   subtitle: "Hunter · slot 2",
+ *   sections: [
+ *     { label: "WEAPONS", rows: [
+ *       { name: "Quicksilver Storm", rarity: "Exotic", middle: "Auto Rifle", element: "Strand" },
+ *     ] },
+ *     { label: "ARMOR", rows: [
+ *       { name: "Mask of Bakris", rarity: "Exotic", middle: "Helmet" },
+ *       { name: "—", rarity: "Basic", middle: "Class item", empty: true },
+ *     ] },
+ *     { label: "SUBCLASS", rows: [
+ *       { name: "Strand Hunter", rarity: "Basic", middle: "Strand", element: "Strand" },
+ *     ] },
+ *   ],
+ * }
+ */
 export function cardModel(card: LoadoutCard): CardModel {
   const detail = card.subtitle ?? (card.slot !== undefined ? `slot ${card.slot}` : undefined);
   const subtitle = detail ? `${card.className} · ${detail}` : card.className;

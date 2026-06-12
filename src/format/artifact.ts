@@ -39,7 +39,21 @@ function perkLine(perk: ArtifactPerkView): string {
   return boxLine(`  ${mark} ${truncate(perk.name, PERK_NAME_WIDTH)}`);
 }
 
-/** Render the seasonal artifact as a monochrome box card; chosen perks marked ●, the rest ○. */
+/**
+ * Render the seasonal artifact as a monochrome box card; chosen perks marked ●, the rest ○.
+ *
+ * @example
+ * ╭────────────────────────────────────────────────╮
+ * │ TERMINAL OVERLOAD OVERRIDE               9 pts │
+ * ├────────────────────────────────────────────────┤
+ * │ TIER 1                                         │
+ * │   ● Anti-Barrier Auto Rifle                    │
+ * │   ○ Overload Rounds                            │
+ * │                                                │
+ * │ TIER 2 · locked                                │
+ * │   ○ Authorized Mods: Sidearms                  │
+ * ╰────────────────────────────────────────────────╯
+ */
 export function renderArtifactCardText(artifact: ArtifactView): string {
   const subtitle = `${artifact.pointsUsed} pts`;
   const titleWidth = BOX_WIDTH - subtitle.length;

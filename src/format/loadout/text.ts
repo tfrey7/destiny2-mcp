@@ -38,7 +38,29 @@ function rowLine(row: CardRow): string {
   return boxLine(`  ${nameCell(row)}${pad(row.middle, MIDDLE_WIDTH)}${tail(row)}`);
 }
 
-/** Render a loadout as a monochrome box card. Exotics are marked with a star, elements named in plain text. */
+/**
+ * Render a loadout as a monochrome box card. Exotics are marked with a star, elements named in plain text.
+ *
+ * @example
+ * ╭────────────────────────────────────────────────╮
+ * │ Threadrunner                   Hunter · slot 2 │
+ * ├────────────────────────────────────────────────┤
+ * │ WEAPONS                                        │
+ * │   Quicksilver Sto… ★Auto Rifle   ● Strand      │
+ * │   The Immortal      SMG          ● Arc         │
+ * │   Cataclysmic       Linear Fusion● Solar       │
+ * │                                                │
+ * │ ARMOR                                          │
+ * │   Mask of Bakris ★  Helmet                     │
+ * │   Gloves            Gauntlets                  │
+ * │   Chestpiece        Chest                      │
+ * │   Boots             Legs                       │
+ * │   —                 Class item   (empty)       │
+ * │                                                │
+ * │ SUBCLASS                                       │
+ * │   Strand Hunter     Strand       ● Strand      │
+ * ╰────────────────────────────────────────────────╯
+ */
 export function renderLoadoutCardText(card: LoadoutCard): string {
   const model = cardModel(card);
   // Reserve one space between a long title and the subtitle so the right border stays aligned.
