@@ -156,6 +156,49 @@ export async function plugDescription(definition: ItemDefinition): Promise<strin
   return "";
 }
 
+// Resolve plug hashes to the atoms a player reasons with: each plug's name and rules text, following
+// the sandbox-perk link for aspects/fragments whose own description is blank. Deduped by name. This
+// is the shared resolver behind inspect_item's perk list and the mechanics the build tools surface
+// inline, so a loadout's loop can be reasoned out from its parts rather than looked up one by one.
+export async function describePlugs(
+  plugHashes: number[],
+): Promise<{ name: string; description: string }[]> {
+  const definitions = await Promise.all(plugHashes.map((hash) => itemDefinition(hash)));
+  const described = await Promise.all(
+    definitions.map(async (definition) => ({
+      name: definition.displayProperties?.name,
+      description: await plugDescription(definition),
+    })),
+  );
+
+  const seen = new Set<string>();
+  const plugs: { name: string; description: string }[] = [];
+
+  for (const { name, description } of described) {
+    if (!name || seen.has(name)) {
+      continue;
+    }
+
+    seen.add(name);
+    plugs.push({ name, description });
+  }
+
+  return plugs;
+}
+
+// The perks an item confers from its default sockets — what an exotic actually does, as opposed to
+// its flavor text. Reads the item definition's initial plugs, so it works for gear you don't own.
+export async function intrinsicPerks(
+  itemHash: number,
+): Promise<{ name: string; description: string }[]> {
+  const definition = await itemDefinition(itemHash);
+  const plugHashes = (definition.sockets?.socketEntries ?? [])
+    .map((entry) => entry.singleInitialItemHash)
+    .filter((plugHash): plugHash is number => plugHash !== undefined && plugHash !== 0);
+
+  return describePlugs(plugHashes);
+}
+
 export async function statName(hash: number): Promise<string> {
   const stat = await getDefinition<StatDefinition>("DestinyStatDefinition", hash);
 

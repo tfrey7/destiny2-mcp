@@ -366,6 +366,9 @@ subclass engine and exotic that powers it.
   {
     id: "recipes",
     title: "Proven synergy recipes",
+    // These are exemplars of the loop grammar, not a closed catalog. The atoms to synthesise a
+    // playstyle for any specific build — its actual aspects, fragments, and exotic with rules text —
+    // ride along on import_build and get_equipped; reason the loop from those against this section.
     body: `Concrete loops that work. Each names an engine, the components that sustain it, and the
 weapon perk that feeds it. Treat exotic/weapon names as examples and verify ownership and rolls.
 

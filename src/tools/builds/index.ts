@@ -1,6 +1,13 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { itemMeta, itemName, loadoutName, type ItemMeta } from "../../bungie/manifest.js";
+import {
+  describePlugs,
+  intrinsicPerks,
+  itemMeta,
+  itemName,
+  loadoutName,
+  type ItemMeta,
+} from "../../bungie/manifest.js";
 import { Component, getProfile } from "../../bungie/profile.js";
 import { classNameSchema, subclassSchema } from "../../schemas.js";
 import { renderLoadoutCardText } from "../../format/loadout/index.js";
@@ -42,7 +49,7 @@ export function registerBuildTools(server: McpServer): void {
     "import_build",
     {
       description:
-        "Map a popular build (by shareId from find_builds) onto the gear you own. Renders the build as a text loadout card, then reports which items you already have (with itemInstanceId for equip_items), which are missing, plus the subclass plugs and armor mods to set up manually. This is a plan — it does not change your gear.",
+        "Map a popular build (by shareId from find_builds) onto the gear you own. Renders the build as a text loadout card, then reports which items you already have (with itemInstanceId for equip_items), which are missing, and the armor mods to set up manually. The subclass abilities/aspects/fragments and each exotic come with their in-game rules text — the mechanical atoms to reason out how the build actually plays (its loop, opener, and priorities) against the verbs and method in get_build_knowledge. This is a plan — it does not change your gear.",
       inputSchema: { shareId: z.string() },
       annotations: { readOnlyHint: true },
     },
@@ -81,9 +88,13 @@ export function registerBuildTools(server: McpServer): void {
       const subclassConfig = subclass
         ? {
             name: await itemName(subclass.hash),
-            plugs: await namesOf(Object.values(subclass.socketOverrides ?? {})),
+            // Abilities, aspects, and fragments with their rules text — the verbs this build
+            // generates and amplifies, which is what its loop is reasoned from.
+            plugs: withRules(await describePlugs(Object.values(subclass.socketOverrides ?? {}))),
           }
         : undefined;
+
+      const exotics = await exoticPerks(build.loadout.equipped.map((item) => item.hash));
 
       const mods = await namesOf([...new Set(build.loadout.parameters?.mods ?? [])]);
       const nameHash = build.loadout.parameters?.inGameIdentifiers?.nameHash;
@@ -106,6 +117,9 @@ export function registerBuildTools(server: McpServer): void {
           })),
         missing: gear.filter((item) => !item.owned).map((item) => item.name),
         subclass: subclassConfig,
+        // The exotic is the build's multiplier — its perk text is the atom that turns a fair loop
+        // into the oppressive one, so surface it for reasoning rather than leaving it to a lookup.
+        exotics,
         armorMods: mods,
         note: "Plan only. equip_items only accepts gear the target character already holds: items with location 'vault' (or 'equipped'/'inventory' on a different characterId) must first be pulled to that character with transfer_item — cross-character moves go via the vault, so two transfers. Set the subclass plugs and armor mods manually in-game.",
       });
@@ -151,4 +165,34 @@ async function namesOf(hashes: number[]): Promise<string[]> {
 
 function subclassItem(build: BuildRecipe): DimItem | undefined {
   return build.loadout.equipped.find((item) => item.socketOverrides);
+}
+
+// Keep only plugs that actually carry rules text — drops empty ability/fragment sockets, whose names
+// are noise, so what's left is the mechanical atoms worth reasoning from.
+function withRules(plugs: { name: string; description: string }[]) {
+  return plugs.filter((plug) => plug.description);
+}
+
+// The exotic perks among a build's equipped gear, each as name + rules text. An exotic is the loop's
+// multiplier, so its mechanic is surfaced inline; legendaries carry no build-defining intrinsic, so
+// they're skipped.
+async function exoticPerks(hashes: number[]): Promise<ExoticPerk[]> {
+  const resolved = await Promise.all(
+    hashes.map(async (hash): Promise<ExoticPerk | undefined> => {
+      const meta = await itemMeta(hash);
+
+      if (meta?.rarity !== "Exotic") {
+        return undefined;
+      }
+
+      return { name: meta.name, perks: withRules(await intrinsicPerks(hash)) };
+    }),
+  );
+
+  return resolved.filter((exotic): exotic is ExoticPerk => exotic !== undefined);
+}
+
+interface ExoticPerk {
+  name: string;
+  perks: { name: string; description: string }[];
 }

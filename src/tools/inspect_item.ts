@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import {
   ammoTypeLabel,
+  describePlugs,
   equipableItemSet,
   gearTierFromPlugs,
   itemDefinition,
@@ -89,32 +90,6 @@ export function registerInspectItem(server: McpServer): void {
   );
 }
 
-async function describePerks(
-  plugHashes: number[],
-): Promise<{ name: string; description: string }[]> {
-  const definitions = await Promise.all(plugHashes.map((hash) => itemDefinition(hash)));
-  const described = await Promise.all(
-    definitions.map(async (definition) => ({
-      name: definition.displayProperties?.name,
-      description: await plugDescription(definition),
-    })),
-  );
-
-  const seen = new Set<string>();
-  const perks: { name: string; description: string }[] = [];
-
-  for (const { name, description } of described) {
-    if (!name || seen.has(name)) {
-      continue;
-    }
-
-    seen.add(name);
-    perks.push({ name, description });
-  }
-
-  return perks;
-}
-
 async function describeStats(
   stats: Record<string, { value?: number }>,
 ): Promise<Record<string, number>> {
@@ -135,7 +110,7 @@ async function describeItem(
   const definition = await itemDefinition(itemHash);
   const setHash = definition.equippingBlock?.equipableItemSetHash;
   const [perks, namedStats, set] = await Promise.all([
-    describePerks(plugHashes),
+    describePlugs(plugHashes),
     describeStats(stats),
     setHash ? equipableItemSet(setHash) : undefined,
   ]);
