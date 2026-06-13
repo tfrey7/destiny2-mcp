@@ -11,17 +11,19 @@ import { cardModel, type CardRow, type LoadoutCard } from "./model.js";
  * │   Strand Hunter     Strand       ● Strand      │
  * │                                                │
  * │ WEAPONS                                        │
- * │   Quicksilver Sto… ★Auto Rifle   ● Strand      │
- * │   The Immortal      SMG          ● Arc         │
+ * │ ✓ Quicksilver Sto…★Auto Rifle   ● Strand       │
+ * │ + The Immortal      SMG          ● Arc         │
  * │   Cataclysmic       Linear Fusion● Solar       │
  * │                                                │
  * │ ARMOR                                          │
- * │   Mask of Bakris ★  Helmet                     │
- * │   Gloves            Gauntlets                  │
- * │   Chestpiece        Chest                      │
- * │   Boots             Legs                       │
- * │   —                 Class item   (empty)       │
+ * │ ✓ Mask of Bakris ★  Helmet                     │
+ * │ + Gloves            Gauntlets                  │
+ * │                                                │
+ * │ ✓ owned   + farm                               │
  * ╰────────────────────────────────────────────────╯
+ *
+ * The leading column marks each piece on a target build — ✓ owned, + still to farm — and is blank
+ * (matching the old two-space indent) on real loadouts and the subclass row, where ownership is moot.
  */
 export function renderLoadoutCardText(card: LoadoutCard): string {
   const model = cardModel(card);
@@ -44,6 +46,13 @@ export function renderLoadoutCardText(card: LoadoutCard): string {
     }
   });
 
+  // A target build mixes owned and still-to-farm pieces; the legend appears only when at least one
+  // piece is flagged as needed, so real loadouts (every piece owned, unmarked) read unchanged.
+  if (model.sections.some((section) => section.rows.some((row) => row.owned === false))) {
+    lines.push(boxLine(""));
+    lines.push(boxLine(`${OWNED_MARK} owned   ${NEEDED_MARK} farm`));
+  }
+
   lines.push("╰" + "─".repeat(BOX_WIDTH + 2) + "╯");
   return lines.join("\n");
 }
@@ -52,6 +61,8 @@ const BOX_WIDTH = 46;
 const NAME_WIDTH = 18;
 const MIDDLE_WIDTH = 13;
 const EXOTIC_MARK = "★";
+const OWNED_MARK = "✓";
+const NEEDED_MARK = "+";
 
 function pad(text: string, width: number): string {
   return text + " ".repeat(Math.max(0, width - text.length));
@@ -83,5 +94,15 @@ function boxLine(content: string): string {
 }
 
 function rowLine(row: CardRow): string {
-  return boxLine(`  ${nameCell(row)}${pad(row.middle, MIDDLE_WIDTH)}${tail(row)}`);
+  return boxLine(`${marker(row)} ${nameCell(row)}${pad(row.middle, MIDDLE_WIDTH)}${tail(row)}`);
+}
+
+// The one-character ownership column. Blank for real loadouts and the subclass row (owned undefined),
+// so a marker + space lands exactly where the old two-space indent did and column widths don't shift.
+function marker(row: CardRow): string {
+  if (row.owned === undefined) {
+    return " ";
+  }
+
+  return row.owned ? OWNED_MARK : NEEDED_MARK;
 }

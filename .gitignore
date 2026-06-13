@@ -10,6 +10,9 @@ yarn-error.log*
 
 .vscode/*
 
+# Local Claude Code config (enabled plugins, etc.)
+.claude/
+
 /dist
 
 # MCPB build artifacts (staging tree + packed .mcpb)

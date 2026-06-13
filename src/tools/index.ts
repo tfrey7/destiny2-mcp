@@ -23,6 +23,7 @@ import { registerSearchItems } from "./search_items.js";
 import { registerFindShaders } from "./shaders/index.js";
 import { registerSearchRecords } from "./search_records.js";
 import { registerShowArtifact } from "./show_artifact.js";
+import { registerShowBuild } from "./show_build.js";
 import { registerShowEquipped } from "./show_equipped.js";
 import { registerShowItem } from "./show_item.js";
 import { registerShowLoadout } from "./show_loadout.js";
@@ -40,6 +41,7 @@ export function registerTools(server: McpServer): void {
   registerShowLoadout(server);
   registerGetEquipped(server);
   registerShowEquipped(server);
+  registerShowBuild(server);
   registerListInventory(server);
   registerInspectItem(server);
   registerInspectSockets(server);

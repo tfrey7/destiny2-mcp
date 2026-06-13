@@ -13,6 +13,9 @@ export interface LoadoutCardItem {
   hash?: number;
   /** Socketed plugs to show under the name: weapon perks, armor mods, or aspects + fragments. */
   plugs?: PlugView[];
+  /** Whether the player already holds this piece — drives the owned/needed marker on a target build.
+   * Omit (undefined) for real loadouts, where every piece is owned by definition and unmarked. */
+  owned?: boolean;
 }
 
 export interface LoadoutCard {
@@ -38,6 +41,8 @@ export interface CardRow {
   hash?: number;
   /** Socketed plugs (perks / mods / aspects + fragments) shown as icons with tooltips. */
   plugs?: PlugView[];
+  /** Whether the player holds this piece, when the card is a target build (see LoadoutCardItem.owned). */
+  owned?: boolean;
   /** The placeholder row for a loadout with no class item equipped. */
   empty?: boolean;
 }
@@ -112,6 +117,7 @@ export function cardModel(card: LoadoutCard): CardModel {
         icon: item.icon,
         hash: item.hash,
         plugs: item.plugs,
+        owned: item.owned,
       })),
     });
   }
@@ -125,6 +131,7 @@ export function cardModel(card: LoadoutCard): CardModel {
     icon: item.icon,
     hash: item.hash,
     plugs: item.plugs,
+    owned: item.owned,
   }));
 
   if (!armor.some((item) => item.bucketHash === CLASS_ITEM_BUCKET)) {

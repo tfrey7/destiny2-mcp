@@ -78,6 +78,29 @@ export async function displayPlugs(
     .map((item) => item.plug);
 }
 
+/**
+ * Resolve a list of plug hashes to PlugViews for a *target* build — the model-named perks, mods,
+ * aspects, and fragments on gear the player may not own, where there is no live instance whose
+ * sockets could be read. Shape follows the section (weapon perks round, armor mods square); within
+ * a subclass, aspects render as rounded squares and fragments (and abilities) as circles, decided
+ * per plug from its category — matching classify below. Order is preserved; plugs the manifest
+ * can't resolve, or noise like empty/tracker sockets, drop out.
+ *
+ * @example
+ * await plugViewsFromHashes([voltshotHash, rampageHash], "WEAPONS")
+ * // → [{ name: "Voltshot", shape: "circle", … }, { name: "Rampage", … }]
+ */
+export async function plugViewsFromHashes(
+  hashes: number[],
+  section: LoadoutSection,
+): Promise<PlugView[]> {
+  const views = await Promise.all(
+    hashes.map(async (hash) => plugView(hash, await shapeForSection(hash, section))),
+  );
+
+  return views.filter((view): view is PlugView => view !== undefined);
+}
+
 // Which socket categories become display plugs depends on the section, since the same category name
 // (e.g. "WEAPON PERKS") only matters on a weapon. Classifying by name rather than hash avoids
 // hardcoding the many class/element-specific aspect and fragment category hashes. rank orders the
@@ -111,6 +134,23 @@ async function classify(
   }
 
   return name === "FRAGMENTS" ? { shape: "circle", rank: 1 } : undefined;
+}
+
+// The plug shape for a target build, where there's no socket category to classify against. Weapons
+// and armor are uniform (round perks, square mods); only a subclass mixes shapes, so resolve those
+// per plug from the category identifier ("…aspects" → square, fragments/abilities → circle).
+async function shapeForSection(hash: number, section: LoadoutSection): Promise<PlugShape> {
+  if (section === "WEAPONS") {
+    return "circle";
+  }
+
+  if (section === "ARMOR") {
+    return "square";
+  }
+
+  const definition = await itemDefinition(hash);
+
+  return definition.plug?.plugCategoryIdentifier?.includes("aspects") ? "square" : "circle";
 }
 
 async function plugView(plugHash: number, shape: PlugShape): Promise<PlugView | undefined> {

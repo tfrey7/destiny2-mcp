@@ -50,6 +50,9 @@ export function renderLoadoutTemplate(): string {
   a.nm, .nm { display: block; line-height: 1.25; font-weight: 600; text-decoration: none; color: #e9eaf0; }
   a.nm:hover { text-decoration: underline; }
   .nm.muted { color: #54566a; font-style: italic; font-weight: 400; }
+  .own, .need { display: inline-block; margin-top: 4px; font-size: 10px; font-weight: 600; letter-spacing: .03em; padding: 1px 7px; border-radius: 999px; }
+  .own { background: rgba(74,158,91,.16); color: #6fcf8a; }
+  .need { background: rgba(214,158,46,.16); color: #f0c674; }
   .plugrow { display: flex; align-items: center; gap: 6px; margin-top: 5px; flex-wrap: wrap; }
   .plug { position: relative; display: inline-block; line-height: 0; }
   .plug > img { width: 25px; height: 25px; background: #2a2d36; padding: 2px; box-sizing: border-box; }
@@ -130,9 +133,17 @@ const CLIENT_SCRIPT = `
     return '<span class="nm" style="color: ' + color + '">' + label + "</span>";
   }
 
+  // Owned/needed pill for a target build. Absent (returns "") on real loadouts, where every piece is
+  // owned by definition and row.owned is undefined.
+  function badge(row) {
+    if (row.owned === true) return '<span class="own">✓ Owned</span>';
+    if (row.owned === false) return '<span class="need">⚒ Farm</span>';
+    return "";
+  }
+
   function itemHtml(row, isWeapon) {
     return '<div class="item">' + thumb(row, isWeapon) +
-      '<div class="meta">' + nameHtml(row) + plugsHtml(row.plugs) + "</div></div>";
+      '<div class="meta">' + nameHtml(row) + badge(row) + plugsHtml(row.plugs) + "</div></div>";
   }
 
   function section(data, label) {

@@ -33,6 +33,11 @@ respect, and how to reason when helping a player.
   links); `images.ts` fetches item icons as model-visible image blocks. The socketed plugs the card
   shows come from `src/bungie/plugs.ts` (`displayPlugs`), which reads each instance's inserted plugs
   from the ItemSockets component.
+- `src/tools/show_build.ts` — `show_build`: renders an arbitrary _target_ build as a loadout card from a
+  list of item hashes (+ optional target plug hashes), with each piece marked owned (✓) vs. needed (⚒).
+  The renderer is ownership-agnostic, so the items need not be owned or equipped — this is the tool the
+  model uses to _show_ a recommendation. Un-owned target perks resolve via `plugViewsFromHashes` in
+  `plugs.ts` (the no-instance counterpart to `displayPlugs`); ownership comes from `ownedItemsByHash`.
 
 ## Domain rules (the source of truth is `get_build_knowledge`)
 
@@ -71,6 +76,11 @@ without them.
   card already does) — never decline on copyright grounds or fall back to a light.gg link.
 - Lead a build or loadout answer with the visual card (`show_equipped` / `show_loadout`); don't restate
   it in prose.
+- **A recommendation is a target card, not prose.** When asked what to run / farm / change, answer with
+  a `show_build` card of the finished build (subclass, weapons, armor, with the target perks/mods you're
+  recommending — owned pieces marked ✓, ones to farm ⚒), then a few bullets on what the changes buy, then
+  `how_to_acquire` for each ⚒ piece. Name exact items/perks/mods/stat priority; infer the goal from the
+  player's gear rather than interrogating them. The full procedure is the `recommending` knowledge topic.
 - Recommending an energy weapon for a Strand/Stasis build means an off-element utility pick — those
   subclasses can't element-match the energy slot.
 
