@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { itemMeta } from "../bungie/manifest.js";
+import { collectedCollectibles } from "../bungie/acquisition.js";
+import { itemInfo, itemMeta } from "../bungie/manifest.js";
 import { displayPlugs, plugViewsFromHashes, type PlugView } from "../bungie/plugs.js";
 import {
   ClassType,
@@ -66,9 +67,13 @@ export function registerShowBuild(server: McpServer): void {
       // empty object, so the build still renders — just without owned markers or real held rolls.
       const profile = await tryProfile();
       const owned = ownedItemsByHash(profile);
+      // Collections lets a piece the account owns but isn't holding (a Deluxe-edition exotic, a
+      // dismantled raid drop) still read as owned. The data is absent when logged out / the fetch
+      // failed; pass undefined then so a not-held piece stays unmarked rather than flagging to farm.
+      const acquired = collectionsAcquired(profile);
 
       const resolved = (
-        await Promise.all(items.map((item) => resolveItem(item, owned, profile)))
+        await Promise.all(items.map((item) => resolveItem(item, owned, acquired, profile)))
       ).filter((item): item is LoadoutCardItem => item !== undefined);
 
       if (resolved.length === 0) {
@@ -91,9 +96,37 @@ export function registerShowBuild(server: McpServer): void {
   );
 }
 
+// The tri-state owned marker, mirroring search_items so the two tools can't disagree about what
+// "owned" means: an explicit flag wins; a held copy or an acquired collectible reads owned (✓); a
+// trackable item the account never acquired reads to-farm (⚒); and an item with no collectible — or
+// no Collections data to consult — stays unmarked, since absence of a collectible is not proof the
+// account lacks it.
+export async function ownershipMarker(
+  item: { hash: number; owned?: boolean },
+  held: boolean,
+  acquired: Set<number> | undefined,
+): Promise<boolean | undefined> {
+  if (item.owned !== undefined) {
+    return item.owned;
+  }
+
+  if (held) {
+    return true;
+  }
+
+  if (!acquired) {
+    return undefined;
+  }
+
+  const collectibleHash = (await itemInfo(item.hash))?.collectibleHash;
+
+  return collectibleHash === undefined ? undefined : acquired.has(collectibleHash);
+}
+
 async function resolveItem(
   item: z.infer<typeof itemSchema>,
   owned: Map<number, OwnedItem>,
+  acquired: Set<number> | undefined,
   profile: ProfileResponse,
 ): Promise<LoadoutCardItem | undefined> {
   const meta = await itemMeta(item.hash);
@@ -105,9 +138,7 @@ async function resolveItem(
   const section = BUCKET[meta.bucketHash]?.section as Section | undefined;
   const held = owned.get(item.hash);
   const plugs = await resolvePlugs(item, section, held, profile);
-  // Explicit ownership wins; otherwise a held copy reads as owned and everything else as unmarked
-  // (it may still be re-acquirable from Collections, so don't presume it must be farmed).
-  const isOwned = item.owned ?? (held ? true : undefined);
+  const isOwned = await ownershipMarker(item, held !== undefined, acquired);
 
   return { ...meta, hash: item.hash, plugs, owned: isOwned };
 }
@@ -139,10 +170,22 @@ async function tryProfile(): Promise<ProfileResponse> {
       Component.CharacterInventories,
       Component.ProfileInventories,
       Component.ItemSockets,
+      Component.Collectibles,
     ]);
   } catch {
     return {};
   }
+}
+
+// The set of collectibles the account has acquired, or undefined when the profile carries no
+// Collections data (logged out / the fetch failed) — distinguishing "this isn't acquired" from
+// "we have nothing to check against", so the latter leaves a piece unmarked instead of to-farm.
+function collectionsAcquired(profile: ProfileResponse): Set<number> | undefined {
+  const hasData =
+    profile.profileCollectibles?.data !== undefined ||
+    profile.characterCollectibles?.data !== undefined;
+
+  return hasData ? collectedCollectibles(profile) : undefined;
 }
 
 function recentClass(profile: ProfileResponse): string | undefined {
