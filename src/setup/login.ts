@@ -70,8 +70,15 @@ export async function runLogin(): Promise<void> {
 }
 
 function openBrowser(url: string): void {
-  const opener =
-    process.platform === "darwin" ? "open" : process.platform === "win32" ? "start" : "xdg-open";
+  // `start` is a cmd.exe built-in, not an executable, and treats its first quoted argument as the
+  // window title — so `start "<url>"` opens a console window titled with the URL instead of the
+  // browser. Invoke it via `cmd /c start ""` with an explicit empty title so the URL is the target.
+  if (process.platform === "win32") {
+    exec(`start "" "${url}"`, { shell: "cmd.exe" });
+    return;
+  }
+
+  const opener = process.platform === "darwin" ? "open" : "xdg-open";
 
   exec(`${opener} "${url}"`);
 }
