@@ -1,10 +1,20 @@
 #!/usr/bin/env bash
-# Assemble and pack the .mcpb bundle. The server is esbuild-bundled into a SINGLE file
-# (server/index.js) with all npm deps inlined — deliberately NOT a copied node_modules tree.
-# Claude Desktop's install dialog enumerates every file in the bundle and times out on large
-# trees (~2300 files of node_modules made the install silently hang with no dialog); collapsing
-# to one file keeps the bundle at a handful of entries so it installs. The runtime path math in
-# config.ts finds data/ by walking up to server/package.json, so the flat layout still resolves.
+# Assemble and pack the .mcpb bundle. Two independent things matter here:
+#
+# 1. The server is esbuild-bundled into a SINGLE file (server/index.js) with all npm deps
+#    inlined — deliberately NOT a copied node_modules tree. This is for cleanliness/size only;
+#    it is NOT an install fix. (An earlier theory blamed install failures on bundle file COUNT
+#    — that was a misdiagnosis. The real cause is #2.) The runtime path math in config.ts finds
+#    data/ by walking up to server/package.json, so the flat single-file layout still resolves.
+#
+# 2. The .mcpb is packed with STORED (uncompressed) zip entries, NOT `mcpb pack`'s default
+#    DEFLATE. Claude Desktop's bundled Node (24.16+) has a stream pause/resume regression
+#    (nodejs/node#62557) that DEADLOCKS its bundled zip reader on any DEFLATE entry whose
+#    COMPRESSED size >= the stream highWaterMark — 64 KiB on macOS, 16 KiB on Windows. Opening
+#    such a .mcpb silently hangs: no preview, no install dialog, no error, zero CPU
+#    (anthropics/claude-code#67865, #68002). Storing every entry uncompressed never takes the
+#    inflate path, so the bundle installs on affected AND fixed Desktop builds. Costs download
+#    size (no compression); that is the accepted trade for an install that actually works.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -45,8 +55,24 @@ MCPB_OUT="$BUNDLE/manifest.json" MCPB_VERSION="$VERSION" node -e '
   fs.writeFileSync(process.env.MCPB_OUT, JSON.stringify(manifest, null, 2) + "\n");
 '
 
-# Zip + validate against the manifest schema.
-npx -y @anthropic-ai/mcpb pack "$BUNDLE" "$OUT"
+# Validate the manifest against the MCPB schema — this is the check `mcpb pack` runs before it
+# zips. We validate but do NOT use `mcpb pack` to build the archive, because it only emits
+# DEFLATE entries (see header note #2); instead we zip by hand with STORED compression.
+npx -y @anthropic-ai/mcpb validate "$BUNDLE/manifest.json"
 
-echo "Built $OUT"
-echo "Bundle file count: $(unzip -l "$OUT" | tail -1 | awk '{print $2}')"
+# Pack STORED (uncompressed): -Z store = no compression, -X = drop extra file attrs, -r recurse.
+# manifest.json must sit at the archive root. Run from inside $BUNDLE so paths are relative.
+OUT_ABS="$PWD/$OUT"
+rm -f "$OUT_ABS"
+( cd "$BUNDLE" && zip -rX -Z store "$OUT_ABS" manifest.json server -x '*/.DS_Store' >/dev/null )
+
+echo "Built $OUT ($(du -h "$OUT" | cut -f1))"
+# Guard: every entry must be Stored. A single DEFLATE entry >= the Node highWaterMark would
+# silently brick install on Claude Desktop builds running Node 24.16+ (see header note #2).
+# The method column ($2 in `unzip -v`) is "Stored" or "Defl:N"; error if any "Defl" appears.
+if unzip -v "$OUT" | awk '$2 ~ /^Defl/ {found=1} END {exit !found}'; then
+  echo "ERROR: bundle has DEFLATE (compressed) entries — would hang Claude Desktop install." >&2
+  unzip -v "$OUT" >&2
+  exit 1
+fi
+echo "All entries Stored — installable on Node 24.16+ Desktop builds."
