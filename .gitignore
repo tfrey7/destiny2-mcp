@@ -26,3 +26,6 @@ oauth.txt
 
 # High-res icon source kept locally for re-cropping; only the packed icon.png is tracked
 assets/*@source.png
+
+# Throwaway local preview artifacts
+previews/

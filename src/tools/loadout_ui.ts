@@ -15,7 +15,12 @@ export function registerLoadoutUi(server: McpServer): void {
   server.registerResource(
     "loadout-ui",
     LOADOUT_UI_RESOURCE_URI,
-    { mimeType: LOADOUT_UI_MIME, _meta: { ui: { prefersBorder: true } } },
+    // resourceDomains declares the icon CDN per SEP-1865; icons are also inlined as data: URIs
+    // because Claude Desktop ignores this field today and its sandbox blocks remote image hosts.
+    {
+      mimeType: LOADOUT_UI_MIME,
+      _meta: { ui: { prefersBorder: true, csp: { resourceDomains: ["https://www.bungie.net"] } } },
+    },
     (uri) => ({
       contents: [{ uri: uri.href, mimeType: LOADOUT_UI_MIME, text: renderLoadoutTemplate() }],
     }),

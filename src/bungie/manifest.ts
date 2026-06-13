@@ -19,6 +19,9 @@ export interface ItemMeta {
   bucketHash: number;
   // The armor set this piece belongs to, if any. Set bonuses live on the set, not the piece.
   setHash?: number;
+  // Relative path to the item's icon on Bungie's CDN (prepend https://www.bungie.net). The
+  // manifest stores the path, not the bytes; renderers that show art fetch it from the CDN.
+  icon?: string;
 }
 
 export interface SocketEntry {
@@ -35,7 +38,7 @@ export interface SocketCategoryEntry {
 }
 
 export interface ItemDefinition {
-  displayProperties?: { name?: string; description?: string };
+  displayProperties?: { name?: string; description?: string; icon?: string };
   itemTypeDisplayName?: string;
   flavorText?: string;
   inventory?: { tierTypeName?: string; bucketTypeHash?: number };
@@ -243,6 +246,7 @@ export async function itemMeta(hash: number): Promise<ItemMeta | undefined> {
     element: elementOf(item),
     bucketHash: item.inventory?.bucketTypeHash ?? 0,
     setHash: item.equippingBlock?.equipableItemSetHash || undefined,
+    icon: item.displayProperties?.icon || undefined,
   };
 }
 
@@ -484,7 +488,7 @@ export async function searchItems(
 const ITEM_TABLE = "DestinyInventoryItemDefinition";
 
 interface RawItem {
-  displayProperties?: { name?: string };
+  displayProperties?: { name?: string; icon?: string };
   itemType?: number;
   itemTypeDisplayName?: string;
   collectibleHash?: number;

@@ -28,11 +28,14 @@ OUT="$OUTDIR/destiny2-mcp-${VERSION}.mcpb"
 DISPLAY_SUFFIX=""
 
 # Debug build (MCPB_DEBUG=1, via `npm run pack:mcpb:debug`): version the artifact as a prerelease of
-# the next patch, "<next-patch>-<strand>" (e.g. 1.1.4-dummy-debug). This is valid semver that sorts
-# ABOVE the installed release (so Desktop never treats the install as a downgrade) and BELOW the
-# eventual release of that patch, while the -<strand> tag marks it as a throwaway. The bundle's
-# `name` is unchanged, so installing it over the release build replaces it (Desktop keys replacement
-# on name); the " (<strand>)" display-name suffix labels it in the extensions list.
+# the next patch, "<next-patch>-<strand>.<build>" (e.g. 1.1.4-images.20260613150723). This is valid
+# semver that sorts ABOVE the installed release (so Desktop never treats the install as a downgrade)
+# and BELOW the eventual release of that patch, while the -<strand> tag marks it as a throwaway. The
+# trailing <build> is a UTC timestamp that MUST increase every rebuild: Desktop keys "is this an
+# upgrade?" on the version, so a constant version makes it silently skip the reinstall and keep
+# running the old code. The build tag is also surfaced in the display-name suffix so you can SEE
+# which build actually loaded. The bundle's `name` is unchanged, so installing over the release build
+# replaces it (Desktop keys replacement on name).
 if [[ "${MCPB_DEBUG:-}" == "1" ]]; then
   BRANCH=$(git rev-parse --abbrev-ref HEAD)
   if [[ "$BRANCH" != strand/* ]]; then
@@ -41,8 +44,9 @@ if [[ "${MCPB_DEBUG:-}" == "1" ]]; then
   fi
   STRAND=${BRANCH#strand/}
   NEXT_PATCH=$(node -e 'const [a,b,c]=require("./package.json").version.split(".").map(Number); console.log(`${a}.${b}.${c+1}`)')
-  VERSION="${NEXT_PATCH}-${STRAND}"
-  DISPLAY_SUFFIX=" ($STRAND)"
+  BUILD=$(date -u +%Y%m%d%H%M%S)
+  VERSION="${NEXT_PATCH}-${STRAND}.${BUILD}"
+  DISPLAY_SUFFIX=" ($STRAND · b${BUILD: -6})"
   OUT="$OUTDIR/destiny2-mcp-${STRAND}.mcpb"
 fi
 

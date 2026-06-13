@@ -1,8 +1,9 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { LOADOUT_UI_RESOURCE_URI } from "../format/loadout/html.js";
-import { itemMeta, type ItemMeta } from "../bungie/manifest.js";
+import type { LoadoutCardItem } from "../format/loadout/model.js";
 import { ClassType, Component, type DestinyCharacter, getProfile } from "../bungie/profile.js";
+import { enrichItem } from "./loadout_items.js";
 import { card, json } from "./response.js";
 import { clientSupportsUi } from "./ui_capability.js";
 
@@ -11,13 +12,20 @@ export function registerShowEquipped(server: McpServer): void {
     "show_equipped",
     {
       description:
-        "Render the currently equipped gear as a text card: weapons, armor, and subclass in aligned columns, with exotics marked and elements named. Defaults to the most recently played character; pass a characterId to choose another. Use this to show a player their current loadout.",
-      inputSchema: { characterId: z.string().optional() },
+        'Render the currently equipped gear as a text card: weapons, armor, and subclass in aligned columns, with exotics marked and elements named. Defaults to the most recently played character; pass a characterId to choose another. Set imageStyle to "icons" to also attach each item\'s icon so the model can see the gear. Use this to show a player their current loadout.',
+      inputSchema: {
+        characterId: z.string().optional(),
+        imageStyle: z.enum(["icons"]).optional(),
+      },
       annotations: { readOnlyHint: true },
       _meta: { ui: { resourceUri: LOADOUT_UI_RESOURCE_URI, visibility: ["model", "app"] } },
     },
-    async ({ characterId }) => {
-      const profile = await getProfile([Component.Characters, Component.CharacterEquipment]);
+    async ({ characterId, imageStyle }) => {
+      const profile = await getProfile([
+        Component.Characters,
+        Component.CharacterEquipment,
+        Component.ItemSockets,
+      ]);
       const equipment = profile.characterEquipment?.data ?? {};
 
       const id =
@@ -30,9 +38,11 @@ export function registerShowEquipped(server: McpServer): void {
         return json({ error: `No equipped gear for character ${id}` });
       }
 
-      const items = (await Promise.all(bucket.items.map((item) => itemMeta(item.itemHash)))).filter(
-        (item): item is ItemMeta => item !== undefined,
-      );
+      const items = (
+        await Promise.all(
+          bucket.items.map((item) => enrichItem(item.itemHash, item.itemInstanceId, profile)),
+        )
+      ).filter((item): item is LoadoutCardItem => item !== undefined);
 
       const spec = {
         title: "EQUIPPED",
@@ -46,7 +56,7 @@ export function registerShowEquipped(server: McpServer): void {
       // falls through to the text card.
       const ui = clientSupportsUi(server) ? {} : undefined;
 
-      return card(spec, ui);
+      return card(spec, { ui, images: imageStyle });
     },
   );
 }

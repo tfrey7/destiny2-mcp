@@ -1,9 +1,11 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { LOADOUT_UI_RESOURCE_URI } from "../format/loadout/html.js";
-import { itemMeta, loadoutName, type ItemMeta } from "../bungie/manifest.js";
+import type { LoadoutCardItem } from "../format/loadout/model.js";
+import { loadoutName } from "../bungie/manifest.js";
 import { ClassType, Component, getProfile } from "../bungie/profile.js";
 import { instanceMap } from "./inventory.js";
+import { enrichItem } from "./loadout_items.js";
 import { card, json } from "./response.js";
 import { clientSupportsUi } from "./ui_capability.js";
 
@@ -12,18 +14,23 @@ export function registerShowLoadout(server: McpServer): void {
     "show_loadout",
     {
       description:
-        "Render a saved loadout as a text card: weapons, armor, and subclass in aligned columns, with exotics marked and elements named. Defaults to the first character; pass a loadoutIndex (from list_loadouts) to choose a slot.",
-      inputSchema: { loadoutIndex: z.number(), characterId: z.string().optional() },
+        'Render a saved loadout as a text card: weapons, armor, and subclass in aligned columns, with exotics marked and elements named. Defaults to the first character; pass a loadoutIndex (from list_loadouts) to choose a slot. Set imageStyle to "icons" to also attach each item\'s icon so the model can see the gear.',
+      inputSchema: {
+        loadoutIndex: z.number(),
+        characterId: z.string().optional(),
+        imageStyle: z.enum(["icons"]).optional(),
+      },
       annotations: { readOnlyHint: true },
       _meta: { ui: { resourceUri: LOADOUT_UI_RESOURCE_URI, visibility: ["model", "app"] } },
     },
-    async ({ loadoutIndex, characterId }) => {
+    async ({ loadoutIndex, characterId, imageStyle }) => {
       const profile = await getProfile([
         Component.Characters,
         Component.CharacterEquipment,
         Component.CharacterInventories,
         Component.ProfileInventories,
         Component.CharacterLoadouts,
+        Component.ItemSockets,
       ]);
 
       const hashByInstance = instanceMap(profile);
@@ -39,9 +46,11 @@ export function registerShowLoadout(server: McpServer): void {
         await Promise.all(
           loadout.items
             .filter((item) => hashByInstance.has(item.itemInstanceId))
-            .map((item) => itemMeta(hashByInstance.get(item.itemInstanceId)!)),
+            .map((item) =>
+              enrichItem(hashByInstance.get(item.itemInstanceId)!, item.itemInstanceId, profile),
+            ),
         )
-      ).filter((item): item is ItemMeta => item !== undefined);
+      ).filter((item): item is LoadoutCardItem => item !== undefined);
 
       const spec = {
         title: (await loadoutName(loadout.nameHash)).toUpperCase(),
@@ -63,7 +72,7 @@ export function registerShowLoadout(server: McpServer): void {
           }
         : undefined;
 
-      return card(spec, ui);
+      return card(spec, { ui, images: imageStyle });
     },
   );
 }

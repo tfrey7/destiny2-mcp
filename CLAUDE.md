@@ -26,7 +26,13 @@ respect, and how to reason when helping a player.
   fetches. `manifest.ts` is the source of truth for an item's `slot`, `element`, `tier`, `ammoType`.
 - `src/knowledge/` — `get_build_knowledge`. Curated, qualitative build knowledge as code
   (`data.ts` = the sections; `index.ts` = the tool). This is where Destiny _facts and mechanics_ live.
-- `src/format/loadout/` — renders loadout cards to PNG (`logic`/`model`/`data`/`png` split by role).
+- `src/format/loadout/` — renders the loadout card. `model.ts` reduces a loadout to sections/rows
+  (the shared shape); `text.ts` is the model-visible box card; `html.ts` is the MCP-UI template that
+  renders the DIM-style two-column card client-side from `structuredContent` (subclass + aspects/
+  fragments on top, weapons left, armor right, perk/mod icons with tooltips, element pips, light.gg
+  links); `images.ts` fetches item icons as model-visible image blocks. The socketed plugs the card
+  shows come from `src/bungie/plugs.ts` (`displayPlugs`), which reads each instance's inserted plugs
+  from the ItemSockets component.
 
 ## Domain rules (the source of truth is `get_build_knowledge`)
 
@@ -74,11 +80,15 @@ without them.
   `/mcp`.
 - **Debug artifacts per strand.** `npm run pack:mcpb` builds a release bundle versioned from
   `package.json`. `npm run pack:mcpb:debug` (only on a `strand/<name>` branch) builds a throwaway bundle
-  versioned `<next-patch>-<strand>` (e.g. `1.1.4-dummy-debug` — valid semver that sorts above the
-  installed release so Desktop never treats the install as a downgrade) with display name
-  "Destiny 2 (<strand>)", output `release/destiny2-mcp-<strand>.mcpb`. The bundle `name` is unchanged, so
-  installing it over the release build replaces it (Desktop keys replacement on name). **You (Claude) run this, not the user.** When a strand's changes are working and
-  the user wants to try them in Claude Desktop, run `npm run pack:mcpb:debug` yourself and hand them the
-  artifact path to double-click — don't wait to be asked for the command. Rebuild it after each round of
-  changes the user wants to re-test.
+  versioned `<next-patch>-<strand>.<build>` (e.g. `1.1.4-images.20260613150753` — valid semver that sorts
+  above the installed release so Desktop never treats it as a downgrade) with display name
+  "Destiny 2 (<strand> · b<HHMMSS>)", output `release/destiny2-mcp-<strand>.mcpb`. The trailing `<build>`
+  is a UTC timestamp that **must increase every rebuild**: Desktop keys "is this an upgrade?" on the
+  version, so a constant version makes it silently skip the reinstall and keep running the old code — the
+  `b<HHMMSS>` display tag lets the user confirm which build actually loaded. The bundle `name` is
+  unchanged, so installing over the release build replaces it (Desktop keys replacement on name).
+  **You (Claude) run this, not the user.** When a strand's changes are working and the user wants to try
+  them in Claude Desktop, run `npm run pack:mcpb:debug` yourself and hand them the artifact path to
+  double-click — don't wait to be asked for the command. Rebuild it after each round of changes the user
+  wants to re-test.
 - Before committing: `npm run typecheck`, `npm run lint`, `npm run format`. Never skip hooks.

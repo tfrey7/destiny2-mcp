@@ -17,8 +17,11 @@ export interface UiAction {
  * loadout data: it initiates the `ui/initialize` handshake, then renders client-side from the
  * `structuredContent` (a cardModel) the host pushes over `ui/notifications/tool-result`.
  *
- * The same template serves every loadout; the data varies per tool call. It shows a "waiting"
- * shell on load so a host that renders the iframe is visible even before data arrives.
+ * The card lays out like the in-game loadout: a subclass row (with its aspects + fragments) on
+ * top, then weapons on the left and armor on the right. Each item shows its icon (weapons carry an
+ * element pip), a name that links to light.gg, and its socketed plugs as icons — weapon perks and
+ * armor mods — with a hover tooltip naming each plug and what it does. The same template serves
+ * every loadout; the data varies per tool call. A "waiting" shell shows before data arrives.
  */
 export function renderLoadoutTemplate(): string {
   return `<!doctype html>
@@ -30,24 +33,34 @@ export function renderLoadoutTemplate(): string {
   :root { color-scheme: light dark; }
   * { box-sizing: border-box; }
   body { margin: 0; padding: 16px; font: 14px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; background: #14151a; color: #e9eaf0; }
-  .card { max-width: 460px; border: 1px solid #2b2d36; border-radius: 12px; overflow: hidden; }
-  header { padding: 14px 16px; background: #1c1e26; border-bottom: 1px solid #2b2d36; }
+  .card { max-width: 680px; border: 1px solid #2b2d36; border-radius: 12px; background: #15171c; }
+  header { padding: 14px 16px; background: #1c1e26; border-bottom: 1px solid #2b2d36; border-radius: 12px 12px 0 0; }
   header h1 { margin: 0; font-size: 16px; letter-spacing: .04em; }
   header .subtitle { margin-top: 2px; font-size: 12px; color: #9a9db0; }
   .waiting { padding: 18px 16px; color: #6f7287; font-size: 13px; }
-  section { padding: 10px 16px; border-top: 1px solid #23252e; }
-  section:first-of-type { border-top: none; }
-  h2 { margin: 0 0 6px; font-size: 10px; letter-spacing: .12em; color: #6f7287; font-weight: 600; }
-  /* Fixed 3-column grid so name / type / element line up across every row and section. */
-  .row { display: grid; grid-template-columns: minmax(0, 1fr) 124px 76px; align-items: center; gap: 10px; padding: 3px 0; }
-  .row .name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .row.exotic .name { color: #f5d863; font-weight: 600; }
-  .row.empty .name { color: #54566a; font-style: italic; }
-  .row .middle { color: #9a9db0; font-size: 12px; }
-  .row .el { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: #c4c6d4; }
-  .row .el.dot::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--elc, #8a8d9c); }
-  .row .el.muted { color: #54566a; font-style: italic; }
-  footer { padding: 12px 16px; border-top: 1px solid #2b2d36; background: #1c1e26; }
+  .body { padding: 4px 16px 16px; }
+  .seclabel { margin: 16px 0 8px; padding-bottom: 6px; border-bottom: 1px solid #23252e; font-size: 10px; letter-spacing: .12em; color: #6f7287; font-weight: 600; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 22px; }
+  .col .seclabel { margin-top: 14px; }
+  .item { display: flex; gap: 11px; align-items: flex-start; padding: 6px 0; }
+  .thumb { position: relative; flex: none; line-height: 0; }
+  .thumb .ic { width: 50px; height: 50px; border-radius: 6px; background: #24272f; display: block; }
+  .thumb .pip { position: absolute; right: 3px; bottom: 3px; width: 17px; height: 17px; filter: drop-shadow(0 0 2px #000) drop-shadow(0 0 2px #000); }
+  .meta { min-width: 0; }
+  a.nm, .nm { display: block; line-height: 1.25; font-weight: 600; text-decoration: none; color: #e9eaf0; }
+  a.nm:hover { text-decoration: underline; }
+  .nm.muted { color: #54566a; font-style: italic; font-weight: 400; }
+  .plugrow { display: flex; align-items: center; gap: 6px; margin-top: 5px; flex-wrap: wrap; }
+  .plug { position: relative; display: inline-block; line-height: 0; }
+  .plug > img { width: 25px; height: 25px; background: #2a2d36; padding: 2px; box-sizing: border-box; }
+  .plug.circle > img { border-radius: 50%; }
+  .plug.square > img { border-radius: 6px; }
+  .plug:hover > img { background: #3a3f4a; }
+  .tip { position: absolute; left: 50%; bottom: 135%; transform: translateX(-50%); width: 220px; background: #0b0c10; border: 1px solid #343a45; border-radius: 8px; padding: 9px 11px; font-size: 12px; line-height: 1.45; color: #dfe2e7; box-shadow: 0 6px 22px rgba(0,0,0,.6); opacity: 0; visibility: hidden; transition: opacity .12s; z-index: 30; pointer-events: none; }
+  .tip b { display: block; margin-bottom: 3px; font-size: 12.5px; color: #fff; }
+  .tip .td { white-space: pre-line; color: #aeb3bb; }
+  .plug:hover .tip { opacity: 1; visibility: visible; }
+  footer { padding: 12px 16px; border-top: 1px solid #2b2d36; background: #1c1e26; border-radius: 0 0 12px 12px; }
   button { width: 100%; padding: 9px 12px; border: none; border-radius: 8px; cursor: pointer; font: inherit; font-weight: 600; background: #3b5bdb; color: #fff; }
   button:hover { background: #4263eb; }
   button:disabled { background: #2b2d36; color: #6f7287; cursor: default; }
@@ -68,31 +81,83 @@ export function renderLoadoutTemplate(): string {
 // the host's ui/notifications/tool-result push, and relays the action button as a tools/call.
 const CLIENT_SCRIPT = `
 (function () {
-  var ELEMENT_COLOR = { Strand: "#34d399", Arc: "#7dd3fc", Solar: "#fb923c", Void: "#a855f7", Stasis: "#60a5fa", Kinetic: "#d4d4d8" };
+  var BUNGIE = "https://www.bungie.net";
+  var LIGHTGG = "https://www.light.gg/db/items/";
+  var RARITY = { Exotic: "#f5dc56", Legendary: "#b78fdb", Rare: "#4f87c4", Uncommon: "#4a9e5b", Common: "#cfd3d9", Basic: "#cfd3d9" };
+  // Filled per render from the tool data: ICONS maps a CDN path to its base64 data: URI (Claude
+  // Desktop's sandbox blocks remote image hosts but allows data:), PIPS maps an element to its pip path.
+  var ICONS = {};
+  var PIPS = {};
   var INIT_ID = 1;
   var nextId = 2;
   function send(m) { parent.postMessage(m, "*"); }
   function notify(method, params) { send({ jsonrpc: "2.0", method: method, params: params || {} }); }
   function sizeChanged() { notify("ui/notifications/size-changed", { height: document.documentElement.scrollHeight }); }
   function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
-  function elCell(row) {
-    if (row.empty) return '<span class="el muted">(empty)</span>';
-    if (row.element) return '<span class="el dot" style="--elc: ' + (ELEMENT_COLOR[row.element] || "#8a8d9c") + '">' + esc(row.element) + "</span>";
-    return '<span class="el"></span>';
+  // Resolve a CDN path to its inlined data: URI, falling back to the remote URL (works outside the
+  // sandbox). A data: URI is used verbatim; only a bare path needs escaping into the attribute.
+  function img(path, cls) {
+    if (!path) return "";
+    var data = ICONS[path];
+    var src = data ? data : BUNGIE + esc(path);
+    return '<img class="' + cls + '" src="' + src + '" alt="" />';
   }
 
-  function rowHtml(row) {
-    var cls = "row" + (row.rarity === "Exotic" ? " exotic" : "") + (row.empty ? " empty" : "");
-    return '<div class="' + cls + '"><span class="name">' + esc(row.name) + '</span><span class="middle">' + esc(row.middle) + "</span>" + elCell(row) + "</div>";
+  function thumb(row, isWeapon) {
+    var pipPath = isWeapon && row.element ? PIPS[row.element] : null;
+    var pip = pipPath ? img(pipPath, "pip") : "";
+    return '<span class="thumb">' + img(row.icon, "ic") + pip + "</span>";
+  }
+
+  function plugsHtml(plugs) {
+    if (!plugs || !plugs.length) return "";
+    var cells = plugs.map(function (p) {
+      var shape = p.shape === "square" ? "square" : "circle";
+      var tip = '<span class="tip"><b>' + esc(p.name) + '</b><span class="td">' + esc(p.description) + "</span></span>";
+      return '<span class="plug ' + shape + '">' + img(p.icon, "") + tip + "</span>";
+    }).join("");
+    return '<div class="plugrow">' + cells + "</div>";
+  }
+
+  function nameHtml(row) {
+    if (row.empty) return '<span class="nm muted">(empty)</span>';
+    var color = RARITY[row.rarity] || "#e9eaf0";
+    var label = esc(row.name);
+    if (row.hash) {
+      return '<a class="nm" style="color: ' + color + '" href="' + LIGHTGG + row.hash +
+        '/" target="_blank" rel="noopener">' + label + "</a>";
+    }
+    return '<span class="nm" style="color: ' + color + '">' + label + "</span>";
+  }
+
+  function itemHtml(row, isWeapon) {
+    return '<div class="item">' + thumb(row, isWeapon) +
+      '<div class="meta">' + nameHtml(row) + plugsHtml(row.plugs) + "</div></div>";
+  }
+
+  function section(data, label) {
+    var found = (data.sections || []).filter(function (s) { return s.label === label; })[0];
+    return found ? (found.rows || []) : [];
   }
 
   function render(data) {
-    var sections = (data.sections || []).map(function (s) {
-      return "<section><h2>" + esc(s.label) + "</h2>" + (s.rows || []).map(rowHtml).join("") + "</section>";
-    }).join("");
+    ICONS = data.icons || {};
+    PIPS = data.elementPips || {};
+    var subclass = section(data, "SUBCLASS").map(function (r) { return itemHtml(r, false); }).join("");
+    var weapons = section(data, "WEAPONS").map(function (r) { return itemHtml(r, true); }).join("");
+    var armor = section(data, "ARMOR").map(function (r) { return itemHtml(r, false); }).join("");
+
+    var body = "";
+    if (subclass) body += '<div class="seclabel">SUBCLASS</div>' + subclass;
+    body += '<div class="cols">' +
+      '<div class="col"><div class="seclabel">WEAPONS</div>' + weapons + "</div>" +
+      '<div class="col"><div class="seclabel">ARMOR</div>' + armor + "</div></div>";
+
     var footer = data.action ? '<footer><button id="act">' + esc(data.action.label) + "</button></footer>" : "";
     document.getElementById("card").innerHTML =
-      "<header><h1>" + esc(data.title) + '</h1><div class="subtitle">' + esc(data.subtitle) + "</div></header>" + sections + footer;
+      "<header><h1>" + esc(data.title) + '</h1><div class="subtitle">' + esc(data.subtitle) + "</div></header>" +
+      '<div class="body">' + body + "</div>" + footer;
+
     if (data.action) {
       var btn = document.getElementById("act");
       btn.addEventListener("click", function () {
