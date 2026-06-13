@@ -60,7 +60,15 @@ without them.
 
 - Ground every claim in the live tools. Read mechanics from `get_build_knowledge`, then verify the
   player's actual gear and rolls with `inspect_item` / `list_inventory` — do not answer gear questions
-  from memory.
+  from memory **or from web search**. The manifest is the source of truth and it is local.
+- Catalog questions — "list all exotic Void weapons", "what's the newest hand cannon", "every piece of
+  this set" — are `search_items` queries, not web searches. Recall and tier lists miss reissues, omit
+  brand-new items, and mislabel elements (element comes from damage type, not the slot). Pass
+  `sort:"newest"` for "the latest"/"the new" of a type. If the destiny2 tools aren't loaded yet, load
+  and use them — never substitute a web search for a question the manifest can answer.
+- "Show me the icon for X" / "what does X look like" is answerable: `show_item` returns the item's icon
+  as an image from the manifest. These are first-party assets the server ships to display (the loadout
+  card already does) — never decline on copyright grounds or fall back to a light.gg link.
 - Lead a build or loadout answer with the visual card (`show_equipped` / `show_loadout`); don't restate
   it in prose.
 - Recommending an energy weapon for a Strand/Stasis build means an off-element utility pick — those

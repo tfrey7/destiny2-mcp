@@ -391,6 +391,9 @@ export interface CatalogEntry {
   collectibleHash?: number;
   setHash?: number;
   setName?: string;
+  // The manifest's per-table insertion order. Not a release date, but new content is appended, so a
+  // higher index reliably reads as "more recently added" — the only recency signal the manifest carries.
+  index?: number;
 }
 
 export interface SearchFilters {
@@ -402,6 +405,9 @@ export interface SearchFilters {
   class?: string;
   set?: string;
   owned?: boolean;
+  // "newest" orders by manifest index descending (latest-added first) instead of the default
+  // tier-then-name, so "the newest exotic hand cannon" resolves without guessing from memory.
+  sort?: "newest";
   limit?: number;
 }
 
@@ -476,7 +482,9 @@ export async function searchItems(
   });
 
   const sorted = dedupeByName(matches).sort(
-    (a, b) => compareByTier(a, b) || a.name.localeCompare(b.name),
+    filters.sort === "newest"
+      ? (a, b) => (b.index ?? 0) - (a.index ?? 0)
+      : (a, b) => compareByTier(a, b) || a.name.localeCompare(b.name),
   );
 
   const limit = filters.limit ?? 50;
@@ -497,6 +505,7 @@ interface RawItem {
   equippingBlock?: { ammoType?: number; equipableItemSetHash?: number };
   inventory?: { tierTypeName?: string; bucketTypeHash?: number };
   classType?: number;
+  index?: number;
 }
 
 interface CollectibleDefinition {
@@ -719,6 +728,7 @@ async function buildCatalog(): Promise<CatalogEntry[]> {
       itemType: def.itemType,
       collectibleHash: def.collectibleHash,
       setHash: def.equippingBlock?.equipableItemSetHash || undefined,
+      index: def.index,
     });
   }
 
@@ -747,15 +757,27 @@ async function setNamesByHash(catalog: CatalogEntry[]): Promise<Map<number, stri
   return names;
 }
 
-// Names repeat across reissues; keep the copy with a Collections source so its hash chains into how_to_acquire.
+// Names repeat across reissues; keep the copy with a Collections source so its hash chains into
+// how_to_acquire, but carry the newest index across all copies so a "newest" sort reflects the latest
+// reissue, not whichever copy happens to hold the collectible. Entries are cloned before any mutation —
+// the catalog they come from is cached for the process lifetime and must not be touched.
 function dedupeByName(entries: CatalogEntry[]): CatalogEntry[] {
   const byName = new Map<string, CatalogEntry>();
 
   for (const entry of entries) {
     const existing = byName.get(entry.name);
 
-    if (!existing || (!existing.collectibleHash && entry.collectibleHash)) {
-      byName.set(entry.name, entry);
+    if (!existing) {
+      byName.set(entry.name, { ...entry });
+      continue;
+    }
+
+    const newestIndex = Math.max(existing.index ?? 0, entry.index ?? 0);
+
+    if (!existing.collectibleHash && entry.collectibleHash) {
+      byName.set(entry.name, { ...entry, index: newestIndex });
+    } else {
+      existing.index = newestIndex;
     }
   }
 

@@ -33,6 +33,12 @@ export const gearTierSchema = z.number().int().min(1).max(5);
 export const classNameSchema = z.enum(["Titan", "Hunter", "Warlock"]);
 export type ClassName = z.infer<typeof classNameSchema>;
 
+// Result ordering for catalog search. "newest" surfaces the most recently added items first (by
+// manifest index) — the handle for "the latest" / "the new" queries. Omit for the default
+// highest-rarity-then-name order.
+export const sortSchema = z.enum(["newest"]);
+export type Sort = z.infer<typeof sortSchema>;
+
 export const itemCategorySchema = z.enum([
   "weapon",
   "armor",

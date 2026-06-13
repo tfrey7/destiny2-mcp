@@ -24,6 +24,7 @@ import { registerFindShaders } from "./shaders/index.js";
 import { registerSearchRecords } from "./search_records.js";
 import { registerShowArtifact } from "./show_artifact.js";
 import { registerShowEquipped } from "./show_equipped.js";
+import { registerShowItem } from "./show_item.js";
 import { registerShowLoadout } from "./show_loadout.js";
 import { registerSnapshotLoadout } from "./snapshot_loadout.js";
 import { registerTransferItem } from "./transfer_item.js";
@@ -44,6 +45,7 @@ export function registerTools(server: McpServer): void {
   registerInspectSockets(server);
   registerHowToAcquire(server);
   registerSearchItems(server);
+  registerShowItem(server);
   registerFindOrnaments(server);
   registerFindShaders(server);
   registerGetArtifact(server);
