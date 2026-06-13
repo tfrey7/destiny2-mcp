@@ -27,11 +27,12 @@ VERSION=$(node -p "require('./package.json').version")
 OUT="$OUTDIR/destiny2-mcp-${VERSION}.mcpb"
 DISPLAY_SUFFIX=""
 
-# Debug build (MCPB_DEBUG=1, via `npm run pack:mcpb:debug`): version the artifact by the current
-# strand name instead of semver. The bundle's `name` is unchanged, so installing it over the
-# release build replaces it (Desktop keys replacement on name); the strand version and the
-# " (<strand>)" display-name suffix make it obvious in the extensions list that a throwaway build
-# is installed.
+# Debug build (MCPB_DEBUG=1, via `npm run pack:mcpb:debug`): version the artifact as a prerelease of
+# the next patch, "<next-patch>-<strand>" (e.g. 1.1.4-dummy-debug). This is valid semver that sorts
+# ABOVE the installed release (so Desktop never treats the install as a downgrade) and BELOW the
+# eventual release of that patch, while the -<strand> tag marks it as a throwaway. The bundle's
+# `name` is unchanged, so installing it over the release build replaces it (Desktop keys replacement
+# on name); the " (<strand>)" display-name suffix labels it in the extensions list.
 if [[ "${MCPB_DEBUG:-}" == "1" ]]; then
   BRANCH=$(git rev-parse --abbrev-ref HEAD)
   if [[ "$BRANCH" != strand/* ]]; then
@@ -39,7 +40,8 @@ if [[ "${MCPB_DEBUG:-}" == "1" ]]; then
     exit 1
   fi
   STRAND=${BRANCH#strand/}
-  VERSION="$STRAND"
+  NEXT_PATCH=$(node -e 'const [a,b,c]=require("./package.json").version.split(".").map(Number); console.log(`${a}.${b}.${c+1}`)')
+  VERSION="${NEXT_PATCH}-${STRAND}"
   DISPLAY_SUFFIX=" ($STRAND)"
   OUT="$OUTDIR/destiny2-mcp-${STRAND}.mcpb"
 fi

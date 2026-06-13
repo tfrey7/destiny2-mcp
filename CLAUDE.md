@@ -74,9 +74,10 @@ without them.
   `/mcp`.
 - **Debug artifacts per strand.** `npm run pack:mcpb` builds a release bundle versioned from
   `package.json`. `npm run pack:mcpb:debug` (only on a `strand/<name>` branch) builds a throwaway bundle
-  versioned `<strand>` with display name "Destiny 2 (<strand>)", output `release/destiny2-mcp-<strand>.mcpb`.
-  The bundle `name` is unchanged, so installing it over the release build replaces it (Desktop keys
-  replacement on name). **You (Claude) run this, not the user.** When a strand's changes are working and
+  versioned `<next-patch>-<strand>` (e.g. `1.1.4-dummy-debug` — valid semver that sorts above the
+  installed release so Desktop never treats the install as a downgrade) with display name
+  "Destiny 2 (<strand>)", output `release/destiny2-mcp-<strand>.mcpb`. The bundle `name` is unchanged, so
+  installing it over the release build replaces it (Desktop keys replacement on name). **You (Claude) run this, not the user.** When a strand's changes are working and
   the user wants to try them in Claude Desktop, run `npm run pack:mcpb:debug` yourself and hand them the
   artifact path to double-click — don't wait to be asked for the command. Rebuild it after each round of
   changes the user wants to re-test.
