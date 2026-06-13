@@ -17,6 +17,7 @@
     "auth": "tsx src/setup/auth_cli.ts",
     "start": "tsx src/index.ts",
     "pack:mcpb": "bash scripts/build_mcpb.sh",
+    "pack:mcpb:debug": "MCPB_DEBUG=1 bash scripts/build_mcpb.sh",
     "scrape:builds": "tsx scripts/scrape_builds.ts",
     "extract:test_manifest": "tsx scripts/extract_test_manifest.ts",
     "test": "vitest run"

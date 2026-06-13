@@ -25,6 +25,24 @@ OUTDIR=release
 BUNDLE="$OUTDIR/bundle"
 VERSION=$(node -p "require('./package.json').version")
 OUT="$OUTDIR/destiny2-mcp-${VERSION}.mcpb"
+DISPLAY_SUFFIX=""
+
+# Debug build (MCPB_DEBUG=1, via `npm run pack:mcpb:debug`): version the artifact by the current
+# strand name instead of semver. The bundle's `name` is unchanged, so installing it over the
+# release build replaces it (Desktop keys replacement on name); the strand version and the
+# " (<strand>)" display-name suffix make it obvious in the extensions list that a throwaway build
+# is installed.
+if [[ "${MCPB_DEBUG:-}" == "1" ]]; then
+  BRANCH=$(git rev-parse --abbrev-ref HEAD)
+  if [[ "$BRANCH" != strand/* ]]; then
+    echo "ERROR: pack:mcpb:debug must run on a strand/<name> branch (on '$BRANCH'). Use pack:mcpb for releases." >&2
+    exit 1
+  fi
+  STRAND=${BRANCH#strand/}
+  VERSION="$STRAND"
+  DISPLAY_SUFFIX=" ($STRAND)"
+  OUT="$OUTDIR/destiny2-mcp-${STRAND}.mcpb"
+fi
 
 rm -rf "$OUTDIR"
 mkdir -p "$BUNDLE/server"
@@ -51,11 +69,13 @@ cp package.json "$BUNDLE/server/"
 # "icon" field points to it relative to that root. Without it Claude Desktop shows a "D" tile.
 cp assets/icon.png "$BUNDLE/icon.png"
 
-# Copy the manifest, stamping version from package.json so the two never drift.
-MCPB_OUT="$BUNDLE/manifest.json" MCPB_VERSION="$VERSION" node -e '
+# Copy the manifest, stamping version from package.json so the two never drift. A debug build also
+# appends DISPLAY_SUFFIX to display_name so a strand bundle is labelled in the extensions list.
+MCPB_OUT="$BUNDLE/manifest.json" MCPB_VERSION="$VERSION" MCPB_DISPLAY_SUFFIX="$DISPLAY_SUFFIX" node -e '
   const fs = require("fs");
   const manifest = JSON.parse(fs.readFileSync("manifest.json", "utf8"));
   manifest.version = process.env.MCPB_VERSION;
+  manifest.display_name += process.env.MCPB_DISPLAY_SUFFIX;
   fs.writeFileSync(process.env.MCPB_OUT, JSON.stringify(manifest, null, 2) + "\n");
 '
 
