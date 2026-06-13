@@ -47,6 +47,10 @@ npx esbuild src/index.ts \
 cp -R data "$BUNDLE/server/data"
 cp package.json "$BUNDLE/server/"
 
+# The install-screen icon. Sits at the archive root next to manifest.json; the manifest's
+# "icon" field points to it relative to that root. Without it Claude Desktop shows a "D" tile.
+cp assets/icon.png "$BUNDLE/icon.png"
+
 # Copy the manifest, stamping version from package.json so the two never drift.
 MCPB_OUT="$BUNDLE/manifest.json" MCPB_VERSION="$VERSION" node -e '
   const fs = require("fs");
@@ -64,7 +68,7 @@ npx -y @anthropic-ai/mcpb validate "$BUNDLE/manifest.json"
 # manifest.json must sit at the archive root. Run from inside $BUNDLE so paths are relative.
 OUT_ABS="$PWD/$OUT"
 rm -f "$OUT_ABS"
-( cd "$BUNDLE" && zip -rX -Z store "$OUT_ABS" manifest.json server -x '*/.DS_Store' >/dev/null )
+( cd "$BUNDLE" && zip -rX -Z store "$OUT_ABS" manifest.json icon.png server -x '*/.DS_Store' >/dev/null )
 
 echo "Built $OUT ($(du -h "$OUT" | cut -f1))"
 # Guard: every entry must be Stored. A single DEFLATE entry >= the Node highWaterMark would

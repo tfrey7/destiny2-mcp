@@ -6,6 +6,7 @@
   "version": "1.0.0",
   "description": "Inspect your Destiny 2 gear, craft builds, and equip loadouts via the Bungie.net API.",
   "long_description": "An MCP server for Destiny 2. Reads your characters, inventory, and item rolls from Bungie.net; serves curated build knowledge; finds and imports builds; and equips gear and loadouts. Authenticate once with the `login` tool (opens a browser); tokens are stored locally in `~/.destiny2-mcp`.",
+  "icon": "icon.png",
   "author": {
     "name": "tfrey7"
   },

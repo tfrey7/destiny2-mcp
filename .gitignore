@@ -23,3 +23,6 @@ oauth.txt
 
 # Ornament enrichment cache (downloaded screenshots + intermediate captions)
 .cache/
+
+# High-res icon source kept locally for re-cropping; only the packed icon.png is tracked
+assets/*@source.png
