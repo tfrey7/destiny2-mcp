@@ -2,6 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { loadManifest } from "./bungie/manifest_db.js";
 import { registerKnowledgeResources, registerKnowledgeTools } from "./knowledge/index.js";
+import { registerArmorUi } from "./tools/armor_ui.js";
 import { registerTools } from "./tools/index.js";
 import { registerLoadoutUi } from "./tools/loadout_ui.js";
 import { registerRecapUi } from "./tools/recap_ui.js";
@@ -17,6 +18,7 @@ registerLoadoutUi(server);
 registerTriumphsUi(server);
 registerWeaponUi(server);
 registerRecapUi(server);
+registerArmorUi(server);
 
 try {
   await loadManifest();

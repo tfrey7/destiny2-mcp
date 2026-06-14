@@ -16,6 +16,9 @@ export interface ItemMeta {
   // it, the way searchItems does, so weapon/armor can't drift between the two tools.
   itemType?: number;
   element?: string;
+  // The class an armor piece is restricted to ("Titan"/"Hunter"/"Warlock"), "Any" for class-agnostic
+  // gear (weapons), or undefined when absent. Class is to armor what element is to weapons.
+  className?: string;
   bucketHash: number;
   // The armor set this piece belongs to, if any. Set bonuses live on the set, not the piece.
   setHash?: number;
@@ -101,6 +104,12 @@ export function isGearBucket(bucketHash: number | undefined): boolean {
 // per-instance socket walk to armor and spares it the weapons/ghosts/ships that can never carry one.
 export function isArmorBucket(bucketHash: number | undefined): boolean {
   return bucketHash !== undefined && ARMOR_BUCKETS.has(bucketHash);
+}
+
+// The armor equip slot's in-game name (Helmet, Gauntlets, …), or undefined for a non-armor bucket.
+// Armor's counterpart to slotFromBucketHash — the armor card's header reads its slot from here.
+export function armorSlot(bucketHash: number | undefined): string | undefined {
+  return bucketHash === undefined ? undefined : ARMOR_SLOT_BY_BUCKET[bucketHash];
 }
 
 // True when an item's live bucket is the Postmaster — i.e. it's uncollected mail, not on-person gear.
@@ -255,6 +264,7 @@ export async function itemMeta(hash: number): Promise<ItemMeta | undefined> {
     type: item.itemTypeDisplayName ?? "",
     itemType: item.itemType,
     element: elementOf(item),
+    className: classTypeLabel(item.classType),
     bucketHash: item.inventory?.bucketTypeHash ?? 0,
     setHash: item.equippingBlock?.equipableItemSetHash || undefined,
     icon: item.displayProperties?.icon || undefined,
@@ -636,10 +646,18 @@ const WEAPON_SLOT_BY_BUCKET: Record<number, string> = {
   953998645: "Power",
 };
 
-// DestinyInventoryBucketDefinition hashes for the five armor equip slots (helmet, gauntlets, chest,
-// legs, class item). With the three weapon buckets above, these are the buckets holding gear that
-// transfers freely between a character and the vault — unlike subclass, postmaster, or cosmetic buckets.
-const ARMOR_BUCKETS = new Set([3448274439, 3551918588, 14239492, 20886954, 1585787867]);
+// DestinyInventoryBucketDefinition hashes for the five armor equip slots → their in-game slot names.
+// With the three weapon buckets above, these are the buckets holding gear that transfers freely
+// between a character and the vault — unlike subclass, postmaster, or cosmetic buckets.
+const ARMOR_SLOT_BY_BUCKET: Record<number, string> = {
+  3448274439: "Helmet",
+  3551918588: "Gauntlets",
+  14239492: "Chest Armor",
+  20886954: "Leg Armor",
+  1585787867: "Class Armor",
+};
+
+const ARMOR_BUCKETS = new Set(Object.keys(ARMOR_SLOT_BY_BUCKET).map(Number));
 
 // The Lost Items (Postmaster) bucket. Bungie returns its contents inside CharacterInventories, so an
 // item's *current* bucket — not its definition's home bucket — is the only signal that it's sitting in
@@ -665,7 +683,9 @@ const CLASS_TYPE: Record<number, string> = {
 // masterwork plug ("Upgrade Armor") adds the same value to all six, and that value IS the gear
 // tier (1-5) — Edge of Fate's quality scale, separate from rarity. (Armor Energy Capacity, also on
 // the plug, is a legacy stat fixed at 10, not the tier.) Legacy pre-tier armor has no such plug.
-const ARMOR_ARCHETYPE_STATS = new Set([
+// Exported so the armor card can pick out these six from an instance's full stat block and render
+// them in this canonical order — a Set preserves insertion order, so iterating it is the order above.
+export const ARMOR_ARCHETYPE_STATS = new Set([
   2996146975, // Weapons
   392767087, // Health
   1735777505, // Grenade

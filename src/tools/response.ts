@@ -1,3 +1,5 @@
+import { armorIconBlock, armorIconMap } from "../format/armor/images.js";
+import { type ArmorCard, renderArmorCardText } from "../format/armor/index.js";
 import { renderArtifactCardText, type ArtifactView } from "../format/artifact.js";
 import type { UiAction } from "../format/loadout/html.js";
 import { ELEMENT_PIP, iconBlocks, iconMap } from "../format/loadout/images.js";
@@ -165,6 +167,36 @@ export async function recapCard(spec: RecapCard, opts?: { ui?: boolean }) {
   };
 
   return { content: [{ type: "text" as const, text: note }], structuredContent };
+}
+
+/**
+ * Wrap an armor piece as a tool response carrying its inspect card (see renderArmorCardText).
+ *
+ * Mirrors weaponCard. The piece's own icon rides along as a model-visible image block (like
+ * show_item), and the text card is the model-visible content on plain hosts and the CLI. When `ui` is
+ * true (a UI-capable host; see clientSupportsUi), the ArmorCard rides as structuredContent —
+ * forwarded to the iframe rendered from the `ui://destiny2/armor` template — and the model gets a
+ * terse note instead of the text card, so it doesn't echo the stat block back in prose. The inlined
+ * icon map (exotic-perk + mod icons as data URIs) rides in structuredContent at zero token cost, as
+ * Claude Desktop's sandbox blocks remote hosts.
+ */
+export async function armorCard(spec: ArmorCard, opts?: { ui?: boolean }) {
+  const block = await armorIconBlock(spec);
+  const images = block ? [block] : [];
+
+  if (!opts?.ui) {
+    return {
+      content: [{ type: "text" as const, text: renderArmorCardText(spec) }, ...images],
+    };
+  }
+
+  const note = `Armor inspect card for ${spec.name} shown to the user — its six archetype stats, exotic perk, set bonuses, and slotted mods. The card is the answer; don't restate its stats in prose.`;
+  const structuredContent: Record<string, unknown> = {
+    ...spec,
+    icons: await armorIconMap(spec),
+  };
+
+  return { content: [{ type: "text" as const, text: note }, ...images], structuredContent };
 }
 
 /**
