@@ -1,6 +1,6 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { Component, getProfile } from "../bungie/profile.js";
+import { getTriumphsProfile } from "../bungie/profile.js";
 import { suggestTriumphs } from "../bungie/progression.js";
 import { json } from "./response.js";
 
@@ -18,7 +18,7 @@ export function registerSuggestTriumphs(server: McpServer): void {
       annotations: { readOnlyHint: true },
     },
     async (filters) => {
-      const profile = await getProfile([Component.Records, Component.PresentationNodes]);
+      const profile = await getTriumphsProfile();
 
       return json(await suggestTriumphs(profile, filters));
     },

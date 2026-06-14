@@ -2,7 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { LOADOUT_UI_RESOURCE_URI } from "../format/loadout/html.js";
 import type { LoadoutCardItem } from "../format/loadout/model.js";
-import { ClassType, Component, type DestinyCharacter, getProfile } from "../bungie/profile.js";
+import { ClassType, type DestinyCharacter, getEquippedProfile } from "../bungie/profile.js";
 import { enrichItem } from "./loadout_items.js";
 import { card, json } from "./response.js";
 import { clientSupportsUi } from "./ui_capability.js";
@@ -21,16 +21,12 @@ export function registerShowEquipped(server: McpServer): void {
       _meta: { ui: { resourceUri: LOADOUT_UI_RESOURCE_URI, visibility: ["model", "app"] } },
     },
     async ({ characterId, imageStyle }) => {
-      const profile = await getProfile([
-        Component.Characters,
-        Component.CharacterEquipment,
-        Component.ItemSockets,
-      ]);
-      const equipment = profile.characterEquipment?.data ?? {};
+      const profile = await getEquippedProfile();
+      const equipment = profile.characterEquipment;
 
       const id =
         characterId ??
-        mostRecentlyPlayed(profile.characters?.data ?? {})?.characterId ??
+        mostRecentlyPlayed(profile.characters)?.characterId ??
         Object.keys(equipment)[0];
       const bucket = id ? equipment[id] : undefined;
 
@@ -40,13 +36,15 @@ export function registerShowEquipped(server: McpServer): void {
 
       const items = (
         await Promise.all(
-          bucket.items.map((item) => enrichItem(item.itemHash, item.itemInstanceId, profile)),
+          bucket.items.map((item) =>
+            enrichItem(item.itemHash, item.itemInstanceId, profile.itemSockets),
+          ),
         )
       ).filter((item): item is LoadoutCardItem => item !== undefined);
 
       const spec = {
         title: "EQUIPPED",
-        className: ClassType[profile.characters?.data?.[id]?.classType ?? -1] ?? "Unknown",
+        className: ClassType[profile.characters[id]?.classType ?? -1] ?? "Unknown",
         subtitle: "current",
         items,
       };

@@ -1,8 +1,8 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { itemMeta } from "../bungie/manifest.js";
-import { getProfile } from "../bungie/profile.js";
-import { action, ensureOnCharacter, itemHashFor, TRANSFER_COMPONENTS } from "./actions.js";
+import { getGearProfile } from "../bungie/profile.js";
+import { action, ensureOnCharacter, itemHashFor } from "./actions.js";
 import { ok } from "./response.js";
 
 export function registerEquipItems(server: McpServer): void {
@@ -23,7 +23,7 @@ export function registerEquipItems(server: McpServer): void {
       annotations: { readOnlyHint: false, destructiveHint: true },
     },
     async ({ characterId, itemIds }) => {
-      const profile = await getProfile(TRANSFER_COMPONENTS);
+      const profile = await getGearProfile();
 
       // Resolve each item up front: its name (for the result) and rarity (to order exotics last).
       const items = await Promise.all(

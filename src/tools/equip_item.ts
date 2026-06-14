@@ -1,7 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getProfile } from "../bungie/profile.js";
-import { action, ensureOnCharacter, TRANSFER_COMPONENTS } from "./actions.js";
+import { getGearProfile } from "../bungie/profile.js";
+import { action, ensureOnCharacter } from "./actions.js";
 import { ok } from "./response.js";
 
 export function registerEquipItem(server: McpServer): void {
@@ -17,7 +17,7 @@ export function registerEquipItem(server: McpServer): void {
       annotations: { readOnlyHint: false, destructiveHint: true },
     },
     async ({ characterId, itemId }) => {
-      const profile = await getProfile(TRANSFER_COMPONENTS);
+      const profile = await getGearProfile();
       const note = await ensureOnCharacter(profile, characterId, itemId);
       const response = await action("/Destiny2/Actions/Items/EquipItem/", { characterId, itemId });
 

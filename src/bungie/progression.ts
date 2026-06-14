@@ -3,11 +3,12 @@ import { itemInfo } from "./manifest.js";
 import { matchActivityType, matchWorld } from "./locations.js";
 import { loadTriumphIndex, triumphTag, type TriumphTag } from "./triumph_index.js";
 import {
+  type FullProfile,
   type ObjectiveProgress,
   type PresentationNodeState,
-  type ProfileResponse,
   type RecordComponentState,
   type RecordsComponent,
+  type TriumphsProfile,
 } from "./profile.js";
 
 // A Triumph's completion lifecycle, derived from the DestinyRecordState bitmask: whether its
@@ -99,7 +100,9 @@ export function recordStatus(state: number): RecordStatus {
 // Records live in two scopes — account-wide (profileRecords) and per-character (characterRecords) —
 // so a lookup has to consult both. Character entries win on overlap since they carry the live copy
 // for character-scoped Triumphs.
-function collectRecords(profile: ProfileResponse): Map<number, RecordComponentState> {
+function collectRecords(
+  profile: Pick<FullProfile, "profileRecords" | "characterRecords">,
+): Map<number, RecordComponentState> {
   const merged = new Map<number, RecordComponentState>();
   const absorb = (records?: Record<string, RecordComponentState>) => {
     for (const [hash, state] of Object.entries(records ?? {})) {
@@ -107,8 +110,8 @@ function collectRecords(profile: ProfileResponse): Map<number, RecordComponentSt
     }
   };
 
-  absorb(profile.profileRecords?.data?.records);
-  for (const character of Object.values(profile.characterRecords?.data ?? {})) {
+  absorb(profile.profileRecords.records);
+  for (const character of Object.values(profile.characterRecords)) {
     absorb(character.records);
   }
 
@@ -117,7 +120,9 @@ function collectRecords(profile: ProfileResponse): Map<number, RecordComponentSt
 
 // Presentation-node rollups are split the same way as records; merge both scopes so every seal has
 // its live progress, since some seals are tracked per-character.
-function collectNodes(profile: ProfileResponse): Map<number, PresentationNodeState> {
+function collectNodes(
+  profile: Pick<FullProfile, "profilePresentationNodes" | "characterPresentationNodes">,
+): Map<number, PresentationNodeState> {
   const merged = new Map<number, PresentationNodeState>();
   const absorb = (nodes?: Record<string, PresentationNodeState>) => {
     for (const [hash, state] of Object.entries(nodes ?? {})) {
@@ -125,8 +130,8 @@ function collectNodes(profile: ProfileResponse): Map<number, PresentationNodeSta
     }
   };
 
-  absorb(profile.profilePresentationNodes?.data?.nodes);
-  for (const character of Object.values(profile.characterPresentationNodes?.data ?? {})) {
+  absorb(profile.profilePresentationNodes.nodes);
+  for (const character of Object.values(profile.characterPresentationNodes)) {
     absorb(character.nodes);
   }
 
@@ -173,12 +178,12 @@ async function describeRecord(
 // attributes come from a cached one-time scan of the manifest; per-call work is the filter plus
 // describing just the returned slice.
 export async function searchRecords(
-  profile: ProfileResponse,
+  profile: TriumphsProfile,
   filters: RecordFilters,
 ): Promise<RecordSearch> {
   const catalog = await recordCatalog();
   const live = collectRecords(profile);
-  const seals = await sealMembership(profile.profileRecords?.data?.recordSealsRootNodeHash);
+  const seals = await sealMembership(profile.profileRecords.recordSealsRootNodeHash);
   const tags = filters.location || filters.activity ? await loadTriumphIndex() : undefined;
 
   const name = filters.name?.toLowerCase();
@@ -267,11 +272,11 @@ function matchesPlace(
 
 // The seal overview: total Triumph score plus every seal with its live completion counts, so a
 // caller can spot which title is closest. Progress comes from the seal node's live rollup.
-export async function triumphSummary(profile: ProfileResponse): Promise<TriumphSummary> {
-  const records = profile.profileRecords?.data;
+export async function triumphSummary(profile: TriumphsProfile): Promise<TriumphSummary> {
+  const records = profile.profileRecords;
   const nodes = collectNodes(profile);
   const live = collectRecords(profile);
-  const sealHashes = await sealNodeHashes(records?.recordSealsRootNodeHash);
+  const sealHashes = await sealNodeHashes(records.recordSealsRootNodeHash);
 
   const seals = await Promise.all(
     sealHashes.map((sealHash) => describeSeal(sealHash, nodes.get(sealHash), live)),
@@ -279,10 +284,10 @@ export async function triumphSummary(profile: ProfileResponse): Promise<TriumphS
 
   return {
     score: {
-      total: records?.score ?? 0,
-      active: records?.activeScore ?? 0,
-      legacy: records?.legacyScore ?? 0,
-      lifetime: records?.lifetimeScore ?? 0,
+      total: records.score ?? 0,
+      active: records.activeScore ?? 0,
+      legacy: records.legacyScore ?? 0,
+      lifetime: records.lifetimeScore ?? 0,
     },
     // Closest-to-done first — that's the seal worth focusing on — but earned seals sink to the bottom.
     seals: seals.sort((a, b) => Number(a.earned) - Number(b.earned) || b.percent - a.percent),
@@ -313,15 +318,15 @@ export interface SuggestResult {
 // Triumph score. Optionally scoped to a location/activity so "what next on the Moon" composes the
 // location filter with the ranking. Only the returned slice is described, like searchRecords.
 export async function suggestTriumphs(
-  profile: ProfileResponse,
+  profile: TriumphsProfile,
   filters: SuggestFilters,
 ): Promise<SuggestResult> {
   const catalog = await recordCatalog();
   const live = collectRecords(profile);
-  const seals = await sealMembership(profile.profileRecords?.data?.recordSealsRootNodeHash);
+  const seals = await sealMembership(profile.profileRecords.recordSealsRootNodeHash);
   const tags = await loadTriumphIndex();
   const nodes = collectNodes(profile);
-  const sealHashes = await sealNodeHashes(profile.profileRecords?.data?.recordSealsRootNodeHash);
+  const sealHashes = await sealNodeHashes(profile.profileRecords.recordSealsRootNodeHash);
   const sealViews = await Promise.all(
     sealHashes.map((sealHash) => describeSeal(sealHash, nodes.get(sealHash), live)),
   );

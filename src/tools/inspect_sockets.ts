@@ -46,8 +46,8 @@ export function registerInspectSockets(server: McpServer): void {
       const definition = await itemDefinition(hash);
       const entries = definition.sockets?.socketEntries ?? [];
       const categoryHashes = categoryHashByIndex(definition.sockets?.socketCategories ?? []);
-      const liveSockets = profile.itemComponents?.sockets?.data?.[itemInstanceId]?.sockets ?? [];
-      const livePlugs = profile.itemComponents?.reusablePlugs?.data?.[itemInstanceId]?.plugs ?? {};
+      const liveSockets = profile.itemSockets[itemInstanceId]?.sockets ?? [];
+      const livePlugs = profile.itemReusablePlugs[itemInstanceId]?.plugs ?? {};
       const plugSets = mergedPlugSets(profile);
 
       const sockets = (

@@ -23,12 +23,12 @@ export function registerListLoadouts(server: McpServer): void {
       ]);
 
       const hashByInstance = instanceMap(profile);
-      const loadoutData = profile.characterLoadouts?.data ?? {};
+      const loadoutData = profile.characterLoadouts;
 
       const result = await Promise.all(
         Object.entries(loadoutData).map(async ([characterId, { loadouts }]) => ({
           characterId,
-          class: ClassType[profile.characters?.data?.[characterId]?.classType ?? -1] ?? "Unknown",
+          class: ClassType[profile.characters[characterId]?.classType ?? -1] ?? "Unknown",
           loadouts: await Promise.all(
             loadouts.map(async (loadout, index) => ({
               loadoutIndex: index,

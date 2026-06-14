@@ -13,7 +13,7 @@ export function registerListCharacters(server: McpServer): void {
     },
     async () => {
       const profile = await getProfile([Component.Characters]);
-      const characters = Object.values(profile.characters?.data ?? {}).map((character) => ({
+      const characters = Object.values(profile.characters).map((character) => ({
         characterId: character.characterId,
         class: ClassType[character.classType] ?? "Unknown",
         light: character.light,

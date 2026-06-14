@@ -1,7 +1,7 @@
 import { itemInfo } from "../bungie/manifest.js";
 import { getDefinition } from "../bungie/manifest_db.js";
 import { objectivePercent, resolveObjectives, type ObjectiveView } from "../bungie/progression.js";
-import { type DestinyItem, type ProfileResponse } from "../bungie/profile.js";
+import { type FullProfile } from "../bungie/profile.js";
 
 // An in-progress quest step a player is actively working: the current step, where it sits in its
 // quest line, what's left on its objectives, and what completing it grants.
@@ -20,11 +20,13 @@ interface ActiveQuest {
 // quest bucket carrying the quest trait (which separates it from bounties); we keep only the ones
 // the live objectives component (301) is tracking, since those are the steps actually in progress —
 // Destiny leaves long-finished steps sitting in the bucket with no live objectives.
-export async function activeQuests(profile: ProfileResponse): Promise<ActiveQuest[]> {
-  const objectives = profile.itemComponents?.objectives?.data ?? {};
+export async function activeQuests(
+  profile: Pick<FullProfile, "characterInventories" | "itemObjectives">,
+): Promise<ActiveQuest[]> {
+  const objectives = profile.itemObjectives;
   const quests: ActiveQuest[] = [];
 
-  for (const [characterId, bucket] of Object.entries(profile.characterInventories?.data ?? {})) {
+  for (const [characterId, bucket] of Object.entries(profile.characterInventories)) {
     for (const item of bucket.items) {
       if (!QUEST_BUCKETS.has(item.bucketHash) || !item.itemInstanceId) {
         continue;

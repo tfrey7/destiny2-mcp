@@ -1,6 +1,6 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getProfile, Component } from "../bungie/profile.js";
+import { getTriumphsProfile } from "../bungie/profile.js";
 import { searchRecords } from "../bungie/progression.js";
 import { json } from "./response.js";
 
@@ -22,7 +22,7 @@ export function registerSearchRecords(server: McpServer): void {
       annotations: { readOnlyHint: true },
     },
     async (filters) => {
-      const profile = await getProfile([Component.Records, Component.PresentationNodes]);
+      const profile = await getTriumphsProfile();
 
       return json(await searchRecords(profile, filters));
     },

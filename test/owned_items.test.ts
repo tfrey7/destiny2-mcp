@@ -1,17 +1,29 @@
 import { describe, expect, test } from "vitest";
 import { collectedCollectibles, isOwned } from "../src/bungie/acquisition.js";
-import type { DestinyItem, ProfileResponse } from "../src/bungie/profile.js";
+import type { DestinyItem, ItemBucket } from "../src/bungie/profile.js";
 import { ownedItemsByHash } from "../src/tools/builds/logic.js";
 
 function gearItem(itemHash: number, itemInstanceId?: string): DestinyItem {
   return { itemHash, itemInstanceId, quantity: 1, bucketHash: 0 };
 }
 
+// The unwrapped gear slice ownedItemsByHash now consumes (no `{ data }` envelope); unspecified
+// buckets default to empty so each test states only what it cares about.
+function gearProfile(parts: {
+  characterEquipment?: Record<string, ItemBucket>;
+  characterInventories?: Record<string, ItemBucket>;
+  profileInventory?: ItemBucket;
+}) {
+  return {
+    characterEquipment: parts.characterEquipment ?? {},
+    characterInventories: parts.characterInventories ?? {},
+    profileInventory: parts.profileInventory ?? { items: [] },
+  };
+}
+
 describe("ownedItemsByHash", () => {
   test("records a vault item with no owning character", () => {
-    const profile: ProfileResponse = {
-      profileInventory: { data: { items: [gearItem(100, "inst-vault")] } },
-    };
+    const profile = gearProfile({ profileInventory: { items: [gearItem(100, "inst-vault")] } });
 
     const entry = ownedItemsByHash(profile).get(100);
 
@@ -21,11 +33,11 @@ describe("ownedItemsByHash", () => {
   });
 
   test("prefers the equipped copy over inventory and vault", () => {
-    const profile: ProfileResponse = {
-      characterEquipment: { data: { "char-1": { items: [gearItem(100, "inst-equipped")] } } },
-      characterInventories: { data: { "char-1": { items: [gearItem(100, "inst-inventory")] } } },
-      profileInventory: { data: { items: [gearItem(100, "inst-vault")] } },
-    };
+    const profile = gearProfile({
+      characterEquipment: { "char-1": { items: [gearItem(100, "inst-equipped")] } },
+      characterInventories: { "char-1": { items: [gearItem(100, "inst-inventory")] } },
+      profileInventory: { items: [gearItem(100, "inst-vault")] },
+    });
 
     const entry = ownedItemsByHash(profile).get(100);
 
@@ -35,10 +47,10 @@ describe("ownedItemsByHash", () => {
   });
 
   test("prefers an inventory copy over the vault when not equipped", () => {
-    const profile: ProfileResponse = {
-      characterInventories: { data: { "char-1": { items: [gearItem(100, "inst-inventory")] } } },
-      profileInventory: { data: { items: [gearItem(100, "inst-vault")] } },
-    };
+    const profile = gearProfile({
+      characterInventories: { "char-1": { items: [gearItem(100, "inst-inventory")] } },
+      profileInventory: { items: [gearItem(100, "inst-vault")] },
+    });
 
     const entry = ownedItemsByHash(profile).get(100);
 
@@ -47,9 +59,7 @@ describe("ownedItemsByHash", () => {
   });
 
   test("skips an item that has no instance id", () => {
-    const profile: ProfileResponse = {
-      profileInventory: { data: { items: [gearItem(100)] } },
-    };
+    const profile = gearProfile({ profileInventory: { items: [gearItem(100)] } });
 
     expect(ownedItemsByHash(profile).has(100)).toBe(false);
   });
@@ -57,17 +67,18 @@ describe("ownedItemsByHash", () => {
 
 describe("collectedCollectibles", () => {
   test("counts a collectible acquired on a character even when absent from the profile bucket", () => {
-    const profile: ProfileResponse = {
-      profileCollectibles: { data: { collectibles: {} } },
-      characterCollectibles: { data: { "char-1": { collectibles: { "10": { state: 16 } } } } },
+    const profile = {
+      profileCollectibles: { collectibles: {} },
+      characterCollectibles: { "char-1": { collectibles: { "10": { state: 16 } } } },
     };
 
     expect(collectedCollectibles(profile).has(10)).toBe(true);
   });
 
   test("excludes a collectible whose NOT_ACQUIRED bit is set in every bucket", () => {
-    const profile: ProfileResponse = {
-      characterCollectibles: { data: { "char-1": { collectibles: { "10": { state: 85 } } } } },
+    const profile = {
+      profileCollectibles: { collectibles: {} },
+      characterCollectibles: { "char-1": { collectibles: { "10": { state: 85 } } } },
     };
 
     expect(collectedCollectibles(profile).has(10)).toBe(false);

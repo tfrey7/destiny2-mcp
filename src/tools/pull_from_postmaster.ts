@@ -1,8 +1,8 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { BungieError } from "../bungie/client.js";
-import { getProfile } from "../bungie/profile.js";
-import { action, itemHashFor, transfer, TRANSFER_COMPONENTS } from "./actions.js";
+import { getGearProfile } from "../bungie/profile.js";
+import { action, itemHashFor, transfer } from "./actions.js";
 import { ok } from "./response.js";
 
 export function registerPullFromPostmaster(server: McpServer): void {
@@ -21,7 +21,7 @@ export function registerPullFromPostmaster(server: McpServer): void {
       annotations: { readOnlyHint: false, destructiveHint: true },
     },
     async ({ characterId, itemId, itemReferenceHash, stackSize, thenVault }) => {
-      const profile = await getProfile(TRANSFER_COMPONENTS);
+      const profile = await getGearProfile();
       const hash = itemReferenceHash ?? (itemId ? itemHashFor(profile, itemId) : undefined);
 
       if (hash === undefined) {

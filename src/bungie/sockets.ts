@@ -1,19 +1,26 @@
 import { itemDefinition, plugSetItemHashes, type SocketEntry } from "./manifest.js";
-import type { ProfileResponse, ReusablePlug } from "./profile.js";
+import type { FullProfile, ReusablePlug } from "./profile.js";
+
+// Live per-instance sockets and reusable plugs plus the account-wide plug sets — everything needed to
+// decide which plugs can go into an equipped item's sockets right now.
+type SocketProfile = Pick<
+  FullProfile,
+  "itemSockets" | "itemReusablePlugs" | "profilePlugSets" | "characterPlugSets"
+>;
 
 // Find the socket on an equipped item instance into which a given plug can be inserted right now, or
 // undefined if the plug isn't unlocked or doesn't fit the item. This both locates the socketIndex and
 // confirms ownership in one pass, which is exactly what applying a shader/ornament needs.
 export async function insertableSocketIndex(
-  profile: ProfileResponse,
+  profile: SocketProfile,
   itemInstanceId: string,
   itemHash: number,
   plugItemHash: number,
 ): Promise<number | undefined> {
   const definition = await itemDefinition(itemHash);
   const entries = definition.sockets?.socketEntries ?? [];
-  const liveSockets = profile.itemComponents?.sockets?.data?.[itemInstanceId]?.sockets ?? [];
-  const livePlugs = profile.itemComponents?.reusablePlugs?.data?.[itemInstanceId]?.plugs ?? {};
+  const liveSockets = profile.itemSockets[itemInstanceId]?.sockets ?? [];
+  const livePlugs = profile.itemReusablePlugs[itemInstanceId]?.plugs ?? {};
   const plugSets = mergedPlugSets(profile);
 
   for (let index = 0; index < liveSockets.length; index++) {
@@ -29,7 +36,9 @@ export async function insertableSocketIndex(
 
 // Account-wide unlocks (shaders, universal ornaments) live in the profile/character plug-set
 // components, keyed by plug-set hash, not on the item instance. These ride along with ItemSockets.
-export function mergedPlugSets(profile: ProfileResponse): Map<number, ReusablePlug[]> {
+export function mergedPlugSets(
+  profile: Pick<FullProfile, "profilePlugSets" | "characterPlugSets">,
+): Map<number, ReusablePlug[]> {
   const sets = new Map<number, ReusablePlug[]>();
   const add = (plugs?: Record<string, ReusablePlug[]>) => {
     for (const [hash, list] of Object.entries(plugs ?? {})) {
@@ -37,8 +46,8 @@ export function mergedPlugSets(profile: ProfileResponse): Map<number, ReusablePl
     }
   };
 
-  add(profile.profilePlugSets?.data?.plugs);
-  for (const character of Object.values(profile.characterPlugSets?.data ?? {})) {
+  add(profile.profilePlugSets.plugs);
+  for (const character of Object.values(profile.characterPlugSets)) {
     add(character.plugs);
   }
 

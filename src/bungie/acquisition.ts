@@ -1,5 +1,5 @@
 import { collectibleSource, itemInfo } from "./manifest.js";
-import { Component, getProfile, type DestinyItem, type ProfileResponse } from "./profile.js";
+import { Component, getProfile, type DestinyItem, type FullProfile } from "./profile.js";
 
 interface Acquisition {
   name: string;
@@ -33,12 +33,12 @@ export async function ownedGear(): Promise<OwnedGear> {
     }
   };
 
-  collect(profile.profileInventory?.data);
-  for (const character of Object.values(profile.characterInventories?.data ?? {})) {
+  collect(profile.profileInventory);
+  for (const character of Object.values(profile.characterInventories)) {
     collect(character);
   }
 
-  for (const character of Object.values(profile.characterEquipment?.data ?? {})) {
+  for (const character of Object.values(profile.characterEquipment)) {
     collect(character);
   }
 
@@ -57,10 +57,12 @@ export async function ownedGear(): Promise<OwnedGear> {
 
 // Acquisition state is split across the account-wide bucket and each character's bucket; a
 // collectible counts as acquired when NOT_ACQUIRED is clear in any of them.
-export function collectedCollectibles(profile: ProfileResponse): Set<number> {
+export function collectedCollectibles(
+  profile: Pick<FullProfile, "profileCollectibles" | "characterCollectibles">,
+): Set<number> {
   const buckets = [
-    profile.profileCollectibles?.data?.collectibles ?? {},
-    ...Object.values(profile.characterCollectibles?.data ?? {}).map(
+    profile.profileCollectibles.collectibles ?? {},
+    ...Object.values(profile.characterCollectibles).map(
       (character) => character.collectibles ?? {},
     ),
   ];

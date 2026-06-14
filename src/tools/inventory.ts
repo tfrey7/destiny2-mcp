@@ -8,10 +8,16 @@ import {
   itemSetName,
   slotFromBucketHash,
 } from "../bungie/manifest.js";
-import { type DestinyItem, type ProfileResponse } from "../bungie/profile.js";
+import { type DestinyItem, type FullProfile } from "../bungie/profile.js";
 import type { ItemCategory } from "../schemas.js";
 
-export function instanceMap(profile: ProfileResponse): Map<string, number> {
+// The buckets needed to resolve an instance id to its definition hash: equipment, inventory, vault.
+type InstanceProfile = Pick<
+  FullProfile,
+  "characterEquipment" | "characterInventories" | "profileInventory"
+>;
+
+export function instanceMap(profile: InstanceProfile): Map<string, number> {
   const map = new Map<string, number>();
   const add = (items?: DestinyItem[]) => {
     for (const item of items ?? []) {
@@ -21,15 +27,15 @@ export function instanceMap(profile: ProfileResponse): Map<string, number> {
     }
   };
 
-  for (const bucket of Object.values(profile.characterEquipment?.data ?? {})) {
+  for (const bucket of Object.values(profile.characterEquipment)) {
     add(bucket.items);
   }
 
-  for (const bucket of Object.values(profile.characterInventories?.data ?? {})) {
+  for (const bucket of Object.values(profile.characterInventories)) {
     add(bucket.items);
   }
 
-  add(profile.profileInventory?.data?.items);
+  add(profile.profileInventory.items);
   return map;
 }
 
@@ -37,8 +43,10 @@ export function instanceMap(profile: ProfileResponse): Map<string, number> {
 // This is cheap — no definition lookups, just reading the component — so it covers every instanced
 // item. The expensive part (resolving plug definitions to decode a tier) is deferred to inventoryItems,
 // which runs it only for armor.
-export function socketPlugsByInstance(profile: ProfileResponse): Map<string, number[]> {
-  const socketData = profile.itemComponents?.sockets?.data ?? {};
+export function socketPlugsByInstance(
+  profile: Pick<FullProfile, "itemSockets">,
+): Map<string, number[]> {
+  const socketData = profile.itemSockets;
   const plugs = new Map<string, number[]>();
 
   for (const [instanceId, component] of Object.entries(socketData)) {

@@ -1,5 +1,5 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { Component, getProfile } from "../bungie/profile.js";
+import { getArtifactProfile } from "../bungie/profile.js";
 import { describeArtifact, seasonalArtifact } from "./artifact.js";
 import { artifactCard, json } from "./response.js";
 
@@ -13,7 +13,7 @@ export function registerShowArtifact(server: McpServer): void {
       annotations: { readOnlyHint: true },
     },
     async () => {
-      const profile = await getProfile([Component.CharacterProgressions]);
+      const profile = await getArtifactProfile();
       const artifact = seasonalArtifact(profile);
 
       if (!artifact) {

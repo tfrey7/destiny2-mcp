@@ -23,7 +23,7 @@ export function registerVaultInventory(server: McpServer): void {
     },
     async ({ characterId }) => {
       const profile = await getProfile([Component.Characters, Component.CharacterInventories]);
-      const inventories = profile.characterInventories?.data ?? {};
+      const inventories = profile.characterInventories;
       const entries = Object.entries(inventories).filter(
         ([id]) => !characterId || id === characterId,
       );

@@ -44,9 +44,9 @@ export function registerInspectItem(server: McpServer): void {
           throw new Error(`[destiny2-mcp] No item found for instance ${itemInstanceId}.`);
         }
 
-        const instance = profile.itemComponents?.instances?.data?.[itemInstanceId];
-        const sockets = profile.itemComponents?.sockets?.data?.[itemInstanceId]?.sockets ?? [];
-        const stats = profile.itemComponents?.stats?.data?.[itemInstanceId]?.stats ?? {};
+        const instance = profile.itemInstances[itemInstanceId];
+        const sockets = profile.itemSockets[itemInstanceId]?.sockets ?? [];
+        const stats = profile.itemStats[itemInstanceId]?.stats ?? {};
         const plugHashes = sockets
           .filter(
             (socket) =>

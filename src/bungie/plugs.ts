@@ -4,7 +4,7 @@ import {
   type SocketCategoryEntry,
   socketCategoryName,
 } from "./manifest.js";
-import type { ProfileResponse } from "./profile.js";
+import type { FullProfile } from "./profile.js";
 
 /** A socketed plug rendered on the loadout card: a weapon perk, armor mod, aspect, or fragment. */
 export interface PlugView {
@@ -31,21 +31,19 @@ export type LoadoutSection = "WEAPONS" | "ARMOR" | "SUBCLASS";
  * aspects), then the rest — see classify's rank.
  *
  * @example
- * await displayPlugs(quicksilverHash, instanceId, profile, "WEAPONS")
+ * await displayPlugs(quicksilverHash, instanceId, itemSockets, "WEAPONS")
  * // → [{ name: "Missile Tracers", shape: "circle", … }, { name: "Grenade Chaser", … }, …]
  */
 export async function displayPlugs(
   hash: number,
   instanceId: string | undefined,
-  profile: ProfileResponse,
+  itemSockets: FullProfile["itemSockets"],
   section: LoadoutSection,
 ): Promise<PlugView[]> {
   const definition = await itemDefinition(hash);
   const entries = definition.sockets?.socketEntries ?? [];
   const categoryByIndex = categoryHashByIndex(definition.sockets?.socketCategories ?? []);
-  const live = instanceId
-    ? (profile.itemComponents?.sockets?.data?.[instanceId]?.sockets ?? [])
-    : [];
+  const live = instanceId ? (itemSockets[instanceId]?.sockets ?? []) : [];
 
   const collected = await Promise.all(
     entries.map(async (entry, index) => {

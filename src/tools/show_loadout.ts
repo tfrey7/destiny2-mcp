@@ -34,7 +34,7 @@ export function registerShowLoadout(server: McpServer): void {
       ]);
 
       const hashByInstance = instanceMap(profile);
-      const loadoutData = profile.characterLoadouts?.data ?? {};
+      const loadoutData = profile.characterLoadouts;
       const id = characterId ?? Object.keys(loadoutData)[0];
       const loadout = loadoutData[id]?.loadouts[loadoutIndex];
 
@@ -47,14 +47,18 @@ export function registerShowLoadout(server: McpServer): void {
           loadout.items
             .filter((item) => hashByInstance.has(item.itemInstanceId))
             .map((item) =>
-              enrichItem(hashByInstance.get(item.itemInstanceId)!, item.itemInstanceId, profile),
+              enrichItem(
+                hashByInstance.get(item.itemInstanceId)!,
+                item.itemInstanceId,
+                profile.itemSockets,
+              ),
             ),
         )
       ).filter((item): item is LoadoutCardItem => item !== undefined);
 
       const spec = {
         title: (await loadoutName(loadout.nameHash)).toUpperCase(),
-        className: ClassType[profile.characters?.data?.[id]?.classType ?? -1] ?? "Unknown",
+        className: ClassType[profile.characters[id]?.classType ?? -1] ?? "Unknown",
         slot: loadoutIndex,
         items,
       };

@@ -1,5 +1,5 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { Component, getProfile } from "../bungie/profile.js";
+import { getTriumphsProfile } from "../bungie/profile.js";
 import { triumphSummary } from "../bungie/progression.js";
 import { json } from "./response.js";
 
@@ -13,7 +13,7 @@ export function registerGetTriumphs(server: McpServer): void {
       annotations: { readOnlyHint: true },
     },
     async () => {
-      const profile = await getProfile([Component.Records, Component.PresentationNodes]);
+      const profile = await getTriumphsProfile();
 
       return json(await triumphSummary(profile));
     },

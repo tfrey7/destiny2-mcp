@@ -1,7 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { describePlugs, equipableItemSet, intrinsicPerks, itemMeta } from "../bungie/manifest.js";
-import { ClassType, Component, type DestinyItem, getProfile } from "../bungie/profile.js";
+import { ClassType, type DestinyItem, getEquippedProfile } from "../bungie/profile.js";
 import { inventoryItems, socketPlugsByInstance } from "./inventory.js";
 import { json } from "./response.js";
 
@@ -115,12 +115,8 @@ export function registerGetEquipped(server: McpServer): void {
       annotations: { readOnlyHint: true },
     },
     async ({ characterId }) => {
-      const profile = await getProfile([
-        Component.Characters,
-        Component.CharacterEquipment,
-        Component.ItemSockets,
-      ]);
-      const equipment = profile.characterEquipment?.data ?? {};
+      const profile = await getEquippedProfile();
+      const equipment = profile.characterEquipment;
       const plugsByInstance = socketPlugsByInstance(profile);
 
       const entries = Object.entries(equipment).filter(
@@ -129,7 +125,7 @@ export function registerGetEquipped(server: McpServer): void {
       const result = await Promise.all(
         entries.map(async ([id, bucket]) => ({
           characterId: id,
-          class: ClassType[profile.characters?.data?.[id]?.classType ?? -1] ?? "Unknown",
+          class: ClassType[profile.characters[id]?.classType ?? -1] ?? "Unknown",
           equipped: await inventoryItems(bucket.items, plugsByInstance),
           setBonuses: await setBonuses(bucket.items),
           subclass: await subclassMechanics(bucket.items, plugsByInstance),

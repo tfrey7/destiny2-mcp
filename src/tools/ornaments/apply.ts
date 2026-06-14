@@ -1,7 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { itemMeta } from "../../bungie/manifest.js";
-import { ClassType, Component, getProfile, type ProfileResponse } from "../../bungie/profile.js";
+import { ClassType, Component, getProfile, type ProfileFor } from "../../bungie/profile.js";
 import { insertableSocketIndex } from "../../bungie/sockets.js";
 import type { ClassName } from "../../schemas.js";
 import { action } from "../actions.js";
@@ -13,7 +13,9 @@ const APPLY_COMPONENTS = [
   Component.CharacterEquipment,
   Component.ItemSockets,
   Component.ItemReusablePlugs,
-];
+] as const;
+
+type ApplyProfile = ProfileFor<typeof APPLY_COMPONENTS>;
 
 export function registerApplyOrnament(server: McpServer): void {
   server.registerTool(
@@ -115,8 +117,8 @@ interface ApplyResult {
   reason?: string;
 }
 
-function characterClassOf(profile: ProfileResponse, characterId: string): ClassName {
-  const character = profile.characters?.data?.[characterId];
+function characterClassOf(profile: ApplyProfile, characterId: string): ClassName {
+  const character = profile.characters[characterId];
 
   if (!character) {
     throw new Error(`[destiny2-mcp] No character ${characterId} on this account.`);
@@ -129,7 +131,7 @@ function characterClassOf(profile: ProfileResponse, characterId: string): ClassN
 // instead of throwing so a set application can carry on past pieces the player can't equip. usedSlots
 // guards against two hashes fighting over the same slot.
 async function applyOne(
-  profile: ProfileResponse,
+  profile: ApplyProfile,
   characterId: string,
   characterClass: ClassName,
   plugItemHash: number,
@@ -193,13 +195,13 @@ async function applyOne(
 }
 
 async function equippedInSlot(
-  profile: ProfileResponse,
+  profile: ApplyProfile,
   characterId: string,
   slot: OrnamentSlot,
 ): Promise<{ itemHash: number; itemInstanceId: string } | undefined> {
   const bucket = BUCKET_BY_SLOT[slot];
 
-  for (const item of profile.characterEquipment?.data?.[characterId]?.items ?? []) {
+  for (const item of profile.characterEquipment[characterId]?.items ?? []) {
     const meta = await itemMeta(item.itemHash);
 
     if (item.itemInstanceId && meta?.bucketHash === bucket) {

@@ -1,17 +1,13 @@
 import { BungieError, bungieFetch } from "../bungie/client.js";
 import { itemName } from "../bungie/manifest.js";
-import {
-  Component,
-  getPrimaryMembership,
-  type DestinyItem,
-  type ProfileResponse,
-} from "../bungie/profile.js";
+import { getPrimaryMembership, type DestinyItem, type GearProfile } from "../bungie/profile.js";
 
-export const TRANSFER_COMPONENTS = [
-  Component.CharacterEquipment,
-  Component.CharacterInventories,
-  Component.ProfileInventories,
-];
+// The slice of a profile needed to find an item by instance id: the equipment, inventory, and vault
+// buckets. Any profile that carries these (e.g. getGearProfile, or inspect_item's richer fetch) fits.
+type LocatableProfile = Pick<
+  GearProfile,
+  "characterEquipment" | "characterInventories" | "profileInventory"
+>;
 
 export async function action(path: string, body: Record<string, unknown>): Promise<unknown> {
   const { membershipType } = await getPrimaryMembership();
@@ -39,7 +35,7 @@ export function transfer(
 // when the destination bucket is full it only evicts a *duplicate of the same item*, matching the
 // hand-orchestrated policy — anything else fails clearly so the caller decides what to drop.
 export async function ensureOnCharacter(
-  profile: ProfileResponse,
+  profile: LocatableProfile,
   characterId: string,
   itemId: string,
 ): Promise<string> {
@@ -94,10 +90,10 @@ interface Location {
 
 // Find an instanced item anywhere it can live — equipped, in a character's inventory, or the vault —
 // so the server can derive its definition hash and current home without the client supplying either.
-function locate(profile: ProfileResponse, itemId: string): Location | undefined {
+function locate(profile: LocatableProfile, itemId: string): Location | undefined {
   const find = (items?: DestinyItem[]) => items?.find((item) => item.itemInstanceId === itemId);
 
-  for (const [characterId, bucket] of Object.entries(profile.characterEquipment?.data ?? {})) {
+  for (const [characterId, bucket] of Object.entries(profile.characterEquipment)) {
     const item = find(bucket.items);
 
     if (item) {
@@ -105,7 +101,7 @@ function locate(profile: ProfileResponse, itemId: string): Location | undefined 
     }
   }
 
-  for (const [characterId, bucket] of Object.entries(profile.characterInventories?.data ?? {})) {
+  for (const [characterId, bucket] of Object.entries(profile.characterInventories)) {
     const item = find(bucket.items);
 
     if (item) {
@@ -113,7 +109,7 @@ function locate(profile: ProfileResponse, itemId: string): Location | undefined 
     }
   }
 
-  const vaultItem = find(profile.profileInventory?.data?.items);
+  const vaultItem = find(profile.profileInventory.items);
 
   return vaultItem ? { item: vaultItem } : undefined;
 }
@@ -121,19 +117,19 @@ function locate(profile: ProfileResponse, itemId: string): Location | undefined 
 // The definition hash for an owned instance, read from the live profile. transfer_item needs this hash
 // but a caller rarely has it: the manifest's catalog hash can differ from a reissued instance's, so
 // resolving from the profile (the way equip_item does) is the only reliable source.
-export function itemHashFor(profile: ProfileResponse, itemId: string): number | undefined {
+export function itemHashFor(profile: LocatableProfile, itemId: string): number | undefined {
   return locate(profile, itemId)?.item.itemHash;
 }
 
 // A non-equipped copy of the same item already sitting in the character's inventory. Copies share a
 // definition hash and therefore a bucket, so one of these is exactly what occupies a full destination.
 function inventoryDuplicate(
-  profile: ProfileResponse,
+  profile: LocatableProfile,
   characterId: string,
   itemHash: number,
   excludeItemId: string,
 ): DestinyItem | undefined {
-  const items = profile.characterInventories?.data?.[characterId]?.items ?? [];
+  const items = profile.characterInventories[characterId]?.items ?? [];
 
   return items.find((item) => item.itemHash === itemHash && item.itemInstanceId !== excludeItemId);
 }

@@ -60,7 +60,7 @@ export function registerListInventory(server: McpServer): void {
         (gearTier === undefined || item.gearTier === gearTier) &&
         (!setTerm || (item.setName ?? "").toLowerCase().includes(setTerm));
 
-      const inventories = profile.characterInventories?.data ?? {};
+      const inventories = profile.characterInventories;
       const charGroups = await Promise.all(
         Object.entries(inventories)
           .filter(([id]) => !characterId || id === characterId)
@@ -69,14 +69,14 @@ export function registerListInventory(server: McpServer): void {
 
             return {
               characterId: id,
-              class: ClassType[profile.characters?.data?.[id]?.classType ?? -1] ?? "Unknown",
+              class: ClassType[profile.characters[id]?.classType ?? -1] ?? "Unknown",
               items: matched.filter((item) => !item.inPostmaster),
               postmaster: matched.filter((item) => item.inPostmaster),
             };
           }),
       );
       const vaultItems = (
-        await inventoryItems(profile.profileInventory?.data?.items ?? [], plugsByInstance)
+        await inventoryItems(profile.profileInventory.items, plugsByInstance)
       ).filter(matches);
 
       if (summary) {

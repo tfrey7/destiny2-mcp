@@ -8,7 +8,7 @@ import {
   Component,
   type DestinyCharacter,
   getProfile,
-  type ProfileResponse,
+  type ProfileFor,
 } from "../bungie/profile.js";
 import { BUCKET, type Section } from "../format/loadout/data.js";
 import { LOADOUT_UI_RESOURCE_URI } from "../format/loadout/html.js";
@@ -63,10 +63,10 @@ export function registerShowBuild(server: McpServer): void {
       _meta: { ui: { resourceUri: LOADOUT_UI_RESOURCE_URI, visibility: ["model", "app"] } },
     },
     async ({ title, subtitle, className, items }) => {
-      // Ownership and live rolls are best-effort enrichment: a logged-out (or failed) profile is an
-      // empty object, so the build still renders — just without owned markers or real held rolls.
+      // Ownership and live rolls are best-effort enrichment: a logged-out (or failed) fetch yields
+      // null, so the build still renders — just without owned markers or real held rolls.
       const profile = await tryProfile();
-      const owned = ownedItemsByHash(profile);
+      const owned = profile ? ownedItemsByHash(profile) : new Map<number, OwnedItem>();
       // Collections lets a piece the account owns but isn't holding (a Deluxe-edition exotic, a
       // dismantled raid drop) still read as owned. The data is absent when logged out / the fetch
       // failed; pass undefined then so a not-held piece stays unmarked rather than flagging to farm.
@@ -127,7 +127,7 @@ async function resolveItem(
   item: z.infer<typeof itemSchema>,
   owned: Map<number, OwnedItem>,
   acquired: Set<number> | undefined,
-  profile: ProfileResponse,
+  profile: ShowBuildProfile | null,
 ): Promise<LoadoutCardItem | undefined> {
   const meta = await itemMeta(item.hash);
 
@@ -147,7 +147,7 @@ async function resolvePlugs(
   item: z.infer<typeof itemSchema>,
   section: Section | undefined,
   held: OwnedItem | undefined,
-  profile: ProfileResponse,
+  profile: ShowBuildProfile | null,
 ): Promise<PlugView[] | undefined> {
   if (!section) {
     return undefined;
@@ -159,37 +159,39 @@ async function resolvePlugs(
     return plugViewsFromHashes(item.plugs, section);
   }
 
-  return displayPlugs(item.hash, held?.itemInstanceId, profile, section);
+  return displayPlugs(item.hash, held?.itemInstanceId, profile?.itemSockets ?? {}, section);
 }
 
-async function tryProfile(): Promise<ProfileResponse> {
+const SHOW_BUILD_COMPONENTS = [
+  Component.Characters,
+  Component.CharacterEquipment,
+  Component.CharacterInventories,
+  Component.ProfileInventories,
+  Component.ItemSockets,
+  Component.Collectibles,
+] as const;
+
+type ShowBuildProfile = ProfileFor<typeof SHOW_BUILD_COMPONENTS>;
+
+// Ownership and live rolls are best-effort: a logged-out or failed fetch yields null, and the build
+// still renders — just without owned markers or real held rolls.
+async function tryProfile(): Promise<ShowBuildProfile | null> {
   try {
-    return await getProfile([
-      Component.Characters,
-      Component.CharacterEquipment,
-      Component.CharacterInventories,
-      Component.ProfileInventories,
-      Component.ItemSockets,
-      Component.Collectibles,
-    ]);
+    return await getProfile(SHOW_BUILD_COMPONENTS);
   } catch {
-    return {};
+    return null;
   }
 }
 
 // The set of collectibles the account has acquired, or undefined when the profile carries no
 // Collections data (logged out / the fetch failed) — distinguishing "this isn't acquired" from
 // "we have nothing to check against", so the latter leaves a piece unmarked instead of to-farm.
-function collectionsAcquired(profile: ProfileResponse): Set<number> | undefined {
-  const hasData =
-    profile.profileCollectibles?.data !== undefined ||
-    profile.characterCollectibles?.data !== undefined;
-
-  return hasData ? collectedCollectibles(profile) : undefined;
+function collectionsAcquired(profile: ShowBuildProfile | null): Set<number> | undefined {
+  return profile ? collectedCollectibles(profile) : undefined;
 }
 
-function recentClass(profile: ProfileResponse): string | undefined {
-  const recent = Object.values(profile.characters?.data ?? {}).reduce<DestinyCharacter | undefined>(
+function recentClass(profile: ShowBuildProfile | null): string | undefined {
+  const recent = Object.values(profile?.characters ?? {}).reduce<DestinyCharacter | undefined>(
     (latest, character) =>
       character.dateLastPlayed > (latest?.dateLastPlayed ?? "") ? character : latest,
     undefined,

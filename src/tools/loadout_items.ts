@@ -1,6 +1,6 @@
 import { itemMeta } from "../bungie/manifest.js";
 import { displayPlugs, type LoadoutSection } from "../bungie/plugs.js";
-import type { ProfileResponse } from "../bungie/profile.js";
+import type { FullProfile } from "../bungie/profile.js";
 import { BUCKET } from "../format/loadout/data.js";
 import type { LoadoutCardItem } from "../format/loadout/model.js";
 
@@ -13,7 +13,7 @@ import type { LoadoutCardItem } from "../format/loadout/model.js";
 export async function enrichItem(
   hash: number,
   instanceId: string | undefined,
-  profile: ProfileResponse,
+  itemSockets: FullProfile["itemSockets"],
 ): Promise<LoadoutCardItem | undefined> {
   const meta = await itemMeta(hash);
 
@@ -22,7 +22,7 @@ export async function enrichItem(
   }
 
   const section = BUCKET[meta.bucketHash]?.section as LoadoutSection | undefined;
-  const plugs = section ? await displayPlugs(hash, instanceId, profile, section) : undefined;
+  const plugs = section ? await displayPlugs(hash, instanceId, itemSockets, section) : undefined;
 
   return { ...meta, hash, plugs };
 }

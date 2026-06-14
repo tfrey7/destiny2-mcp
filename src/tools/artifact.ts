@@ -1,9 +1,11 @@
 import { artifactName, artifactPerkText } from "../bungie/manifest.js";
-import { type ProfileResponse, type SeasonalArtifact } from "../bungie/profile.js";
+import { type FullProfile, type SeasonalArtifact } from "../bungie/profile.js";
 
 // The artifact is account-wide, so its unlock state is identical on every character; read the first.
-export function seasonalArtifact(profile: ProfileResponse): SeasonalArtifact | undefined {
-  for (const character of Object.values(profile.characterProgressions?.data ?? {})) {
+export function seasonalArtifact(
+  profile: Pick<FullProfile, "characterProgressions">,
+): SeasonalArtifact | undefined {
+  for (const character of Object.values(profile.characterProgressions)) {
     if (character.seasonalArtifact) {
       return character.seasonalArtifact;
     }

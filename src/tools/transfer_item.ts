@@ -1,7 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getProfile } from "../bungie/profile.js";
-import { action, itemHashFor, TRANSFER_COMPONENTS } from "./actions.js";
+import { getGearProfile } from "../bungie/profile.js";
+import { action, itemHashFor } from "./actions.js";
 import { ok } from "./response.js";
 
 export function registerTransferItem(server: McpServer): void {
@@ -20,7 +20,7 @@ export function registerTransferItem(server: McpServer): void {
       annotations: { readOnlyHint: false, destructiveHint: true },
     },
     async ({ characterId, itemId, itemReferenceHash, transferToVault, stackSize }) => {
-      const profile = await getProfile(TRANSFER_COMPONENTS);
+      const profile = await getGearProfile();
       const hash = itemReferenceHash ?? itemHashFor(profile, itemId);
 
       if (hash === undefined) {

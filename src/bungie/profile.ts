@@ -137,7 +137,10 @@ export interface ReusablePlug {
   enabled?: boolean;
 }
 
-export interface ProfileResponse {
+// The raw Bungie profile envelope: every component is optional (present only if requested) and wraps
+// its payload in a `{ data }` shell. This is internal — `getProfile` unwraps it into the narrow,
+// required shape `ProfileFor<C>` so call sites never touch `?.data ?? {}`.
+interface RawProfile {
   characters?: { data?: Record<string, DestinyCharacter> };
   characterEquipment?: { data?: Record<string, ItemBucket> };
   characterInventories?: { data?: Record<string, ItemBucket> };
@@ -194,16 +197,161 @@ export async function getPrimaryMembership(): Promise<Membership> {
   return cachedMembership;
 }
 
-export async function getProfile(components: number[]): Promise<ProfileResponse> {
+// The valid component values, derived from `Component` so a typo'd or made-up number can't be passed.
+export type ComponentValue = (typeof Component)[keyof typeof Component];
+
+// Maps each requested component to the field(s) it populates, already unwrapped (no `{ data }` shell)
+// and required. Multi-field components (Records/PresentationNodes/Collectibles) list both their
+// profile- and character-level fields; ItemSockets also carries the account-wide plug sets, which
+// ride along with component 305. The item components flatten out of the `itemComponents` wrapper to
+// top-level `itemInstances` / `itemStats` / `itemSockets` / `itemReusablePlugs` / `itemObjectives`.
+interface ProfileComponentData {
+  [Component.ProfileInventories]: { profileInventory: ItemBucket };
+  [Component.Characters]: { characters: Record<string, DestinyCharacter> };
+  [Component.CharacterInventories]: { characterInventories: Record<string, ItemBucket> };
+  [Component.CharacterEquipment]: { characterEquipment: Record<string, ItemBucket> };
+  [Component.CharacterLoadouts]: {
+    characterLoadouts: Record<string, { loadouts: DestinyLoadout[] }>;
+  };
+  [Component.CharacterProgressions]: {
+    characterProgressions: Record<string, { seasonalArtifact?: SeasonalArtifact }>;
+  };
+  [Component.ItemInstances]: { itemInstances: Record<string, ItemInstance> };
+  [Component.ItemObjectives]: {
+    itemObjectives: Record<string, { objectives?: ObjectiveProgress[] }>;
+  };
+  [Component.ItemStats]: {
+    itemStats: Record<string, { stats?: Record<string, { value?: number }> }>;
+  };
+  [Component.ItemSockets]: {
+    itemSockets: Record<string, { sockets?: ItemSocket[] }>;
+    profilePlugSets: { plugs?: Record<string, ReusablePlug[]> };
+    characterPlugSets: Record<string, { plugs?: Record<string, ReusablePlug[]> }>;
+  };
+  [Component.ItemReusablePlugs]: {
+    itemReusablePlugs: Record<string, { plugs?: Record<string, ReusablePlug[]> }>;
+  };
+  [Component.PresentationNodes]: {
+    profilePresentationNodes: { nodes?: Record<string, PresentationNodeState> };
+    characterPresentationNodes: Record<string, { nodes?: Record<string, PresentationNodeState> }>;
+  };
+  [Component.Collectibles]: {
+    profileCollectibles: { collectibles?: Record<string, { state: number }> };
+    characterCollectibles: Record<string, { collectibles?: Record<string, { state: number }> }>;
+  };
+  [Component.Records]: {
+    profileRecords: RecordsComponent;
+    characterRecords: Record<string, RecordsComponent>;
+  };
+}
+
+type UnionToIntersection<U> = (U extends unknown ? (k: U) => void : never) extends (
+  k: infer I,
+) => void
+  ? I
+  : never;
+
+// The profile shape for a given component list: the union of each requested component's fields,
+// intersected into one object. A read of a field whose component wasn't requested fails to compile.
+export type ProfileFor<C extends readonly ComponentValue[]> = UnionToIntersection<
+  ProfileComponentData[C[number]]
+>;
+
+// Every field a profile can carry, all required. Helpers that take a profile slice type their
+// parameter as a `Pick` of this, so any richer `ProfileFor<...>` result is assignable.
+export type FullProfile = UnionToIntersection<ProfileComponentData[ComponentValue]>;
+
+// One extractor per component: pull its payload out of the raw envelope, defaulting an absent
+// component (Bungie can omit it — privacy, empty account) to an empty collection so the field stays
+// present and non-optional. This is the one place the old per-call-site `?.data ?? {}` now lives.
+const EXTRACTORS: Record<ComponentValue, (raw: RawProfile) => Record<string, unknown>> = {
+  [Component.ProfileInventories]: (r) => ({
+    profileInventory: r.profileInventory?.data ?? { items: [] },
+  }),
+  [Component.Characters]: (r) => ({ characters: r.characters?.data ?? {} }),
+  [Component.CharacterInventories]: (r) => ({
+    characterInventories: r.characterInventories?.data ?? {},
+  }),
+  [Component.CharacterEquipment]: (r) => ({ characterEquipment: r.characterEquipment?.data ?? {} }),
+  [Component.CharacterLoadouts]: (r) => ({ characterLoadouts: r.characterLoadouts?.data ?? {} }),
+  [Component.CharacterProgressions]: (r) => ({
+    characterProgressions: r.characterProgressions?.data ?? {},
+  }),
+  [Component.ItemInstances]: (r) => ({ itemInstances: r.itemComponents?.instances?.data ?? {} }),
+  [Component.ItemObjectives]: (r) => ({ itemObjectives: r.itemComponents?.objectives?.data ?? {} }),
+  [Component.ItemStats]: (r) => ({ itemStats: r.itemComponents?.stats?.data ?? {} }),
+  [Component.ItemSockets]: (r) => ({
+    itemSockets: r.itemComponents?.sockets?.data ?? {},
+    profilePlugSets: r.profilePlugSets?.data ?? {},
+    characterPlugSets: r.characterPlugSets?.data ?? {},
+  }),
+  [Component.ItemReusablePlugs]: (r) => ({
+    itemReusablePlugs: r.itemComponents?.reusablePlugs?.data ?? {},
+  }),
+  [Component.PresentationNodes]: (r) => ({
+    profilePresentationNodes: r.profilePresentationNodes?.data ?? {},
+    characterPresentationNodes: r.characterPresentationNodes?.data ?? {},
+  }),
+  [Component.Collectibles]: (r) => ({
+    profileCollectibles: r.profileCollectibles?.data ?? {},
+    characterCollectibles: r.characterCollectibles?.data ?? {},
+  }),
+  [Component.Records]: (r) => ({
+    profileRecords: r.profileRecords?.data ?? {},
+    characterRecords: r.characterRecords?.data ?? {},
+  }),
+};
+
+// Fetch a profile and project it to exactly the components requested. The return type is computed
+// from the component list, so each requested field is present and unwrapped, and reading a field that
+// wasn't requested is a compile error. `const C` captures the literal component values without the
+// caller writing `as const` on an inline array.
+export async function getProfile<const C extends readonly ComponentValue[]>(
+  components: C,
+): Promise<ProfileFor<C>> {
   const { membershipType, destinyMembershipId } = await getPrimaryMembership();
   const query = components.join(",");
 
-  return bungieFetch<ProfileResponse>(
+  const raw = await bungieFetch<RawProfile>(
     `/Destiny2/${membershipType}/Profile/${destinyMembershipId}/?components=${query}`,
   );
+
+  const result: Record<string, unknown> = {};
+
+  for (const component of components) {
+    Object.assign(result, EXTRACTORS[component](raw));
+  }
+
+  return result as ProfileFor<C>;
 }
 
-interface ItemBucket {
+// Named fetchers for the common shapes. Long-tail combinations call `getProfile([...])` directly —
+// they're just as fully typed; these only spare the repeated component list at the popular call sites.
+
+// Characters + all inventory buckets: the base for locating an item by instance and for ownership
+// maps. Deliberately no item components, so the per-item payload stays small on transfer/equip paths.
+export const getGearProfile = () =>
+  getProfile([
+    Component.Characters,
+    Component.CharacterEquipment,
+    Component.CharacterInventories,
+    Component.ProfileInventories,
+  ]);
+
+// Worn gear plus its live sockets — scoped to equipped items only (no inventories), keeping the
+// socket payload tiny.
+export const getEquippedProfile = () =>
+  getProfile([Component.Characters, Component.CharacterEquipment, Component.ItemSockets]);
+
+export const getArtifactProfile = () => getProfile([Component.CharacterProgressions]);
+
+export const getTriumphsProfile = () =>
+  getProfile([Component.Records, Component.PresentationNodes]);
+
+export type GearProfile = Awaited<ReturnType<typeof getGearProfile>>;
+export type TriumphsProfile = Awaited<ReturnType<typeof getTriumphsProfile>>;
+
+export interface ItemBucket {
   items: DestinyItem[];
 }
 
