@@ -115,6 +115,43 @@ more than a marginal stat or gear-tier gain, so when a player is one piece away 
 say so. Set bonuses are armor-only; weapons have no set. Legacy armor belongs to no set.`,
   },
   {
+    id: "equipping",
+    title: "How to equip a loadout efficiently",
+    body: `Putting a loadout on a character is one batched operation, not a pile of single equips and
+manual transfers. Done right it is one tool call; the thrash people hit comes from going piece-by-piece.
+
+Use the cheapest tier that applies, in order:
+1. A matching saved in-game loadout → equip_loadout(characterId, loadoutIndex). Check list_loadouts
+   first. This hands the whole swap to Bungie, which resolves transfers, equip order, and bucket space
+   server-side — the most reliable path by far. Prefer it whenever the player already has the loadout
+   saved in-game.
+2. Otherwise → ONE equip_items call with the COMPLETE final set (all three weapons + five armor in a
+   single itemIds array). Do not equip slot by slot, and do not pre-transfer with transfer_item first:
+   equip_items pulls every piece from the vault or another character automatically, and Bungie validates
+   the RESULTING equipment state as a whole, so a clean loadout (one exotic weapon + one exotic armor)
+   swaps atomically even when it means trading one exotic for another in a different slot. equip_items
+   also equips exotics last as insurance, and reports any piece Bungie declined to equip — read that
+   result, don't assume success.
+3. Single equip_item, one piece at a time, is the LAST resort (e.g. changing just one slot). Each single
+   equip is validated against the CURRENT state, so equipping a second exotic of the same category while
+   the first is still on is rejected. When you must go one at a time across an exotic swap, equip the new
+   exotic LAST — after a non-exotic has taken the outgoing exotic's slot — so only one exotic is ever
+   equipped at a time.
+
+Space rarely needs pre-clearing for an equip: equipping DISPLACES the worn piece into inventory rather
+than filling a new inventory slot, so the only overflow risk is the brief pull onto the character.
+equip_items handles the common case by bumping a duplicate of the same item to the vault; if a bucket is
+genuinely full of distinct items it stops and names what to move. Only then reach for transfer_item (one
+piece to the vault) or vault_inventory (clear all unequipped gear), then retry the equip. Don't vault
+things up front "to be safe" — it just adds operations.
+
+Equipping is a LIVE action: it only succeeds while the player is signed into Destiny 2 (Bungie returns
+error 1623 / DestinyCannotPerformActionAtThisLocation otherwise). Transfers between character and vault
+work offline, but the equip at the end does not — if equips fail with 1623, the player needs to be in
+the game, it is not a tool bug. The one-exotic rule itself lives in the loadout section; this topic is
+only about carrying it out without stepping on the tools.`,
+  },
+  {
     id: "armor",
     title: "Armor: the Edge of Fate stat system",
     body: `What an armor piece actually contributes, once you look past its appearance. The model is
