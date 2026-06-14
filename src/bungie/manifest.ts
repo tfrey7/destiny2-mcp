@@ -24,6 +24,17 @@ export interface ItemMeta {
   icon?: string;
 }
 
+// A completed activity's manifest facts: its name, the activity-type and destination names resolved
+// from their own definitions, and the art the recap card draws on (the wide PGCR image, plus the
+// small director icon as a fallback). Surfaced instead of the raw hashes a history entry carries.
+export interface ActivityMeta {
+  name: string;
+  activityType?: string;
+  destination?: string;
+  pgcrImage?: string;
+  icon?: string;
+}
+
 export interface SocketEntry {
   socketTypeHash?: number;
   singleInitialItemHash?: number;
@@ -359,6 +370,50 @@ export async function loadoutName(hash: number): Promise<string> {
   const loadout = await findDefinition<NameDefinition>("DestinyLoadoutNameDefinition", hash);
 
   return loadout?.displayProperties?.name ?? loadout?.name ?? "Unnamed loadout";
+}
+
+// Resolve a completed activity's reference (its directorActivityHash or referenceId) to the names
+// and art the recap surfaces. Returns undefined for an unknown hash so a stray instance degrades to
+// "Unknown activity" rather than failing the whole history fetch.
+export async function activityMeta(hash: number): Promise<ActivityMeta | undefined> {
+  const activity = await findDefinition<ActivityDefinition>("DestinyActivityDefinition", hash);
+  const name = activity?.displayProperties?.name;
+
+  if (!name) {
+    return undefined;
+  }
+
+  const [activityType, destination] = await Promise.all([
+    activity.activityTypeHash ? activityTypeName(activity.activityTypeHash) : undefined,
+    activity.destinationHash ? destinationName(activity.destinationHash) : undefined,
+  ]);
+
+  return {
+    name,
+    activityType,
+    destination,
+    pgcrImage: activity.pgcrImage || undefined,
+    icon: activity.displayProperties?.icon || undefined,
+  };
+}
+
+interface ActivityDefinition {
+  displayProperties?: { name?: string; icon?: string };
+  activityTypeHash?: number;
+  destinationHash?: number;
+  pgcrImage?: string;
+}
+
+async function activityTypeName(hash: number): Promise<string | undefined> {
+  const type = await getDefinition<NameDefinition>("DestinyActivityTypeDefinition", hash);
+
+  return type.displayProperties?.name || undefined;
+}
+
+async function destinationName(hash: number): Promise<string | undefined> {
+  const destination = await getDefinition<NameDefinition>("DestinyDestinationDefinition", hash);
+
+  return destination.displayProperties?.name || undefined;
 }
 
 export async function collectibleSource(collectibleHash: number): Promise<string | undefined> {
