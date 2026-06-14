@@ -1,0 +1,6646 @@
+{
+  "5590258": {
+    "activityType": "Iron Banner",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Earn points completing objectives in Iron Banner playlist modes."
+  },
+  "6731545": {
+    "effort": "grind",
+    "summary": "Open Fallen chests in the Reclaim activity."
+  },
+  "20214566": {
+    "effort": "moderate",
+    "summary": "Imbue a full set of Sublime armor with Incandescent Ingots."
+  },
+  "23667519": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Complete the Rathil encounter while freeing caged Guardians in Warlord's Ruin."
+  },
+  "26006895": {
+    "effort": "grind",
+    "summary": "Defeat combatants with Hand Cannons, with bonus progress in Solo Ops."
+  },
+  "34156645": {
+    "effort": "quick",
+    "summary": "Win a match."
+  },
+  "45437977": {
+    "effort": "moderate",
+    "summary": "Defeat targets with snowball final blows, bonus for Guardians."
+  },
+  "50288594": {
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Win games in the Heavy Metal mode."
+  },
+  "51187054": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Capture zones in Control or collect Crests in Tribute."
+  },
+  "52324766": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Defeat enemy Guardians in the Crucible using Machine Guns."
+  },
+  "59745629": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat 6 combatants with Heavy ammo weapons."
+  },
+  "65736660": {
+    "effort": "grind",
+    "summary": "Reach Event Rank 15 in the seasonal event."
+  },
+  "66379764": {
+    "location": [
+      "Savathûn's Throne World"
+    ],
+    "activityType": "Dungeon",
+    "scope": "solo",
+    "effort": "grind",
+    "summary": "Complete all Spire of the Watcher encounters solo without leaving."
+  },
+  "70932677": {
+    "location": [
+      "Dreadnaught"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete all King's Fall encounters with a full fireteam of clanmates."
+  },
+  "77283282": {
+    "location": [
+      "Kepler"
+    ],
+    "effort": "quick",
+    "summary": "Collect the Torn Journal Page lore item from Old Chicago."
+  },
+  "77283288": {
+    "location": [
+      "Kepler"
+    ],
+    "effort": "quick",
+    "summary": "Collect the Magnetic Audiotape lore item from Old Chicago."
+  },
+  "77283289": {
+    "location": [
+      "Kepler"
+    ],
+    "effort": "quick",
+    "summary": "Collect the Memoranda lore item from Old Chicago."
+  },
+  "77283291": {
+    "location": [
+      "Kepler"
+    ],
+    "effort": "quick",
+    "summary": "Collect the Project Proposal lore item from Old Chicago."
+  },
+  "77283292": {
+    "location": [
+      "Kepler"
+    ],
+    "effort": "quick",
+    "summary": "Collect the Spiral-Bound Notebook lore item from Old Chicago."
+  },
+  "77283293": {
+    "location": [
+      "Kepler"
+    ],
+    "effort": "quick",
+    "summary": "Collect the Magnetic Audiovisual Tape lore item from Old Chicago."
+  },
+  "77283294": {
+    "location": [
+      "Kepler"
+    ],
+    "effort": "quick",
+    "summary": "Collect the Pocket Notebook lore item from Old Chicago."
+  },
+  "77283295": {
+    "effort": "quick",
+    "summary": "Collect a lore item from recovered materials to unlock a lore entry."
+  },
+  "82633904": {
+    "activityType": "Trials of Osiris",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete Trials of Osiris matches, with wins granting bonus progress."
+  },
+  "84979789": {
+    "activityType": "Gambit",
+    "effort": "moderate",
+    "summary": "Earn ranks in Gambit to reach the Brave division."
+  },
+  "89246831": {
+    "activityType": "Story",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete Dares of Eternity on Expert with a fireteam of 2 to 4."
+  },
+  "95110376": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat 6 combatants with precision damage in strikes."
+  },
+  "113009888": {
+    "effort": "moderate",
+    "summary": "Complete Expunging, Stitching, and Cleansing events on distorted destinations."
+  },
+  "116345475": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete all Crota's End encounters with a full fireteam of clanmates."
+  },
+  "120485216": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Reach Platinum Division in competitive Crucible in any season."
+  },
+  "126238604": {
+    "effort": "grind",
+    "summary": "Complete 26 of 33 feats of strength for Moments of Triumph 2024."
+  },
+  "128285377": {
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Defeat targets as a team in a match."
+  },
+  "130892800": {
+    "location": [
+      "Savathûn's Throne World"
+    ],
+    "effort": "grind",
+    "summary": "Defeat Scorn in the Throne World using Strand abilities or Slayer's Fang."
+  },
+  "131896889": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the Warlord's Ruin dungeon through its final boss."
+  },
+  "135921577": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Capture zones in Control or Fortress Crucible modes."
+  },
+  "138558716": {
+    "effort": "moderate",
+    "summary": "Complete Contracts in the Lawless Frontier activity."
+  },
+  "141986954": {
+    "effort": "quick",
+    "summary": "Rapidly defeat multiple combatants with Hand Cannons."
+  },
+  "149024466": {
+    "effort": "grind",
+    "summary": "Complete all Episode: Echoes Title Triumphs to earn the Intrepid title."
+  },
+  "149170606": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Defeat Guardians with Hand Cannons and Sniper Rifles in PvP."
+  },
+  "151565434": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Earn weapon, grenade, melee, and Super final blow medals without dying."
+  },
+  "157401662": {
+    "activityType": "Iron Banner",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Earn a team score by competing in the Iron Banner playlist."
+  },
+  "161633486": {
+    "effort": "moderate",
+    "summary": "Defeat targets with any Super, with bonus progress against Guardians."
+  },
+  "162965819": {
+    "effort": "moderate",
+    "summary": "Collect Candy while a Candy perk is active on your mask."
+  },
+  "179949428": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Capture zones in Control or become Surging in Eruption."
+  },
+  "180301225": {
+    "activityType": "Gambit",
+    "effort": "moderate",
+    "summary": "Defeat Guardians as an Invader in Gambit."
+  },
+  "183417353": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Unlock a Vanguard lore entry tied to becoming Legend."
+  },
+  "189880055": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Patrol",
+    "effort": "moderate",
+    "summary": "Defeat combatants on the Moon using your Sparrow."
+  },
+  "193004114": {
+    "effort": "moderate",
+    "summary": "Open Fallen chests in the Reclaim activity."
+  },
+  "193233095": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete matches in the Competitive 3v3 playlist."
+  },
+  "195189278": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Complete matches, with bonus progress for using the Behemoth subclass."
+  },
+  "196842574": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the Duality dungeon on Master difficulty."
+  },
+  "204656528": {
+    "effort": "moderate",
+    "summary": "Defeat targets."
+  },
+  "206029874": {
+    "activityType": "Iron Banner",
+    "effort": "quick",
+    "summary": "Deal two or more final blows in a single life in Iron Banner."
+  },
+  "208891670": {
+    "effort": "quick",
+    "summary": "Acquire Tharsis Reformation Renegade abilities Vex Deflector and Vex Stun Field."
+  },
+  "210159282": {
+    "effort": "grind",
+    "summary": "Collect all aspects for the Revenant Stasis Hunter subclass."
+  },
+  "219577591": {
+    "activityType": "Crucible",
+    "effort": "quick",
+    "summary": "Get an A grade deathless Rushdown run and score 30 in a Supremacy match."
+  },
+  "220021601": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Defeat opponents in Control or destroy Scorpius turrets in Fortress."
+  },
+  "232467698": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Complete The Glassway strike with low Health and high Weapons stats, killing with weapons."
+  },
+  "237493115": {
+    "effort": "moderate",
+    "summary": "Defeat targets with snowball final blows, bonus for Guardians."
+  },
+  "238037026": {
+    "activityType": "Dungeon",
+    "scope": "solo",
+    "effort": "grind",
+    "summary": "Solo-flawless the Warlord's Ruin dungeon without dying."
+  },
+  "241162463": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Complete Supremacy or Trials matches, bonus for winning."
+  },
+  "246756743": {
+    "effort": "quick",
+    "summary": "Unlock an Altars of Reflection lore entry."
+  },
+  "246756744": {
+    "effort": "quick",
+    "summary": "Unlock the Personal Accountability lore entry."
+  },
+  "246756745": {
+    "effort": "quick",
+    "summary": "Unlock an Altars of Reflection draft lore entry."
+  },
+  "246756746": {
+    "effort": "quick",
+    "summary": "Unlock an Altars of Reflection lore entry."
+  },
+  "246756747": {
+    "effort": "quick",
+    "summary": "Unlock an Altars of Reflection lore entry."
+  },
+  "246756748": {
+    "effort": "quick",
+    "summary": "Unlock an Altars of Reflection lore entry."
+  },
+  "246756749": {
+    "effort": "quick",
+    "summary": "Unlock an Altars of Reflection lore entry."
+  },
+  "246756750": {
+    "effort": "quick",
+    "summary": "Unlock an Altars of Reflection lore entry."
+  },
+  "254252205": {
+    "effort": "grind",
+    "summary": "Unlock all Lustrous armor for your class."
+  },
+  "258126864": {
+    "effort": "quick",
+    "summary": "Unlock a Shattered Suns lore entry."
+  },
+  "258126865": {
+    "effort": "quick",
+    "summary": "Unlock a Shattered Suns lore entry."
+  },
+  "258126866": {
+    "effort": "quick",
+    "summary": "Unlock a Shattered Suns lore entry."
+  },
+  "258126867": {
+    "effort": "quick",
+    "summary": "Unlock a Shattered Suns lore entry."
+  },
+  "258126868": {
+    "effort": "quick",
+    "summary": "Unlock a Shattered Suns lore entry."
+  },
+  "258126869": {
+    "effort": "quick",
+    "summary": "Unlock a Shattered Suns lore entry."
+  },
+  "258126870": {
+    "effort": "quick",
+    "summary": "Unlock a Shattered Suns lore entry."
+  },
+  "258126878": {
+    "effort": "quick",
+    "summary": "Unlock a Shattered Suns lore entry."
+  },
+  "258126879": {
+    "effort": "quick",
+    "summary": "Unlock a Shattered Suns lore entry."
+  },
+  "278051646": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Complete the Ghosts of the Deep Ecthar encounter with each member activating a rune underwater."
+  },
+  "279569799": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Complete King's Fall Hall of Souls rotating relic dunks among all players."
+  },
+  "281042830": {
+    "activityType": "Dungeon",
+    "effort": "moderate",
+    "summary": "Earn trophies from the Equilibrium dungeon."
+  },
+  "287814188": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear all Ghosts of the Deep encounters with a full Strand-subclass fireteam."
+  },
+  "289471364": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Defeat opponents while holding Zone Advantage or neutralize zones in Fortress."
+  },
+  "291764657": {
+    "summary": "Unlock a lore record tied to a companion entity."
+  },
+  "291764658": {
+    "summary": "Unlock a lore record tied to a companion entity."
+  },
+  "291764659": {
+    "summary": "Unlock a lore record tied to a companion entity."
+  },
+  "291764660": {
+    "summary": "Unlock a lore record tied to a companion entity."
+  },
+  "291764661": {
+    "summary": "Unlock a lore record tied to a companion entity."
+  },
+  "292491321": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete King's Fall Golgoroth rotating the taunt among all players."
+  },
+  "294235046": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the currently featured rotating dungeon."
+  },
+  "295018272": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete all Master-tier encounter challenges in Crota's End."
+  },
+  "307846729": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear all King's Fall encounters with a full Strand-subclass fireteam."
+  },
+  "315198983": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat three combatants with Stasis shatter damage."
+  },
+  "316531393": {
+    "summary": "Unlock a Darkness lore record."
+  },
+  "317600593": {
+    "activityType": "Gambit",
+    "effort": "grind",
+    "summary": "Get Machine Gun final blows in Gambit matches."
+  },
+  "319809988": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat five combatants with Stasis damage."
+  },
+  "332044944": {
+    "effort": "moderate",
+    "summary": "Defeat targets with Solar melee final blows."
+  },
+  "332044945": {
+    "effort": "moderate",
+    "summary": "Defeat targets with Solar ability final blows."
+  },
+  "332044946": {
+    "effort": "moderate",
+    "summary": "Defeat targets with Solar grenade final blows."
+  },
+  "332044947": {
+    "effort": "moderate",
+    "summary": "Rapidly defeat targets, with bonus for defeating Guardians."
+  },
+  "332044948": {
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Defeat combatants with unstable Solar Flares or pass them between fireteam members."
+  },
+  "332044949": {
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete Fireteam or Pinnacle Vanguard Ops with a Solstice modifier active."
+  },
+  "332044950": {
+    "scope": "solo",
+    "effort": "moderate",
+    "summary": "Complete Solo Vanguard Ops activities with a Solstice modifier active."
+  },
+  "332044951": {
+    "effort": "moderate",
+    "summary": "Defeat targets with Solar damage final blows."
+  },
+  "332044958": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Complete activities in the Crucible Ops Solstice Scorched playlist."
+  },
+  "332044959": {
+    "effort": "quick",
+    "summary": "Cast any Solar Supers."
+  },
+  "332183763": {
+    "activityType": "Strike",
+    "summary": "Unlock a Vanguard lore record."
+  },
+  "347005656": {
+    "location": [
+      "Savathûn's Throne World"
+    ],
+    "scope": "solo",
+    "effort": "quick",
+    "summary": "Find a scenic vista spot in the Quagmire region."
+  },
+  "349070628": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat Guardians in the Crucible using any Shotgun."
+  },
+  "351192622": {
+    "effort": "moderate",
+    "summary": "Collect coins."
+  },
+  "351867733": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Complete the Shadowkeep Lunar Rover Collections badge."
+  },
+  "352520803": {
+    "effort": "grind",
+    "summary": "Collect every hidden tape in the Renegades content."
+  },
+  "354655351": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Loot all hidden chests in The Desert Perpetual raid."
+  },
+  "355141223": {
+    "effort": "grind",
+    "summary": "Defeat targets with Arc damage final blows anywhere."
+  },
+  "361587248": {
+    "effort": "quick",
+    "summary": "Gather lore stories about Ada-1's journey."
+  },
+  "364613283": {
+    "activityType": "Exotic Mission",
+    "effort": "moderate",
+    "summary": "Complete Triumphs in the Combat Exotic Missions category."
+  },
+  "368921315": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Exotic Mission",
+    "effort": "quick",
+    "summary": "Beat the Beyond mission deathless after acquiring the Darkblade Harvester buff."
+  },
+  "369952683": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat opponents in Control or Eruption matches."
+  },
+  "371139471": {
+    "summary": "Spend a reroll chip to reroll something."
+  },
+  "373639556": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Complete activities in the Solstice Scorched Crucible playlist."
+  },
+  "373639557": {
+    "effort": "moderate",
+    "summary": "Cast Solar Supers during Solstice."
+  },
+  "373639560": {
+    "effort": "grind",
+    "summary": "Defeat targets with Solar grenade final blows."
+  },
+  "373639561": {
+    "effort": "grind",
+    "summary": "Rapidly defeat targets."
+  },
+  "373639562": {
+    "effort": "grind",
+    "summary": "Defeat targets with Solar melee final blows."
+  },
+  "373639563": {
+    "effort": "grind",
+    "summary": "Defeat targets with Solar ability final blows."
+  },
+  "373639564": {
+    "scope": "solo",
+    "effort": "moderate",
+    "summary": "Complete Solo Ops activities while a Solstice modifier is active."
+  },
+  "373639565": {
+    "effort": "grind",
+    "summary": "Defeat targets with Solar damage final blows."
+  },
+  "373639566": {
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Defeat combatants with unstable Solar Flares or pass them between fireteam members."
+  },
+  "373639567": {
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete Fireteam or Pinnacle Ops while a Solstice modifier is active."
+  },
+  "375713269": {
+    "activityType": "Iron Banner",
+    "effort": "grind",
+    "summary": "Defeat opponents in Iron Banner matches."
+  },
+  "378655832": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Win matches in the Arms Week Hardware playlist."
+  },
+  "380312357": {
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete Fireteam or Pinnacle Ops with a Solstice modifier active."
+  },
+  "389768519": {
+    "effort": "grind",
+    "summary": "Earn Dawning Essence during the Dawning event."
+  },
+  "390537696": {
+    "effort": "grind",
+    "summary": "Complete Vanguard Orders from the Seasonal Hub."
+  },
+  "393827228": {
+    "effort": "grind",
+    "summary": "Complete all Episode Heresy title Triumphs to earn Heretic."
+  },
+  "395235013": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear all Spire of the Watcher encounters with a same-class fireteam."
+  },
+  "401164180": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Accumulate lifetime Crucible stats as a Warlock."
+  },
+  "401500152": {
+    "effort": "quick",
+    "summary": "Register a score in Call to Arms: Creation."
+  },
+  "401500153": {
+    "effort": "quick",
+    "summary": "Register a score in Call to Arms: Kell's Fall."
+  },
+  "401500157": {
+    "effort": "quick",
+    "summary": "Register a score in Call to Arms: Nightmare Containment."
+  },
+  "401500158": {
+    "effort": "quick",
+    "summary": "Register a score in Call to Arms: Arms Dealer."
+  },
+  "401500159": {
+    "activityType": "Crucible",
+    "effort": "quick",
+    "summary": "Register a score in the Call to Arms: Lockdown Crucible activity."
+  },
+  "416745949": {
+    "effort": "moderate",
+    "summary": "Defeat the opposing leader or defeat opponents while acting as a leader."
+  },
+  "421213004": {
+    "effort": "grind",
+    "summary": "Complete all Triumphs in the Renegades category."
+  },
+  "429030658": {
+    "location": [
+      "Savathûn's Throne World"
+    ],
+    "activityType": "Patrol",
+    "effort": "quick",
+    "summary": "Collect scattered Case Files across Savathûn's Throne World."
+  },
+  "444958787": {
+    "effort": "moderate",
+    "summary": "Achieve performance grade B or better in Ops activities."
+  },
+  "448634049": {
+    "activityType": "Strike",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete a Nightfall strike on Grandmaster difficulty."
+  },
+  "457433273": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Defeat Rhulk in Vow of the Disciple with a Glaive equipped."
+  },
+  "458372153": {
+    "activityType": "Iron Banner",
+    "effort": "grind",
+    "summary": "Complete matches in the Iron Banner playlist."
+  },
+  "466074981": {
+    "location": [
+      "Mars"
+    ],
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete Spire of the Watcher dungeon with an all-Void-subclass fireteam."
+  },
+  "470621007": {
+    "location": [
+      "Titan"
+    ],
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete the Ghosts of the Deep dungeon on Master difficulty."
+  },
+  "471281008": {
+    "location": [
+      "The Cosmodrome"
+    ],
+    "activityType": "Patrol",
+    "effort": "quick",
+    "summary": "Defeat Randal the Vandal in the Cosmodrome's Forgotten Shore."
+  },
+  "471733135": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Purchase defense upgrades in the Haunted Altars of Sorrow activity."
+  },
+  "474930361": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Finish a Guardian Games activity with a Bronze Tier score."
+  },
+  "476814483": {
+    "location": [
+      "The Cosmodrome"
+    ],
+    "activityType": "Exotic Mission",
+    "effort": "moderate",
+    "summary": "Survive TR3-VR's maze in Zero Hour and reach the vault without dying."
+  },
+  "476913641": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Patrol",
+    "effort": "quick",
+    "summary": "Find the crashed satellite within K1 Logistics on the Moon."
+  },
+  "479253340": {
+    "effort": "quick",
+    "summary": "Predict the branching path in Dares of Eternity by standing on the winning circle."
+  },
+  "488524386": {
+    "location": [
+      "Kepler"
+    ],
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the Equilibrium dungeon's encounters."
+  },
+  "495103485": {
+    "effort": "moderate",
+    "summary": "Bake cookies in the Dawning Oven during the Dawning event."
+  },
+  "510634284": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Acquire medals in the Crucible Gold Tier category."
+  },
+  "524009794": {
+    "activityType": "Strike",
+    "summary": "Earn a lore-based Vanguard Triumph about allies made."
+  },
+  "534078720": {
+    "effort": "grind",
+    "summary": "Defeat targets with long-range weapons like bows, scouts, and hand cannons."
+  },
+  "534078721": {
+    "effort": "grind",
+    "summary": "Defeat targets with close-range weapons like shotguns, swords, and glaives."
+  },
+  "534078722": {
+    "effort": "grind",
+    "summary": "Defeat targets with automatic weapons like autos, SMGs, and machine guns."
+  },
+  "534078723": {
+    "effort": "grind",
+    "summary": "Defeat targets with Solar or Stasis damage."
+  },
+  "534078724": {
+    "effort": "moderate",
+    "summary": "Achieve grade A or better in Pinnacle, Crucible, or Gambit Ops."
+  },
+  "534078725": {
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Achieve grade A or better in Fireteam Ops."
+  },
+  "534078726": {
+    "scope": "solo",
+    "effort": "moderate",
+    "summary": "Achieve grade A or better in Solo Ops."
+  },
+  "534078727": {
+    "effort": "grind",
+    "summary": "Defeat targets with grenades, grenade launchers, or rocket launchers."
+  },
+  "534078731": {
+    "effort": "moderate",
+    "summary": "Achieve grade C or higher in Crucible or Gambit Ops."
+  },
+  "540377256": {
+    "location": [
+      "Europa"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "summary": "Earn the Triumphs associated with the Deep Stone Crypt raid."
+  },
+  "558030220": {
+    "activityType": "Iron Banner",
+    "effort": "grind",
+    "summary": "Defeat opponents in Iron Banner matches."
+  },
+  "566688294": {
+    "effort": "grind",
+    "summary": "Defeat bosses in any activity."
+  },
+  "572729504": {
+    "activityType": "Gambit",
+    "effort": "quick",
+    "summary": "Defeat an opponent in Gambit while their Super is active."
+  },
+  "574517844": {
+    "activityType": "Strike",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete a Grandmaster Nightfall with each of the five subclasses."
+  },
+  "576846472": {
+    "effort": "grind",
+    "summary": "Defeat combatants with Hand Cannons, more in Solo Ops."
+  },
+  "579515765": {
+    "activityType": "Gambit",
+    "effort": "grind",
+    "summary": "Acquire the Malfeasance exotic hand cannon via Gambit."
+  },
+  "583127756": {
+    "activityType": "Gambit",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Win a Gambit match summoning only small Blockers as a team."
+  },
+  "587536046": {
+    "activityType": "Story",
+    "effort": "moderate",
+    "summary": "Complete the main Renegades campaign quest."
+  },
+  "588582033": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear Warlord's Ruin with a full fireteam of Solar subclasses."
+  },
+  "607578532": {
+    "effort": "grind",
+    "summary": "Complete matches, bonus for using the Tank."
+  },
+  "609861418": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Earn points completing objectives in the Competitive 3v3 playlist."
+  },
+  "615773925": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat three combatants with Primary-ammo weapons."
+  },
+  "618314828": {
+    "effort": "moderate",
+    "summary": "Complete Dawning Snowball Fight matches, bonus for wins."
+  },
+  "619966894": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear the Equilibrium dungeon with Encounter Challenges active."
+  },
+  "621429186": {
+    "location": [
+      "Savathûn's Throne World"
+    ],
+    "activityType": "Patrol",
+    "effort": "quick",
+    "summary": "Defeat Hive Guardian Knight, Wizard, and Acolyte in the Throne World."
+  },
+  "622162938": {
+    "activityType": "Patrol",
+    "effort": "grind",
+    "summary": "Complete Triumphs in the Worlds: Patrol category."
+  },
+  "627246520": {
+    "location": [
+      "The Cosmodrome"
+    ],
+    "activityType": "Patrol",
+    "effort": "quick",
+    "summary": "Defeat a Fallen Spider Tank in the Cosmodrome."
+  },
+  "630777460": {
+    "effort": "grind",
+    "summary": "Complete Supremacy or Trials of Osiris matches, bonus for wins."
+  },
+  "633304921": {
+    "activityType": "Exotic Mission",
+    "effort": "moderate",
+    "summary": "Complete Zero Hour on Expert or higher in Pinnacle Ops."
+  },
+  "643428014": {
+    "location": [
+      "The Dreaming City"
+    ],
+    "activityType": "Story",
+    "effort": "quick",
+    "summary": "Destroy a corruption and defeat Inkasi in the Chamber of Starlight."
+  },
+  "646103139": {
+    "activityType": "Exotic Mission",
+    "effort": "moderate",
+    "summary": "Complete each Pinnacle Ops activity type with grade S or higher."
+  },
+  "646449162": {
+    "location": [
+      "Savathûn's Throne World"
+    ],
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear Ghosts of the Deep with a full fireteam of Void subclasses."
+  },
+  "651338370": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear The Desert Perpetual with the Phase Race feat active."
+  },
+  "656797399": {
+    "activityType": "Iron Banner",
+    "effort": "grind",
+    "summary": "Complete matches in the Iron Banner playlist."
+  },
+  "660345774": {
+    "effort": "moderate",
+    "summary": "Earn buffs in Reclaim by securing Golden Age technology."
+  },
+  "667185576": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat opponents in Control or Tribute."
+  },
+  "674616608": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Earn trophies from the Root of Nightmares raid."
+  },
+  "676690902": {
+    "effort": "moderate",
+    "summary": "Complete Dawning Snowball Fight matches, bonus for wins."
+  },
+  "676986588": {
+    "effort": "moderate",
+    "summary": "Complete Ops activities with Festival of the Lost modifiers active."
+  },
+  "678858776": {
+    "activityType": "Dungeon",
+    "scope": "solo",
+    "effort": "grind",
+    "summary": "Solo every encounter of Grasp of Avarice without leaving."
+  },
+  "680822308": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the Equal Vessels challenge mode in the Crota's End raid."
+  },
+  "683485813": {
+    "effort": "grind",
+    "summary": "Complete Contender and Platinum Cards obtained from Eva Levante."
+  },
+  "694515083": {
+    "effort": "grind",
+    "summary": "Earn Dawning ingredients from anywhere to bake cookies."
+  },
+  "702238896": {
+    "effort": "moderate",
+    "summary": "Open Strange Caches on Distorted Destinations."
+  },
+  "703751709": {
+    "effort": "moderate",
+    "summary": "Deliver Dawning cookie gifts to vendors."
+  },
+  "710681626": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Loot all hidden chests in the Crota's End raid."
+  },
+  "716128796": {
+    "effort": "moderate",
+    "summary": "Gather lore stories for the Assumption record."
+  },
+  "722229940": {
+    "activityType": "Iron Banner",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete matches in the Iron Banner playlist."
+  },
+  "727459852": {
+    "effort": "moderate",
+    "summary": "Defeat targets with snowball final blows during the Dawning."
+  },
+  "727487794": {
+    "location": [
+      "The Dreaming City"
+    ],
+    "effort": "grind",
+    "summary": "Defeat Taken with Stasis abilities or Whisper of the Worm in the Dreaming City."
+  },
+  "729436309": {
+    "location": [
+      "Neomuna"
+    ],
+    "activityType": "Story",
+    "effort": "quick",
+    "summary": "Use the orbital strike relic to defeat Cabal in the Desperate Measures mission."
+  },
+  "734490740": {
+    "effort": "quick",
+    "summary": "Find and open 3 hidden chests in any raid or dungeon."
+  },
+  "741198497": {
+    "effort": "grind",
+    "summary": "Collect coins."
+  },
+  "741597456": {
+    "summary": "Unlock the Harmonia lore entry."
+  },
+  "741597457": {
+    "summary": "Unlock the Immaru lore entry."
+  },
+  "741597464": {
+    "summary": "Unlock the Pickman lore entry."
+  },
+  "741597466": {
+    "summary": "Unlock the Krill lore entry."
+  },
+  "741597467": {
+    "summary": "Unlock the Three-Oh-Three lore entry."
+  },
+  "741597468": {
+    "summary": "Unlock the Fynch I lore entry."
+  },
+  "741597469": {
+    "summary": "Unlock the Euloch lore entry."
+  },
+  "741597470": {
+    "summary": "Unlock the Specter lore entry."
+  },
+  "741597471": {
+    "summary": "Unlock the Fynch II lore entry."
+  },
+  "742010874": {
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Max out clan rank in a Season."
+  },
+  "747950654": {
+    "activityType": "Iron Banner",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Defeat opponents in the Iron Banner."
+  },
+  "748425411": {
+    "activityType": "Exotic Mission",
+    "scope": "solo",
+    "effort": "moderate",
+    "summary": "Complete the Zero Hour Exotic mission solo."
+  },
+  "752641838": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the All For One challenge mode in the Crota's End raid."
+  },
+  "755549938": {
+    "activityType": "Dungeon",
+    "scope": "solo",
+    "effort": "grind",
+    "summary": "Complete all Duality dungeon encounters solo without leaving the activity."
+  },
+  "758645239": {
+    "effort": "grind",
+    "summary": "Complete all Destination Triumphs."
+  },
+  "760183791": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete Grasp of Avarice with a fireteam all of the same class."
+  },
+  "769220197": {
+    "effort": "moderate",
+    "summary": "Complete Rushdown activities."
+  },
+  "774561288": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat five combatants with Solar damage from weapons or abilities."
+  },
+  "776194973": {
+    "location": [
+      "Kepler"
+    ],
+    "effort": "moderate",
+    "summary": "Reclaim lost territories by completing reclamation areas."
+  },
+  "784567566": {
+    "effort": "moderate",
+    "summary": "Defeat combatants with Hand Cannons, earning bonus progress in Fireteam Ops."
+  },
+  "791269856": {
+    "effort": "grind",
+    "summary": "Complete Vanguard Orders of Common, Legendary, and Exotic tiers from the Seasonal Hub."
+  },
+  "791269857": {
+    "effort": "quick",
+    "summary": "Achieve a performance grade of B or better in Ops activities."
+  },
+  "791269859": {
+    "effort": "moderate",
+    "summary": "Generate Orbs of Power or bricks of ammo during activities."
+  },
+  "791269860": {
+    "effort": "moderate",
+    "summary": "Complete Event Challenges from the currently active seasonal event."
+  },
+  "791269861": {
+    "effort": "moderate",
+    "summary": "Defeat targets with Void or Stasis damage, favoring abilities and Guardians."
+  },
+  "791269862": {
+    "effort": "moderate",
+    "summary": "Defeat targets with Void or Strand damage, favoring abilities and Guardians."
+  },
+  "791269863": {
+    "effort": "moderate",
+    "summary": "Defeat targets with Arc or Stasis damage, favoring abilities and Guardians."
+  },
+  "791269864": {
+    "effort": "moderate",
+    "summary": "Defeat targets with Arc or Strand damage, favoring abilities and Guardians."
+  },
+  "791269865": {
+    "effort": "moderate",
+    "summary": "Defeat targets with Solar or Strand damage, favoring abilities and Guardians."
+  },
+  "792778666": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Defeat Guardians in the Crucible using any Pulse Rifle."
+  },
+  "801789923": {
+    "location": [
+      "The Cosmodrome"
+    ],
+    "effort": "quick",
+    "summary": "Destroy a corruption in the Veles Labyrinth, then defeat Ak-Baral, Nine-Touched."
+  },
+  "809231056": {
+    "effort": "quick",
+    "summary": "Unlock a lore chapter in the Tales of the Forgotten collection."
+  },
+  "809231057": {
+    "effort": "quick",
+    "summary": "Unlock a lore chapter in the Tales of the Forgotten collection."
+  },
+  "809231064": {
+    "effort": "quick",
+    "summary": "Unlock a lore chapter in the Tales of the Forgotten collection."
+  },
+  "809231065": {
+    "effort": "quick",
+    "summary": "Unlock a lore chapter in the Tales of the Forgotten collection."
+  },
+  "809231066": {
+    "effort": "quick",
+    "summary": "Unlock a lore chapter in the Tales of the Forgotten collection."
+  },
+  "809231067": {
+    "effort": "quick",
+    "summary": "Unlock a lore chapter in the Tales of the Forgotten collection."
+  },
+  "809231068": {
+    "effort": "quick",
+    "summary": "Unlock a lore chapter in the Tales of the Forgotten collection."
+  },
+  "809231069": {
+    "effort": "quick",
+    "summary": "Unlock a lore chapter in the Tales of the Forgotten collection."
+  },
+  "809231070": {
+    "effort": "quick",
+    "summary": "Unlock a lore chapter in the Tales of the Forgotten collection."
+  },
+  "809231071": {
+    "effort": "quick",
+    "summary": "Unlock a lore chapter in the Tales of the Forgotten collection."
+  },
+  "818518117": {
+    "effort": "quick",
+    "summary": "Unlock the Revenant Stasis Hunter subclass."
+  },
+  "820278195": {
+    "activityType": "Gambit",
+    "effort": "grind",
+    "summary": "Summon small, medium, and large Blockers and bank Motes in Gambit."
+  },
+  "822588172": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete all Warlord's Ruin encounters with a fireteam of the same class."
+  },
+  "824450797": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Complete the strike The Disgraced without dying."
+  },
+  "826008642": {
+    "effort": "quick",
+    "summary": "Unlock a lore chapter in the Tales of the Forgotten collection."
+  },
+  "826008643": {
+    "effort": "quick",
+    "summary": "Unlock a lore chapter in the Tales of the Forgotten collection."
+  },
+  "826008648": {
+    "effort": "quick",
+    "summary": "Unlock a lore book chapter for collecting or progressing."
+  },
+  "826008649": {
+    "effort": "quick",
+    "summary": "Unlock a lore book chapter for collecting or progressing."
+  },
+  "826008650": {
+    "effort": "quick",
+    "summary": "Unlock a lore book chapter for collecting or progressing."
+  },
+  "826008652": {
+    "effort": "quick",
+    "summary": "Unlock a lore book chapter for collecting or progressing."
+  },
+  "826008653": {
+    "effort": "quick",
+    "summary": "Unlock a lore book chapter for collecting or progressing."
+  },
+  "826008654": {
+    "effort": "quick",
+    "summary": "Unlock a lore book chapter for collecting or progressing."
+  },
+  "826008655": {
+    "effort": "quick",
+    "summary": "Unlock a lore book chapter for collecting or progressing."
+  },
+  "829535143": {
+    "effort": "grind",
+    "summary": "Defeat combatant vehicles using your secondary weapon."
+  },
+  "832436622": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat Guardians in the Crucible with Trace Rifles."
+  },
+  "836101288": {
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Complete 3-person and 6-person activities in a fireteam."
+  },
+  "842786364": {
+    "effort": "quick",
+    "summary": "Unlock a lore book chapter for collecting or progressing."
+  },
+  "842786365": {
+    "effort": "quick",
+    "summary": "Unlock the epilogue lore entry for collecting or progressing."
+  },
+  "842786366": {
+    "effort": "quick",
+    "summary": "Unlock a lore book chapter for collecting or progressing."
+  },
+  "842786367": {
+    "effort": "quick",
+    "summary": "Unlock a lore book chapter for collecting or progressing."
+  },
+  "845644623": {
+    "effort": "grind",
+    "summary": "Defeat bosses in any activity."
+  },
+  "846398159": {
+    "activityType": "Exotic Mission",
+    "effort": "quick",
+    "summary": "Complete the Presage Exotic mission with Dead Man's Tale equipped."
+  },
+  "850057066": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat 3 combatants with Heavy ammo weapons."
+  },
+  "852480396": {
+    "summary": "Become Legend by completing a major milestone."
+  },
+  "857358007": {
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Complete private matches with all players in the same clan."
+  },
+  "858849207": {
+    "location": [
+      "Europa"
+    ],
+    "activityType": "Lost Sector",
+    "effort": "quick",
+    "summary": "Defeat the Perdition Lost Sector Hydra before it teleports away."
+  },
+  "859563920": {
+    "effort": "quick",
+    "summary": "Unlock a lore book chapter for collecting or progressing."
+  },
+  "859563921": {
+    "effort": "quick",
+    "summary": "Unlock a lore book chapter for collecting or progressing."
+  },
+  "859563922": {
+    "effort": "quick",
+    "summary": "Unlock a lore book chapter for collecting or progressing."
+  },
+  "859563923": {
+    "effort": "quick",
+    "summary": "Unlock a lore book chapter for collecting or progressing."
+  },
+  "859563924": {
+    "effort": "quick",
+    "summary": "Unlock a lore book chapter for collecting or progressing."
+  },
+  "859563925": {
+    "effort": "quick",
+    "summary": "Unlock a lore book chapter for collecting or progressing."
+  },
+  "859563926": {
+    "effort": "quick",
+    "summary": "Unlock a lore book chapter for collecting or progressing."
+  },
+  "859563927": {
+    "effort": "quick",
+    "summary": "Unlock a lore book chapter for collecting or progressing."
+  },
+  "859563928": {
+    "effort": "quick",
+    "summary": "Unlock a lore book chapter for collecting or progressing."
+  },
+  "859563929": {
+    "effort": "quick",
+    "summary": "Unlock a lore book chapter for collecting or progressing."
+  },
+  "863124256": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Reach Tier 5 scoring during the Call to Arms Crucible event."
+  },
+  "865076293": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "summary": "Parent node grouping Triumphs for the Crota's End raid."
+  },
+  "866178178": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat 3 combatants with Strand Tangles, Threadlings, or Unraveling."
+  },
+  "867842624": {
+    "effort": "moderate",
+    "summary": "Fully upgrade all of a subclass's abilities."
+  },
+  "884338873": {
+    "effort": "moderate",
+    "summary": "Defeat combatants with a Hand Cannon using a Volatile Weapon mod."
+  },
+  "885822378": {
+    "effort": "moderate",
+    "summary": "Blind or jolt targets in combat."
+  },
+  "889977711": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Finish a Guardian Games playlist activity with a Gold Tier score."
+  },
+  "900178591": {
+    "effort": "moderate",
+    "summary": "Defeat targets with any Super, bonus for defeating Guardians."
+  },
+  "903856480": {
+    "activityType": "Gambit",
+    "effort": "moderate",
+    "summary": "Win Gambit matches against every combatant race."
+  },
+  "905181048": {
+    "location": [
+      "Mars"
+    ],
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "summary": "Parent node grouping trophies for the Spire of the Watcher dungeon."
+  },
+  "906465733": {
+    "effort": "grind",
+    "summary": "Reach Event Rank 30 during the Dawning event."
+  },
+  "911294620": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Collect twelve repressed memories across the Duality dungeon."
+  },
+  "913018933": {
+    "effort": "quick",
+    "summary": "Unlock the Warlock Dawnblade subclass."
+  },
+  "918264624": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat 9 combatants with Strand Tangles, Threadlings, or Unraveling."
+  },
+  "920285581": {
+    "location": [
+      "Kepler"
+    ],
+    "activityType": "Story",
+    "effort": "quick",
+    "summary": "Complete mission Fallow on Kepler without hazardous-water damage or dying."
+  },
+  "925777233": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat 15 combatants with Void damage from weapons or abilities."
+  },
+  "925838355": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Complete Crucible matches, bonus for using the Behemoth super."
+  },
+  "936552552": {
+    "effort": "quick",
+    "summary": "Earn an A grade in any Ops activity with a Solstice modifier active."
+  },
+  "942933865": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Clear all Crota's End encounters with a fireteam of one class."
+  },
+  "943774646": {
+    "location": [
+      "The Cosmodrome"
+    ],
+    "activityType": "Patrol",
+    "effort": "quick",
+    "summary": "Disturb remains in Skywatch and defeat the spawned remnants."
+  },
+  "946721470": {
+    "activityType": "Iron Banner",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Earn team score in the Iron Banner playlist."
+  },
+  "948398310": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Earn team score in Control or Eruption Crucible matches."
+  },
+  "950608302": {
+    "effort": "grind",
+    "summary": "Earn Dawning Spirit during the Dawning event."
+  },
+  "958830294": {
+    "location": [
+      "Mars"
+    ],
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the Spire of the Watcher dungeon on Master difficulty."
+  },
+  "963801201": {
+    "effort": "moderate",
+    "summary": "Complete all Expert Conquests from the Seasonal Hub this season."
+  },
+  "966207508": {
+    "effort": "grind",
+    "summary": "Complete the 2019 Moments of Triumph feats for rewards."
+  },
+  "969142496": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Complete all Crucible Triumphs to earn the title."
+  },
+  "980520049": {
+    "location": [
+      "Nessus"
+    ],
+    "activityType": "Patrol",
+    "effort": "quick",
+    "summary": "Defeat combatants using Vex Craniums in the Ancient's Haunt on Nessus."
+  },
+  "982579018": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear all Warlord's Ruin dungeon encounters without dying."
+  },
+  "986322626": {
+    "effort": "grind",
+    "summary": "Complete all Rite of the Nine Triumphs to earn the ETERNAL title."
+  },
+  "993673022": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Patrol",
+    "effort": "moderate",
+    "summary": "Defeat combatants with the Solar Scythe in K1 Crew Quarters on the Moon."
+  },
+  "996561811": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat three combatants with precision damage."
+  },
+  "996925154": {
+    "location": [
+      "The Leviathan"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "After defeating Calus, view his full hoard of riches."
+  },
+  "1007416551": {
+    "activityType": "Gambit",
+    "effort": "moderate",
+    "summary": "Earn the Gambit ornament for the Chivalric Fire sword."
+  },
+  "1007915188": {
+    "location": [
+      "Dreadnaught"
+    ],
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Complete The Sunless Cell strike using a Solar subclass and Solar kills."
+  },
+  "1020717027": {
+    "effort": "grind",
+    "summary": "Complete 21 Triumphs to earn the 2023 Sparrow reward."
+  },
+  "1024513438": {
+    "effort": "quick",
+    "summary": "Complete the Reclaim activity."
+  },
+  "1024923171": {
+    "location": [
+      "Dreadnaught"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Use unstable Light to defeat Golgoroth in King's Fall."
+  },
+  "1027078176": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Hold off combatant waves in Haunted Altars of Sorrow on the Moon."
+  },
+  "1027078177": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Deposit treats at the altar during Haunted Altars of Sorrow."
+  },
+  "1027078178": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Defeat hungry minibosses rushing the altar in Haunted Altars of Sorrow."
+  },
+  "1027078179": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Defeat Headless Ones in the Haunted Altars of Sorrow activity."
+  },
+  "1027078180": {
+    "effort": "moderate",
+    "summary": "Throw Gourd Grenades in Altars of Sorrow or at enemy Guardians."
+  },
+  "1027078181": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Purchase defenses with treats during Haunted Altars of Sorrow."
+  },
+  "1027078182": {
+    "effort": "grind",
+    "summary": "Defeat combatants in Altars of Sorrow or Guardians elsewhere."
+  },
+  "1027078183": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Destroy Void crystals during the Haunted Altars of Sorrow activity."
+  },
+  "1027078184": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Upgrade defenses in the Haunted Altars of Sorrow activity."
+  },
+  "1027078185": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Defeat combatants with Void damage in Haunted Altars of Sorrow."
+  },
+  "1030441103": {
+    "activityType": "Dungeon",
+    "scope": "solo",
+    "effort": "grind",
+    "summary": "Solo all encounters of any dungeon without leaving the activity."
+  },
+  "1031853948": {
+    "activityType": "Iron Banner",
+    "effort": "moderate",
+    "summary": "Complete the Event Rank Track in the Event Home."
+  },
+  "1033364398": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Defeat opponents in Control or destroy Honored Scorpius Turrets in Fortress."
+  },
+  "1041600289": {
+    "effort": "quick",
+    "summary": "Unlock the Sintering lore entry 'Only from Pain'."
+  },
+  "1041600290": {
+    "effort": "quick",
+    "summary": "Unlock the Sintering lore entry 'Crop Rendering'."
+  },
+  "1041600291": {
+    "effort": "quick",
+    "summary": "Unlock the Sintering lore entry 'Direct Me'."
+  },
+  "1041600292": {
+    "effort": "quick",
+    "summary": "Unlock the Sintering lore entry 'The Engine of History'."
+  },
+  "1041600293": {
+    "effort": "quick",
+    "summary": "Unlock the Sintering lore entry 'What Mother'."
+  },
+  "1041600294": {
+    "effort": "quick",
+    "summary": "Unlock the Sintering lore entry 'A Hierarchy of Pain'."
+  },
+  "1041600295": {
+    "effort": "quick",
+    "summary": "Unlock the Sintering lore entry 'Paper Histories'."
+  },
+  "1041600296": {
+    "effort": "quick",
+    "summary": "Unlock the Sintering lore entry 'A Conduit for All Futures'."
+  },
+  "1041600297": {
+    "effort": "quick",
+    "summary": "Unlock the Sintering lore entry 'Nine Thoughts out of Time'."
+  },
+  "1049692671": {
+    "location": [
+      "Kepler"
+    ],
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Defeat combatants with a vehicle as a fireteam in Reclaim activities."
+  },
+  "1051844559": {
+    "location": [
+      "Kepler"
+    ],
+    "effort": "grind",
+    "summary": "Reach Reputation Rank 5 with each of the three Kepler Syndicates."
+  },
+  "1055243762": {
+    "location": [
+      "The Dreaming City"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Input the correct sequence at the Wishing Wall in the Last Wish raid."
+  },
+  "1063506858": {
+    "activityType": "Strike",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Complete a Nightfall strike on Advanced difficulty."
+  },
+  "1063506860": {
+    "activityType": "Strike",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete a Nightfall strike on Master difficulty."
+  },
+  "1063506861": {
+    "activityType": "Strike",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete a Nightfall strike on Expert difficulty."
+  },
+  "1081376704": {
+    "effort": "quick",
+    "summary": "Bake and deliver your first cookie during the Dawning event."
+  },
+  "1083771844": {
+    "effort": "grind",
+    "summary": "Complete activities, with bonus progress from Nightmare Containment or Lockdown."
+  },
+  "1083771846": {
+    "effort": "grind",
+    "summary": "Complete activities, with bonus progress from the Kell's Fall Exotic mission."
+  },
+  "1083771847": {
+    "effort": "grind",
+    "summary": "Complete activities, with bonus progress from Arms Dealer or Creation strikes."
+  },
+  "1087927672": {
+    "effort": "grind",
+    "summary": "Complete all Season of the Chosen Triumphs."
+  },
+  "1089543274": {
+    "effort": "moderate",
+    "summary": "Complete Festival of the Lost event challenges before the event ends."
+  },
+  "1096899446": {
+    "location": [
+      "Kepler"
+    ],
+    "effort": "grind",
+    "summary": "Defeat combatants in Reclaim activities."
+  },
+  "1100009272": {
+    "effort": "grind",
+    "summary": "Defeat combatants with a Shotgun."
+  },
+  "1100009273": {
+    "effort": "moderate",
+    "summary": "Rapidly defeat multiple combatants using Shotguns."
+  },
+  "1100009274": {
+    "effort": "grind",
+    "summary": "Defeat combatants at close range with a Shotgun."
+  },
+  "1100009275": {
+    "effort": "grind",
+    "summary": "Defeat combatants with a Shotgun running a Volatile Weapon mod."
+  },
+  "1100009276": {
+    "scope": "solo",
+    "effort": "grind",
+    "summary": "Defeat combatants with Shotguns, with extra progress in Solo Ops."
+  },
+  "1100009277": {
+    "effort": "moderate",
+    "summary": "Complete matches during Arms Week: Hardware."
+  },
+  "1100009278": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat combatants with Shotguns, with bonus progress in Crucible Ops."
+  },
+  "1100009279": {
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Defeat combatants with Shotguns, with bonus progress in Fireteam Ops."
+  },
+  "1104760940": {
+    "effort": "quick",
+    "summary": "Find a scenic spot in Eternity by teleporting from Xûr's Treasure Hoard."
+  },
+  "1107273784": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Complete matches across different Crucible gametypes."
+  },
+  "1109459264": {
+    "effort": "grind",
+    "summary": "Complete Moments of Triumph 2020 feats of strength for rewards."
+  },
+  "1118340699": {
+    "effort": "grind",
+    "summary": "Collect Dawning Spirit during the Dawning event."
+  },
+  "1139170318": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Emote then use a finisher to defeat a powerful combatant."
+  },
+  "1142693639": {
+    "location": [
+      "The European Dead Zone"
+    ],
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the Warlord's Ruin dungeon set in the EDZ mountains."
+  },
+  "1151761978": {
+    "location": [
+      "Mars"
+    ],
+    "activityType": "Dungeon",
+    "scope": "solo",
+    "effort": "grind",
+    "summary": "Solo all encounters of Spire of the Watcher without leaving the activity."
+  },
+  "1152862171": {
+    "effort": "moderate",
+    "summary": "Complete matches, with bonus progress for matches played using the Tank."
+  },
+  "1155518915": {
+    "activityType": "Iron Banner",
+    "effort": "quick",
+    "summary": "Deal two or more final blows in a single life during Iron Banner."
+  },
+  "1155864323": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Defeat opponents during Zone Advantage or deposit Crests in Tribute mode."
+  },
+  "1156427773": {
+    "effort": "grind",
+    "summary": "Complete all Into the Light title Triumphs to earn the BRAVE title."
+  },
+  "1157532472": {
+    "effort": "quick",
+    "summary": "Spend Combat Telemetry during the Arms Week event."
+  },
+  "1163569125": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Complete Solstice Scorched activities in the Crucible Ops playlist."
+  },
+  "1168352002": {
+    "summary": "Unlock a lore entry by progressing through seasonal content."
+  },
+  "1168352008": {
+    "summary": "Unlock a lore entry by progressing through seasonal content."
+  },
+  "1168352009": {
+    "summary": "Unlock a lore entry by progressing through seasonal content."
+  },
+  "1168352011": {
+    "summary": "Unlock a lore entry by progressing through seasonal content."
+  },
+  "1168352012": {
+    "summary": "Unlock a lore entry by progressing through seasonal content."
+  },
+  "1168352013": {
+    "summary": "Unlock a lore entry by progressing through seasonal content."
+  },
+  "1168352014": {
+    "summary": "Unlock a lore entry by progressing through seasonal content."
+  },
+  "1168352015": {
+    "summary": "Unlock a lore entry by progressing through seasonal content."
+  },
+  "1171177906": {
+    "location": [
+      "Nessus"
+    ],
+    "activityType": "Patrol",
+    "effort": "quick",
+    "summary": "Defeat the Assimilated Demolishers while patrolling Nessus."
+  },
+  "1171345545": {
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Defeat combatants using a vehicle as a fireteam in Reclaim activities."
+  },
+  "1171737790": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Defeat opponents in Control or Tribute Crucible modes."
+  },
+  "1177956319": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Defeat the opposing leader or defeat opponents while acting as leader."
+  },
+  "1185680627": {
+    "effort": "grind",
+    "summary": "Complete all Triumphs for the Season of Dawn."
+  },
+  "1204858125": {
+    "location": [
+      "Savathûn's Throne World"
+    ],
+    "activityType": "Dungeon",
+    "scope": "solo",
+    "effort": "grind",
+    "summary": "Solo-flawless every encounter in the Equilibrium dungeon without leaving."
+  },
+  "1209940824": {
+    "summary": "Unlock a lore entry by progressing through seasonal content."
+  },
+  "1209940825": {
+    "summary": "Unlock a lore entry by progressing through seasonal content."
+  },
+  "1209940826": {
+    "summary": "Unlock a lore entry by progressing through seasonal content."
+  },
+  "1209940827": {
+    "summary": "Unlock a lore entry by progressing through seasonal content."
+  },
+  "1209940828": {
+    "summary": "Unlock a lore entry by progressing through seasonal content."
+  },
+  "1209940829": {
+    "summary": "Unlock a lore entry by progressing through seasonal content."
+  },
+  "1209940831": {
+    "summary": "Unlock a lore entry by progressing through seasonal content."
+  },
+  "1213046261": {
+    "summary": "Parent node grouping Triumphs for The Desert Perpetual raid."
+  },
+  "1219946575": {
+    "activityType": "Story",
+    "effort": "quick",
+    "summary": "Complete the story mission The Tenets."
+  },
+  "1228693527": {
+    "effort": "grind",
+    "summary": "Complete event Triumphs across each of the four calendar Seasons."
+  },
+  "1234501850": {
+    "effort": "moderate",
+    "summary": "Acquire Totality Division Renegade abilities Imperium Pod and Behemoth."
+  },
+  "1239035872": {
+    "effort": "grind",
+    "summary": "Defeat targets with Primary ammo weapons, bonus with King Orfeo Bow."
+  },
+  "1239035873": {
+    "effort": "grind",
+    "summary": "Defeat targets with Special ammo weapons anywhere, bonus for The Heron Glaive."
+  },
+  "1239035875": {
+    "effort": "grind",
+    "summary": "Defeat targets with Special ammo weapons, bonus for the Gizmo Weft Grenade Launcher."
+  },
+  "1239035878": {
+    "effort": "grind",
+    "summary": "Defeat targets with Special ammo weapons, bonus for the Action Item Trace Rifle."
+  },
+  "1239035879": {
+    "effort": "grind",
+    "summary": "Defeat targets with Heavy ammo weapons, bonus for the Micromort Rocket Launcher."
+  },
+  "1240252189": {
+    "effort": "moderate",
+    "summary": "Earn buffs in the Reclaim activity by securing Golden Age technology."
+  },
+  "1243179709": {
+    "effort": "moderate",
+    "summary": "Defeat bosses in any activity."
+  },
+  "1245308094": {
+    "location": [
+      "The Pale Heart"
+    ],
+    "activityType": "Story",
+    "effort": "quick",
+    "summary": "Complete the mission Ascent killing combatants using only the Khvostov 7G-0X."
+  },
+  "1259632252": {
+    "location": [
+      "The European Dead Zone",
+      "The Last City",
+      "Nessus"
+    ],
+    "effort": "quick",
+    "summary": "Retrieve Xûr's strange leftovers from the EDZ, the Tower, and Nessus."
+  },
+  "1265419795": {
+    "activityType": "Iron Banner",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Earn score as a team in the Iron Banner playlist."
+  },
+  "1268432769": {
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete a Grandmaster Conquest from the Seasonal Hub this Season."
+  },
+  "1270488840": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Capture zones in Control or Fortress."
+  },
+  "1282889881": {
+    "activityType": "Iron Banner",
+    "effort": "moderate",
+    "summary": "Deal two or more final blows in a single life in Iron Banner."
+  },
+  "1284946259": {
+    "effort": "grind",
+    "summary": "Complete 28 of 30 Moments of Triumph 2021 Feats of Strength."
+  },
+  "1287928419": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete all Pantheon: Insurrection Prime Revolutionary encounters with two or more feats."
+  },
+  "1287928420": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete all Pantheon: Insurrection Prime Revolutionary encounters with all feats enabled."
+  },
+  "1289729629": {
+    "location": [
+      "The Pale Heart"
+    ],
+    "activityType": "Story",
+    "effort": "quick",
+    "summary": "Use the Pike in the mission Requiem to defeat combatants."
+  },
+  "1292743970": {
+    "effort": "moderate",
+    "summary": "Complete Triumphs in the Stories: Campaigns category."
+  },
+  "1301029795": {
+    "effort": "moderate",
+    "summary": "Earn buffs in the Reclaim activity by securing Golden Age technology."
+  },
+  "1303787458": {
+    "effort": "moderate",
+    "summary": "Complete Triumphs in the Stories: The Nine category."
+  },
+  "1305695156": {
+    "effort": "moderate",
+    "summary": "Complete Triumphs in the Worlds: Distortions category."
+  },
+  "1305720119": {
+    "effort": "moderate",
+    "summary": "Complete a Master dungeon, raid, or Ops, or win Trials rounds, in full Lustrous armor."
+  },
+  "1306483854": {
+    "activityType": "Gambit",
+    "effort": "grind",
+    "summary": "Reset your Gambit rank."
+  },
+  "1309005929": {
+    "effort": "moderate",
+    "summary": "Defeat combatant vehicles using your secondary weapon."
+  },
+  "1311830323": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Capture zones in Control or collect Crests in Tribute."
+  },
+  "1312081284": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Earn score as a team in Control or Tribute."
+  },
+  "1315012242": {
+    "summary": "Unlock the Liberated lore entry in the Shattered Suns collection."
+  },
+  "1316855926": {
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Complete any Pantheon encounter with the Cutthroat Combat feat active."
+  },
+  "1318354207": {
+    "effort": "quick",
+    "summary": "Complete the quest Glory Beyond in under 15 minutes."
+  },
+  "1319674015": {
+    "effort": "grind",
+    "summary": "Defeat combatants with Hand Cannons, bonus in Fireteam Ops."
+  },
+  "1326660603": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Defeat 30 combatants with mid-range weapons without dying."
+  },
+  "1326689257": {
+    "summary": "Complete hidden objectives to earn a unique seasonal reward."
+  },
+  "1329091971": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete all King's Fall encounters with a full fireteam of one class."
+  },
+  "1330816862": {
+    "location": [
+      "The Last City"
+    ],
+    "effort": "grind",
+    "summary": "Bank Medallions at the Tower podium for class standing points."
+  },
+  "1334563377": {
+    "location": [
+      "The Dreaming City"
+    ],
+    "activityType": "Patrol",
+    "effort": "quick",
+    "summary": "Deliver Arc charges to the rift generator during the public event."
+  },
+  "1334890488": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the Precarious Balance challenge mode in Crota's End."
+  },
+  "1339235599": {
+    "effort": "moderate",
+    "summary": "Defeat combatant vehicles using your secondary weapon."
+  },
+  "1342446533": {
+    "activityType": "Dungeon",
+    "effort": "moderate",
+    "summary": "Earn the Warlord's Ruin dungeon title across its triumphs."
+  },
+  "1343839969": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Complete all lifetime Crucible Rank and Glory Rank triumphs."
+  },
+  "1348057732": {
+    "activityType": "Iron Banner",
+    "effort": "quick",
+    "summary": "Deal two or more final blows in a single life in Iron Banner."
+  },
+  "1348174393": {
+    "effort": "grind",
+    "summary": "Get Stasis and snowball final blows in Master Portal activities."
+  },
+  "1348609896": {
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Complete group emotes with other Guardians."
+  },
+  "1350388308": {
+    "activityType": "Dungeon",
+    "effort": "moderate",
+    "summary": "Complete the Duality dungeon."
+  },
+  "1350410424": {
+    "effort": "grind",
+    "summary": "Defeat targets with Arc final blows, bonus for Guardians."
+  },
+  "1351452907": {
+    "effort": "moderate",
+    "summary": "Complete triumphs in the Combat: Armaments category."
+  },
+  "1353863346": {
+    "location": [
+      "The European Dead Zone"
+    ],
+    "effort": "moderate",
+    "summary": "Defeat combatants with a Sniper Rifle in Trostland."
+  },
+  "1358222483": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "quick",
+    "summary": "Defeat a powerful Wizard with your Super on the Moon."
+  },
+  "1358576229": {
+    "location": [
+      "Europa"
+    ],
+    "effort": "moderate",
+    "summary": "Purchase all Stasis Aspects, Fragments, and abilities from the Exo Stranger."
+  },
+  "1360511082": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the King's Fall raid without dying."
+  },
+  "1360624215": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Reach the Fabled division in Competitive ranks."
+  },
+  "1380085703": {
+    "effort": "moderate",
+    "summary": "Collect coins."
+  },
+  "1380206638": {
+    "effort": "grind",
+    "summary": "Deal final blows with weapons using a Volatile Weapon mod."
+  },
+  "1382005115": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete triumphs for the Salvation's Edge raid."
+  },
+  "1384029371": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete all Raid triumphs."
+  },
+  "1388516343": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Complete Haunted Altars of Sorrow with a B-grade or higher."
+  },
+  "1389264495": {
+    "location": [
+      "Europa"
+    ],
+    "activityType": "Story",
+    "effort": "quick",
+    "summary": "Complete any Exo Challenge mission on Europa."
+  },
+  "1403072282": {
+    "effort": "grind",
+    "summary": "Defeat targets in Guardian Games activities."
+  },
+  "1405824101": {
+    "effort": "moderate",
+    "summary": "Acquire all Dawning upgrades."
+  },
+  "1408913087": {
+    "effort": "grind",
+    "summary": "Reach Event Rank 30 during Solstice."
+  },
+  "1412790576": {
+    "effort": "grind",
+    "summary": "Defeat combatants with a Hand Cannon using a Volatile Weapon mod."
+  },
+  "1415391181": {
+    "activityType": "Iron Banner",
+    "effort": "grind",
+    "summary": "Defeat opponents in the Iron Banner."
+  },
+  "1417273794": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete Crota's End raid and all four encounter challenges within 48 hours of launch."
+  },
+  "1423289253": {
+    "effort": "moderate",
+    "summary": "Defeat combatants with Rocket Launchers and finish runs of Dares of Eternity."
+  },
+  "1428874384": {
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Defeat targets as a team during a match."
+  },
+  "1428941067": {
+    "location": [
+      "The Pale Heart"
+    ],
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear all Sundered Doctrine encounters with the Token Enabled feat active."
+  },
+  "1431020244": {
+    "location": [
+      "Kepler"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Clear all Desert Perpetual encounters with the Cutthroat Combat feat active."
+  },
+  "1435213525": {
+    "effort": "moderate",
+    "summary": "Defeat combatants with Hand Cannons, with bonus progress in Fireteam Ops."
+  },
+  "1436869588": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear all Warlord's Ruin encounters with a full fireteam running Strand subclasses."
+  },
+  "1437787878": {
+    "activityType": "Iron Banner",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete matches in the Iron Banner playlist."
+  },
+  "1438167672": {
+    "effort": "grind",
+    "summary": "Collect all weapon types and complete select gilding Triumphs."
+  },
+  "1447567817": {
+    "effort": "grind",
+    "summary": "Complete activities with various unique Solstice modifiers active."
+  },
+  "1447905713": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear the Crota's End Abyss encounter without anyone reaching 10 Weight of Darkness stacks."
+  },
+  "1454190194": {
+    "effort": "moderate",
+    "summary": "Gather a collection of lore notes for the As Without story."
+  },
+  "1465187465": {
+    "activityType": "Gambit",
+    "effort": "grind",
+    "summary": "Reach the Heroic division rank in Gambit."
+  },
+  "1470180578": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Purchase defense upgrades in the Haunted Altars of Sorrow activity."
+  },
+  "1470180579": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Defeat combatants with Void damage in Haunted Altars of Sorrow."
+  },
+  "1470180584": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Defeat the hungry minibosses rushing the altar in Haunted Altars of Sorrow."
+  },
+  "1470180585": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Defeat Headless Ones in the Haunted Altars of Sorrow activity."
+  },
+  "1470180586": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Hold off waves of combatants in Haunted Altars of Sorrow."
+  },
+  "1470180587": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Deposit treats into the altar during Haunted Altars of Sorrow."
+  },
+  "1470180588": {
+    "effort": "grind",
+    "summary": "Defeat combatants in Haunted Altars of Sorrow or Guardians elsewhere."
+  },
+  "1470180589": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Destroy Void crystals during the Haunted Altars of Sorrow activity."
+  },
+  "1470180590": {
+    "effort": "moderate",
+    "summary": "Throw Gourd Grenades in Haunted Altars of Sorrow or at opposing Guardians."
+  },
+  "1470180591": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Purchase defenses with treats during Haunted Altars of Sorrow."
+  },
+  "1472453385": {
+    "activityType": "Gambit",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Invade in Gambit, grab 3 Motes from the enemy arena, and return safely."
+  },
+  "1472543597": {
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete matches in the Dawning Snowball Fight activity."
+  },
+  "1481745584": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat nine combatants using Heavy ammo weapons."
+  },
+  "1485875837": {
+    "location": [
+      "Nessus"
+    ],
+    "effort": "quick",
+    "summary": "Find a scenic vista spot in the Exodus Black on Nessus."
+  },
+  "1498554716": {
+    "effort": "quick",
+    "summary": "Unlock your first piece of Solstice armor during the Celebrating Solstice quest."
+  },
+  "1506696941": {
+    "location": [
+      "The Leviathan"
+    ],
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear all Duality encounters as a fireteam without dying or leaving."
+  },
+  "1507277624": {
+    "location": [
+      "Europa"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "As a fireteam, deliver a Pike to the Veiled Statue in Deep Stone Crypt."
+  },
+  "1508881150": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat combatants with Hand Cannons, with bonus progress in Crucible."
+  },
+  "1510515137": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete all Crota's End encounters with a full Void-subclass fireteam."
+  },
+  "1510672449": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Pass the Platinum score threshold in a Guardian Games playlist activity."
+  },
+  "1512184605": {
+    "effort": "moderate",
+    "summary": "Collect every component for the Praxic Blade."
+  },
+  "1519202867": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete the Equilibrium dungeon on Contest difficulty."
+  },
+  "1522246467": {
+    "activityType": "Trials of Osiris",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Earn a 5-win streak on different maps during a Trials Lighthouse Passage."
+  },
+  "1527020180": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "grind",
+    "summary": "Defeat Hive on the Moon with Stasis abilities or Ex Diris."
+  },
+  "1527291146": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat 3 combatants with Special ammo weapons."
+  },
+  "1527495427": {
+    "activityType": "Strike",
+    "effort": "moderate",
+    "summary": "Defeat 30 combatants with close-range weapons without dying."
+  },
+  "1538423216": {
+    "location": [
+      "The Cosmodrome"
+    ],
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Complete the Devils' Lair strike with a Light subclass equipped."
+  },
+  "1544177887": {
+    "activityType": "Iron Banner",
+    "effort": "moderate",
+    "summary": "Complete matches in the Iron Banner playlist."
+  },
+  "1555277870": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Win Crucible matches with each Light subclass."
+  },
+  "1556658903": {
+    "activityType": "Gambit",
+    "effort": "grind",
+    "summary": "Complete all Gambit Triumphs."
+  },
+  "1560816608": {
+    "summary": "Unlock a lore entry in the Dusk and Dawn collection."
+  },
+  "1560816617": {
+    "summary": "Unlock a lore entry in the Dusk and Dawn collection."
+  },
+  "1560816618": {
+    "summary": "Unlock a lore entry in the Dusk and Dawn collection."
+  },
+  "1560816619": {
+    "summary": "Unlock a lore entry in the Dusk and Dawn collection."
+  },
+  "1560816620": {
+    "summary": "Unlock a lore entry in the Dusk and Dawn collection."
+  },
+  "1560816621": {
+    "summary": "Unlock a lore entry in the Dusk and Dawn collection."
+  },
+  "1560816622": {
+    "summary": "Unlock a lore entry in the Dusk and Dawn collection."
+  },
+  "1560816623": {
+    "summary": "Unlock a lore entry in the Dusk and Dawn collection."
+  },
+  "1560973788": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "quick",
+    "summary": "Destroy a corruption in K1 Revelation then defeat Nightmare of Arguth."
+  },
+  "1561426387": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Complete all Triumphs in the Competitions: PvP category."
+  },
+  "1561715947": {
+    "effort": "grind",
+    "summary": "Complete all Season of the Hunt Triumphs."
+  },
+  "1564001702": {
+    "activityType": "Iron Banner",
+    "effort": "grind",
+    "summary": "Complete all Iron Banner Triumphs."
+  },
+  "1565033067": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete all Warlord's Ruin encounters with a full Stasis-subclass fireteam."
+  },
+  "1568354300": {
+    "activityType": "Gambit",
+    "effort": "quick",
+    "summary": "Defeat an invader in Gambit while carrying 15 Motes."
+  },
+  "1578101922": {
+    "effort": "quick",
+    "summary": "Win a match."
+  },
+  "1583073581": {
+    "effort": "quick",
+    "summary": "Acquire the Forerunner Exotic Sidearm from Xûr's Treasure Hoard in Eternity."
+  },
+  "1584772332": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the Spire of the Watcher dungeon."
+  },
+  "1591054373": {
+    "location": [
+      "Mars"
+    ],
+    "activityType": "Dungeon",
+    "scope": "solo",
+    "effort": "moderate",
+    "summary": "Complete all Spire of the Watcher encounters without dying or leaving."
+  },
+  "1592519602": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Epochs & Orbits collection."
+  },
+  "1592519604": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Epochs & Orbits collection."
+  },
+  "1592519607": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Epochs & Orbits collection."
+  },
+  "1592519614": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Epochs & Orbits collection."
+  },
+  "1592519615": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Epochs & Orbits collection."
+  },
+  "1594888684": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Loot all hidden chests in the King's Fall raid."
+  },
+  "1604631695": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Defeat Nightmares on the Moon while Thorn is equipped."
+  },
+  "1607712151": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Survive 10 seconds of the Warden's burn attack in Warden of Nothing."
+  },
+  "1620621038": {
+    "effort": "moderate",
+    "summary": "Complete matches, with bonus progress using the Tank."
+  },
+  "1621015540": {
+    "effort": "quick",
+    "summary": "Win a match."
+  },
+  "1626830599": {
+    "activityType": "Exotic Mission",
+    "scope": "solo",
+    "effort": "moderate",
+    "summary": "Complete the Zero Hour exotic mission solo without dying."
+  },
+  "1626969110": {
+    "effort": "moderate",
+    "summary": "Complete Heavy Metal matches, with bonus for winning."
+  },
+  "1631738192": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete Warlord's Ruin with a full fireteam of clanmates."
+  },
+  "1637409881": {
+    "effort": "grind",
+    "summary": "Complete Supremacy or Trials of Osiris matches, bonus for wins."
+  },
+  "1649882649": {
+    "effort": "moderate",
+    "summary": "Rapidly defeat multiple combatants with Hand Cannons."
+  },
+  "1652340343": {
+    "effort": "moderate",
+    "summary": "Give Dawning gifts to vendors."
+  },
+  "1653222711": {
+    "effort": "moderate",
+    "summary": "Complete objectives in Reclaim activities."
+  },
+  "1662916867": {
+    "activityType": "Trials of Osiris",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Assist another player in reaching a 5 win streak on Lighthouse Passage."
+  },
+  "1675648628": {
+    "effort": "moderate",
+    "summary": "Give Dawning gifts to vendors."
+  },
+  "1676011372": {
+    "activityType": "Gambit",
+    "effort": "grind",
+    "summary": "As a Hunter, win matches, defeat combatants, and deposit Motes in Gambit."
+  },
+  "1676295469": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete all Equilibrium encounters with the Cutthroat Combat feat active."
+  },
+  "1676339490": {
+    "effort": "moderate",
+    "summary": "Cast any Solar Supers."
+  },
+  "1676339491": {
+    "effort": "moderate",
+    "summary": "Complete activities in the Crucible Ops Solstice Scorched playlist."
+  },
+  "1676339496": {
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete Fireteam Ops activities with a Solstice modifier active."
+  },
+  "1676339497": {
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "As a fireteam, defeat combatants with Solar Flares or pass them between members."
+  },
+  "1676339498": {
+    "effort": "grind",
+    "summary": "Defeat targets with Solar damage final blows."
+  },
+  "1676339499": {
+    "scope": "solo",
+    "effort": "moderate",
+    "summary": "Complete Solo Ops activities with a Solstice modifier active."
+  },
+  "1676339500": {
+    "effort": "grind",
+    "summary": "Defeat targets with Solar ability final blows."
+  },
+  "1676339501": {
+    "effort": "grind",
+    "summary": "Defeat targets with Solar melee final blows."
+  },
+  "1676339502": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Rapidly defeat targets, with bonus for defeating other Guardians."
+  },
+  "1676339503": {
+    "effort": "grind",
+    "summary": "Defeat targets with Solar grenade final blows."
+  },
+  "1682150570": {
+    "location": [
+      "Europa"
+    ],
+    "activityType": "Patrol",
+    "scope": "solo",
+    "effort": "quick",
+    "summary": "Find a scenic vista spot in the Asterion Abyss on Europa."
+  },
+  "1682552548": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete a Pantheon encounter with the Phase Limit feat active."
+  },
+  "1693640955": {
+    "activityType": "Dungeon",
+    "effort": "moderate",
+    "summary": "Complete the dungeon quest 'The Way Between.'"
+  },
+  "1699197444": {
+    "effort": "grind",
+    "summary": "Earn Dawning Essence during the Dawning event."
+  },
+  "1699761222": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry."
+  },
+  "1699761223": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry."
+  },
+  "1699761224": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry."
+  },
+  "1699761225": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry."
+  },
+  "1699761226": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry."
+  },
+  "1699761227": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry."
+  },
+  "1699761228": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry."
+  },
+  "1699761229": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry."
+  },
+  "1699761231": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry."
+  },
+  "1703930145": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Unlock a Vanguard lore entry."
+  },
+  "1704146463": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Reach Adept Division rank in Crucible this Season."
+  },
+  "1705576010": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Acquire 100 stacks of Burdened by Riches in Grasp of Avarice's Loot Cave encounter."
+  },
+  "1710217127": {
+    "effort": "grind",
+    "summary": "Complete all Season of the Risen Triumphs."
+  },
+  "1713574971": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Earn score as a team in Control or Eruption."
+  },
+  "1716581969": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat 15 combatants with Arc damage."
+  },
+  "1718559828": {
+    "effort": "grind",
+    "summary": "Complete objectives in Reclaim activities."
+  },
+  "1719376226": {
+    "effort": "grind",
+    "summary": "Defeat combatants with the Exotic weapon Telesto in any activity."
+  },
+  "1722592950": {
+    "effort": "grind",
+    "summary": "Complete all Season of Defiance Triumphs."
+  },
+  "1732152233": {
+    "effort": "grind",
+    "summary": "Blind or jolt targets with Arc effects."
+  },
+  "1732432755": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete the Master tier of the Crota's End raid."
+  },
+  "1738756320": {
+    "effort": "grind",
+    "summary": "Rapidly defeat multiple combatants with Bows."
+  },
+  "1738756321": {
+    "effort": "grind",
+    "summary": "Deal final blows with Bows."
+  },
+  "1738756322": {
+    "effort": "grind",
+    "summary": "Defeat combatants with a Bow using a Volatile Weapon mod."
+  },
+  "1738756323": {
+    "effort": "grind",
+    "summary": "Deal precision final blows with Bows."
+  },
+  "1738756324": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Complete Crucible matches during the Arms Week: Hardware event."
+  },
+  "1738756325": {
+    "scope": "solo",
+    "effort": "grind",
+    "summary": "Defeat combatants with Bows, favoring Solo Ops activities."
+  },
+  "1738756326": {
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Defeat combatants with Bows, favoring Fireteam Ops activities."
+  },
+  "1738756327": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat combatants with Bows, favoring Crucible matches."
+  },
+  "1743489248": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat 10 combatants with Strand damage from weapons or abilities."
+  },
+  "1745956042": {
+    "effort": "grind",
+    "summary": "Earn Vanguard Warmth to unlock the Chivalric Fire sword ornament."
+  },
+  "1760261415": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete all King's Fall encounters with a full fireteam of Arc subclasses."
+  },
+  "1764043866": {
+    "location": [
+      "The Cosmodrome"
+    ],
+    "effort": "grind",
+    "summary": "Defeat Fallen in the Cosmodrome with Arc abilities or Lord of Wolves."
+  },
+  "1770021330": {
+    "activityType": "Dungeon",
+    "effort": "moderate",
+    "summary": "Recover Wilhelm-7's twelve hidden messages in Grasp of Avarice."
+  },
+  "1772394941": {
+    "effort": "quick",
+    "summary": "Open five Call to Arms daily chests."
+  },
+  "1777479125": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Collect Raider's Effigies hidden across every raid."
+  },
+  "1783937755": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete all Crota's End encounters with a full fireteam of Strand subclasses."
+  },
+  "1798920464": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Earn team score by competing in Control or Fortress."
+  },
+  "1801613309": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete all Duality encounters with a full fireteam of Void subclasses."
+  },
+  "1801648027": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Complete any Pantheon encounter with the Battalions feat active."
+  },
+  "1802596959": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "quick",
+    "summary": "Complete Haunted Altars of Sorrow with an A grade or higher."
+  },
+  "1807249311": {
+    "effort": "moderate",
+    "summary": "Reach Event Rank 15 during the Solstice event."
+  },
+  "1814278528": {
+    "activityType": "Iron Banner",
+    "effort": "moderate",
+    "summary": "Win matches in the Iron Banner playlist."
+  },
+  "1816125341": {
+    "activityType": "Iron Banner",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Earn team score by competing in the Iron Banner playlist."
+  },
+  "1819699638": {
+    "effort": "grind",
+    "summary": "Defeat combatants with precision Hand Cannon final blows."
+  },
+  "1820058203": {
+    "location": [
+      "The Pale Heart"
+    ],
+    "activityType": "Story",
+    "effort": "quick",
+    "summary": "Defeat the Witness in the mission Excision."
+  },
+  "1832473114": {
+    "effort": "moderate",
+    "summary": "Complete the Event Rank Track in the Event Home."
+  },
+  "1835330981": {
+    "effort": "grind",
+    "summary": "Complete activities, with bonus for Nightmare Containment or Lockdown."
+  },
+  "1835330982": {
+    "effort": "grind",
+    "summary": "Complete activities, with bonus for Arms Dealer or Creation."
+  },
+  "1835330983": {
+    "activityType": "Exotic Mission",
+    "effort": "grind",
+    "summary": "Complete activities, with bonus for the Exotic mission Kell's Fall."
+  },
+  "1842272728": {
+    "effort": "moderate",
+    "summary": "Spend Combat Telemetry during the Arms Week event."
+  },
+  "1852316088": {
+    "location": [
+      "The European Dead Zone"
+    ],
+    "effort": "quick",
+    "summary": "Destroy a corruption in the EDZ Quarry, then defeat Nine-Touched Yann."
+  },
+  "1864837600": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete all Duality encounters with a full fireteam of Solar subclasses."
+  },
+  "1866578144": {
+    "effort": "grind",
+    "summary": "Complete all Season of the Undying Triumphs."
+  },
+  "1867424608": {
+    "activityType": "Iron Banner",
+    "effort": "grind",
+    "summary": "Complete every Iron Banner bounty in one event on three characters."
+  },
+  "1868977966": {
+    "effort": "moderate",
+    "summary": "Defeat combatants with a Hand Cannon using a Volatile Weapon mod."
+  },
+  "1884655823": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Defeat opponents holding Zone Advantage or neutralize Fortress zones."
+  },
+  "1892464314": {
+    "activityType": "Iron Banner",
+    "effort": "moderate",
+    "summary": "Deal two or more final blows in a single life in Iron Banner."
+  },
+  "1894873531": {
+    "activityType": "Iron Banner",
+    "effort": "grind",
+    "summary": "Defeat opponents in the Iron Banner."
+  },
+  "1895454498": {
+    "activityType": "Gambit",
+    "effort": "grind",
+    "summary": "Defeat high-value targets and challenging combatants in Gambit."
+  },
+  "1896685129": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete Crota's End final encounter with only one player Enlightened at a time."
+  },
+  "1897760395": {
+    "activityType": "Iron Banner",
+    "effort": "grind",
+    "summary": "Defeat opponents in the Iron Banner."
+  },
+  "1901601155": {
+    "effort": "quick",
+    "summary": "Collect a lore entry from The Rubicon collection."
+  },
+  "1901601160": {
+    "effort": "quick",
+    "summary": "Collect a lore entry from The Rubicon collection."
+  },
+  "1901601161": {
+    "effort": "quick",
+    "summary": "Collect a lore entry from The Rubicon collection."
+  },
+  "1901601162": {
+    "effort": "quick",
+    "summary": "Collect a lore entry from The Rubicon collection."
+  },
+  "1901601164": {
+    "effort": "quick",
+    "summary": "Collect a lore entry from The Rubicon collection."
+  },
+  "1901601165": {
+    "effort": "quick",
+    "summary": "Collect a lore entry from The Rubicon collection."
+  },
+  "1901601166": {
+    "effort": "quick",
+    "summary": "Collect a lore entry from The Rubicon collection."
+  },
+  "1901601167": {
+    "effort": "quick",
+    "summary": "Collect a lore entry from The Rubicon collection."
+  },
+  "1904303292": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete all encounters in The Pantheon: Morgeth Surpassing."
+  },
+  "1937728407": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the King's Fall challenge mode 'The Grass Is Always Greener'."
+  },
+  "1939736564": {
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Complete any activity alongside other Guardians."
+  },
+  "1944079787": {
+    "effort": "quick",
+    "summary": "Get multiple Hand Cannon precision final blows in a single life."
+  },
+  "1946918113": {
+    "activityType": "Iron Banner",
+    "effort": "moderate",
+    "summary": "Deal two or more final blows in a single life in Iron Banner."
+  },
+  "1948067627": {
+    "location": [
+      "Europa"
+    ],
+    "effort": "grind",
+    "summary": "Defeat Vex on Europa with the No Time to Explain pulse rifle."
+  },
+  "1950118905": {
+    "location": [
+      "The Dreaming City"
+    ],
+    "effort": "grind",
+    "summary": "Open Ascendant chests with Tincture of Queensfoil in the Dreaming City."
+  },
+  "1956385114": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Defeat opponents holding Zone Advantage or deposit Crests in Tribute."
+  },
+  "1957191184": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Defeat the opposing leader or defeat opponents while leading."
+  },
+  "1964116222": {
+    "effort": "quick",
+    "summary": "Acquire the Piker Renegade abilities Mortar and Chop Shop."
+  },
+  "1965035984": {
+    "activityType": "Trials of Osiris",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Win matches on a 7-win flawless Lighthouse Passage this Episode."
+  },
+  "1965921084": {
+    "activityType": "Gambit",
+    "effort": "moderate",
+    "summary": "Win a Gambit match with Gambit weapons in every slot."
+  },
+  "1971228746": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "summary": "Container for Vow of the Disciple raid Triumphs."
+  },
+  "1975535080": {
+    "effort": "quick",
+    "summary": "Honk your Sparrow horn after defeating a combatant in SRL."
+  },
+  "1979963143": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Defeat opponents in Control or Tribute."
+  },
+  "1981852284": {
+    "effort": "grind",
+    "summary": "Defeat combatant vehicles using your secondary weapon anywhere."
+  },
+  "1987281238": {
+    "effort": "grind",
+    "summary": "Defeat targets with Stasis damage final blows anywhere."
+  },
+  "1988292922": {
+    "effort": "quick",
+    "summary": "Defeat a single rank-and-file enemy with your Super."
+  },
+  "1990651188": {
+    "effort": "grind",
+    "summary": "Earn Dawning Spirit during the Dawning event."
+  },
+  "1990962776": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete Spire of the Watcher with a full Solar-subclass fireteam."
+  },
+  "1996637290": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Story",
+    "effort": "quick",
+    "summary": "Complete any Nightmare Hunt on the Moon."
+  },
+  "2002139996": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Unlock a Guardians-and-Ghosts lore entry via strikes."
+  },
+  "2002139998": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Unlock a Guardians-and-Ghosts lore entry via strikes."
+  },
+  "2002139999": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Unlock a Guardians-and-Ghosts lore entry via strikes."
+  },
+  "2002677709": {
+    "effort": "grind",
+    "summary": "Defeat bosses in any activity."
+  },
+  "2003314074": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat Guardians using Pulse Rifles and Shotguns in Crucible."
+  },
+  "2004433732": {
+    "location": [
+      "Europa"
+    ],
+    "activityType": "Story",
+    "effort": "quick",
+    "summary": "Complete a Beyond Light mission or Empire Hunt on Europa."
+  },
+  "2012565724": {
+    "effort": "grind",
+    "summary": "Bake cookies in the Dawning Oven."
+  },
+  "2017264900": {
+    "effort": "grind",
+    "summary": "Complete matches, ideally piloting the Brig."
+  },
+  "2017340207": {
+    "location": [
+      "Europa",
+      "Mars",
+      "Venus"
+    ],
+    "effort": "grind",
+    "summary": "Complete the Legendary campaign and Grandmaster Jobs across destinations."
+  },
+  "2021947930": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Earn a Silver Tier score in Guardian Games playlists."
+  },
+  "2023413248": {
+    "effort": "grind",
+    "summary": "Defeat combatants with Bows, bonus in Crucible."
+  },
+  "2023413249": {
+    "effort": "grind",
+    "summary": "Defeat combatants with Bows, bonus in Fireteam Ops."
+  },
+  "2023413250": {
+    "scope": "solo",
+    "effort": "grind",
+    "summary": "Defeat combatants with Bows, bonus in Solo Ops."
+  },
+  "2023413251": {
+    "effort": "moderate",
+    "summary": "Complete matches during the Arms Week: Hardware event."
+  },
+  "2023413252": {
+    "effort": "grind",
+    "summary": "Deal precision final blows with Bows."
+  },
+  "2023413253": {
+    "effort": "grind",
+    "summary": "Defeat combatants with a Bow using a Volatile Weapon mod."
+  },
+  "2023413254": {
+    "effort": "grind",
+    "summary": "Deal final blows with Bows."
+  },
+  "2023413255": {
+    "effort": "moderate",
+    "summary": "Rapidly defeat multiple combatants with Bows."
+  },
+  "2033521094": {
+    "effort": "grind",
+    "summary": "Collect coins dropped by defeated targets."
+  },
+  "2037346146": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete The Desert Perpetual raid within 48 hours of release."
+  },
+  "2044897173": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete a Pantheon encounter with Encounter Challenges active."
+  },
+  "2045739672": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete any version of the Crota's End raid."
+  },
+  "2047848123": {
+    "effort": "grind",
+    "summary": "Blind or jolt targets anywhere."
+  },
+  "2049996471": {
+    "effort": "grind",
+    "summary": "Score in weekly Reclaim activities and complete the Ash & Iron mission."
+  },
+  "2056461735": {
+    "effort": "grind",
+    "summary": "Complete every Season of Opulence Triumph as a meta-achievement."
+  },
+  "2060234891": {
+    "location": [
+      "Nessus"
+    ],
+    "effort": "grind",
+    "summary": "Defeat Cabal on Nessus with Solar abilities or Skyburner's Oath."
+  },
+  "2068580646": {
+    "effort": "grind",
+    "summary": "Reach event rank 30 by earning event ranks."
+  },
+  "2070283256": {
+    "effort": "moderate",
+    "summary": "Gather lore stories by meeting various characters."
+  },
+  "2072890963": {
+    "effort": "grind",
+    "summary": "Complete all Season of the Worthy flawless Triumphs."
+  },
+  "2074076376": {
+    "effort": "quick",
+    "summary": "Complete a Sparrow race wearing a full set of SRL gear."
+  },
+  "2085192102": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Chirality collection."
+  },
+  "2085623190": {
+    "effort": "grind",
+    "summary": "Defeat enemies using weapons with Arms Week Volatile Weapon mods."
+  },
+  "2086197492": {
+    "location": [
+      "The Last City"
+    ],
+    "effort": "quick",
+    "summary": "Inspect the Monument of Triumph in the Tower Courtyard."
+  },
+  "2087026461": {
+    "effort": "quick",
+    "summary": "Defeat 7 enemies with a single roaming-light super cast."
+  },
+  "2088123662": {
+    "location": [
+      "Savathûn's Throne World"
+    ],
+    "activityType": "Story",
+    "effort": "quick",
+    "summary": "Find the Drake Tank and kill all Abominations during The Cunning escape."
+  },
+  "2088326955": {
+    "effort": "quick",
+    "summary": "Join a clan."
+  },
+  "2093999292": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear Warlord's Ruin with a full fireteam of Arc subclasses."
+  },
+  "2103895054": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat opponents in Control or Eruption Crucible matches."
+  },
+  "2105117002": {
+    "activityType": "Dungeon",
+    "scope": "solo",
+    "effort": "grind",
+    "summary": "Solo-flawless every encounter in the Ghosts of the Deep dungeon."
+  },
+  "2105786548": {
+    "activityType": "Dungeon",
+    "effort": "moderate",
+    "summary": "Earn all trophies from the Duality dungeon."
+  },
+  "2107222771": {
+    "effort": "quick",
+    "summary": "Complete a Sparrow race on the Eternity track under a time threshold."
+  },
+  "2116827220": {
+    "activityType": "Iron Banner",
+    "effort": "grind",
+    "summary": "Defeat opponents in Iron Banner matches."
+  },
+  "2120297138": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete all Master-tier encounter challenges in King's Fall."
+  },
+  "2120411062": {
+    "location": [
+      "The Dreaming City"
+    ],
+    "effort": "quick",
+    "summary": "Defeat Tethys in Rheasilvia using the Telesto Exotic."
+  },
+  "2123018113": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear all Grasp of Avarice encounters with a full clanmate fireteam."
+  },
+  "2126152885": {
+    "effort": "moderate",
+    "summary": "Complete Dawning event challenges during the event."
+  },
+  "2126548397": {
+    "effort": "grind",
+    "summary": "Complete all Season of the Hunt flawless Triumphs."
+  },
+  "2129704137": {
+    "activityType": "Gambit",
+    "effort": "grind",
+    "summary": "As a Warlock, win Gambit matches and rack up kills and motes."
+  },
+  "2129873423": {
+    "activityType": "Exotic Mission",
+    "effort": "quick",
+    "summary": "Complete the Exotic mission Fire and Ice."
+  },
+  "2132515408": {
+    "effort": "grind",
+    "summary": "Collect Candy while a Candy perk is active on your mask."
+  },
+  "2134240709": {
+    "location": [
+      "Neomuna"
+    ],
+    "effort": "moderate",
+    "summary": "Harness Strand and complete Vex Incursion Zone public events on Neomuna."
+  },
+  "2136112864": {
+    "effort": "quick",
+    "summary": "Unlock the Eris II lore entry."
+  },
+  "2136112873": {
+    "effort": "quick",
+    "summary": "Unlock the Osiris I lore entry."
+  },
+  "2136112874": {
+    "effort": "quick",
+    "summary": "Unlock the Eris I lore entry."
+  },
+  "2136112875": {
+    "summary": "Unlocks a lore entry in the Martian Missives lore book."
+  },
+  "2136112876": {
+    "summary": "Unlocks a lore entry in the Martian Missives lore book."
+  },
+  "2136112877": {
+    "summary": "Unlocks a lore entry in the Martian Missives lore book."
+  },
+  "2136112878": {
+    "summary": "Unlocks a lore entry in the Martian Missives lore book."
+  },
+  "2136112879": {
+    "summary": "Unlocks a lore entry in the Martian Missives lore book."
+  },
+  "2174950046": {
+    "effort": "grind",
+    "summary": "Defeat targets and Guardians with Arc damage final blows anywhere."
+  },
+  "2185537801": {
+    "activityType": "Iron Banner",
+    "effort": "quick",
+    "summary": "Get two or more final blows in a single life in Iron Banner."
+  },
+  "2193413617": {
+    "location": [
+      "Savathûn's Throne World"
+    ],
+    "effort": "quick",
+    "summary": "Destroy a corruption in the Sepulcher then defeat Bar-Zel, Nine-Touched."
+  },
+  "2194860860": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete all encounters in The Desert Perpetual raid with Token Limit active."
+  },
+  "2199096960": {
+    "summary": "Unlock a Pathfinding lore entry."
+  },
+  "2199096961": {
+    "summary": "Unlock a Pathfinding lore entry."
+  },
+  "2199096963": {
+    "summary": "Unlock a Pathfinding lore entry."
+  },
+  "2199096966": {
+    "summary": "Unlock a Pathfinding lore entry."
+  },
+  "2199096967": {
+    "summary": "Unlock a Pathfinding lore entry."
+  },
+  "2199649643": {
+    "activityType": "Gambit",
+    "effort": "moderate",
+    "summary": "Complete matches, with bonus for using the Brig."
+  },
+  "2206124374": {
+    "activityType": "Gambit",
+    "effort": "grind",
+    "summary": "Defeat high-value targets from every enemy species in Gambit."
+  },
+  "2207811548": {
+    "effort": "moderate",
+    "summary": "Upgrade a crafted weapon to Gear Tier 5."
+  },
+  "2223855319": {
+    "location": [
+      "The Tangled Shore"
+    ],
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Complete the Warden of Nothing strike."
+  },
+  "2226302536": {
+    "effort": "grind",
+    "summary": "Complete any full set of world collectibles like Starcats or Jade Rabbits."
+  },
+  "2226626398": {
+    "effort": "grind",
+    "summary": "Complete all Season of the Worthy Grandmaster Triumphs."
+  },
+  "2236912686": {
+    "activityType": "Iron Banner",
+    "effort": "grind",
+    "summary": "Defeat opponents in Iron Banner."
+  },
+  "2237801267": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Expunge Ir Yût each round during her encounter in Crota's End."
+  },
+  "2238420633": {
+    "activityType": "Dungeon",
+    "effort": "quick",
+    "summary": "Find and listen to every Darkness memory in Ghosts of the Deep."
+  },
+  "2240189388": {
+    "effort": "moderate",
+    "summary": "Defeat combatants with Arc damage in Dares of Eternity using an Arc subclass."
+  },
+  "2243456358": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Earn team score competing in Control or Fortress."
+  },
+  "2254157453": {
+    "activityType": "Iron Banner",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Earn team score competing in the Iron Banner playlist."
+  },
+  "2254850328": {
+    "effort": "moderate",
+    "summary": "Complete matches in Arms Week: Hardware."
+  },
+  "2254850329": {
+    "effort": "grind",
+    "summary": "Defeat combatants with Shotguns, bonus in Solo Ops."
+  },
+  "2254850330": {
+    "effort": "grind",
+    "summary": "Defeat combatants with Shotguns, bonus in Fireteam Ops."
+  },
+  "2254850331": {
+    "effort": "grind",
+    "summary": "Defeat combatants with Shotguns, bonus in Crucible Ops."
+  },
+  "2254850332": {
+    "effort": "quick",
+    "summary": "Rapidly defeat multiple combatants using Shotguns."
+  },
+  "2254850333": {
+    "effort": "moderate",
+    "summary": "Deal final blows with a Shotgun."
+  },
+  "2254850334": {
+    "effort": "moderate",
+    "summary": "Defeat combatants with a Shotgun using a Volatile Weapon mod."
+  },
+  "2254850335": {
+    "effort": "moderate",
+    "summary": "Defeat combatants with a close-range Shotgun."
+  },
+  "2259681692": {
+    "activityType": "Dungeon",
+    "effort": "moderate",
+    "summary": "Obtain the Hierarchy of Needs Exotic Bow from Spire of the Watcher."
+  },
+  "2259810484": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Clear all Crota's End encounters with a full Solar-subclass fireteam."
+  },
+  "2261072187": {
+    "effort": "quick",
+    "summary": "Unlock the Shadebinder Warlock subclass."
+  },
+  "2262589114": {
+    "effort": "grind",
+    "summary": "Defeat combatants anywhere."
+  },
+  "2263679223": {
+    "effort": "grind",
+    "summary": "Complete all Renegades Triumphs."
+  },
+  "2269203216": {
+    "effort": "grind",
+    "summary": "Complete all Season of the Witch title Triumphs to earn Haruspex."
+  },
+  "2269500417": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Without dying, defeat 10 combatants using mid-range weapon classes."
+  },
+  "2284880502": {
+    "effort": "moderate",
+    "summary": "Complete all Season of the Worthy flawless Triumphs."
+  },
+  "2286712558": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Finish the Warden of Nothing Nightfall final boss without taking Solar damage."
+  },
+  "2291296465": {
+    "effort": "moderate",
+    "summary": "Complete Supremacy or Trials of Osiris matches, bonus for wins."
+  },
+  "2294998078": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat 10 combatants with Void damage."
+  },
+  "2297854589": {
+    "activityType": "Strike",
+    "effort": "moderate",
+    "summary": "Get 20 precision sniper kills in the Insight Terminus strike."
+  },
+  "2302594814": {
+    "location": [
+      "Neomuna"
+    ],
+    "activityType": "Dungeon",
+    "effort": "quick",
+    "summary": "Find all collectibles within the Spire of the Watcher dungeon."
+  },
+  "2302993504": {
+    "location": [
+      "Neomuna"
+    ],
+    "activityType": "Dungeon",
+    "summary": "Spire of the Watcher dungeon Triumph collection."
+  },
+  "2306002103": {
+    "activityType": "Gambit",
+    "effort": "grind",
+    "summary": "Reach the Mythic division rank in Gambit."
+  },
+  "2306092187": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear Grasp of Avarice encounters with a full Arc-subclass fireteam."
+  },
+  "2314301817": {
+    "location": [
+      "Nessus"
+    ],
+    "effort": "quick",
+    "summary": "Destroy a corruption in The Rift, then defeat Talas, Nine-Touched on Nessus."
+  },
+  "2321036253": {
+    "location": [
+      "The Pale Heart"
+    ],
+    "effort": "grind",
+    "summary": "Defeat Dread in the Pale Heart with Prismatic abilities or Tessellation."
+  },
+  "2326099425": {
+    "location": [
+      "The Dreaming City"
+    ],
+    "effort": "quick",
+    "summary": "Complete one of Petra's daily bounties in the Dreaming City."
+  },
+  "2333027731": {
+    "effort": "quick",
+    "summary": "Speak with Lodi in Eternity via Xûr's Treasure Hoard."
+  },
+  "2334737675": {
+    "effort": "moderate",
+    "summary": "Open Fallen chests in the Reclaim activity."
+  },
+  "2340496560": {
+    "summary": "Unlock a lore entry in The Immanent collection."
+  },
+  "2340496561": {
+    "summary": "Unlock a lore entry in The Immanent collection."
+  },
+  "2340496562": {
+    "summary": "Unlock a lore entry in The Immanent collection."
+  },
+  "2340496563": {
+    "summary": "Unlock a lore entry in The Immanent collection."
+  },
+  "2340496564": {
+    "summary": "Unlock a lore entry in The Immanent collection."
+  },
+  "2340496566": {
+    "summary": "Unlock a lore entry in The Immanent collection."
+  },
+  "2340496567": {
+    "summary": "Unlock a lore entry in The Immanent collection."
+  },
+  "2340496573": {
+    "summary": "Unlock a lore entry in The Immanent collection."
+  },
+  "2341794262": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Earn team score competing in Control or Tribute."
+  },
+  "2341906351": {
+    "location": [
+      "Savathûn's Throne World"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Beat the King's Fall Daughters encounter without anyone touching the ground."
+  },
+  "2345049669": {
+    "effort": "grind",
+    "summary": "Earn a cumulative score by completing weekly Reclaim activities."
+  },
+  "2349700589": {
+    "effort": "grind",
+    "summary": "Earn cookie ingredients from activities anywhere in the system."
+  },
+  "2352333314": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Defeat 20 combatants with long-range weapons without dying in playlist activities."
+  },
+  "2356964322": {
+    "effort": "quick",
+    "summary": "Unlock a Darkness lore entry from the Inspiral collection."
+  },
+  "2356964323": {
+    "effort": "quick",
+    "summary": "Unlock a Darkness lore entry from the Inspiral collection."
+  },
+  "2356964328": {
+    "effort": "quick",
+    "summary": "Unlock a Darkness lore entry from the Inspiral collection."
+  },
+  "2356964329": {
+    "effort": "quick",
+    "summary": "Unlock a Darkness lore entry from the Inspiral collection."
+  },
+  "2356964331": {
+    "effort": "quick",
+    "summary": "Unlock a Darkness lore entry from the Inspiral collection."
+  },
+  "2356964332": {
+    "effort": "quick",
+    "summary": "Unlock a Darkness lore entry from the Inspiral collection."
+  },
+  "2356964333": {
+    "effort": "quick",
+    "summary": "Unlock a Darkness lore entry from the Inspiral collection."
+  },
+  "2356964334": {
+    "effort": "quick",
+    "summary": "Unlock a Darkness lore entry from the Inspiral collection."
+  },
+  "2356964335": {
+    "effort": "quick",
+    "summary": "Unlock a Darkness lore entry from the Inspiral collection."
+  },
+  "2360044588": {
+    "effort": "moderate",
+    "summary": "Complete Rushdown activities."
+  },
+  "2367349989": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Unlock a Vanguard lore entry about enemies of humanity."
+  },
+  "2370033294": {
+    "effort": "moderate",
+    "summary": "Complete the Triumphs in the Combat: Targets category."
+  },
+  "2372577075": {
+    "location": [
+      "Kepler"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Defeat all four bosses to complete the Epic Desert Perpetual raid."
+  },
+  "2375418748": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Pass the Gold score threshold in a Guardian Games playlist activity."
+  },
+  "2376815632": {
+    "location": [
+      "Neomuna"
+    ],
+    "effort": "quick",
+    "summary": "Unlock a Cloud Strider Legacies lore entry on Neomuna."
+  },
+  "2376815634": {
+    "location": [
+      "Neomuna"
+    ],
+    "effort": "quick",
+    "summary": "Unlock a Cloud Strider Legacies lore entry on Neomuna."
+  },
+  "2376815635": {
+    "location": [
+      "Neomuna"
+    ],
+    "effort": "quick",
+    "summary": "Unlock a Cloud Strider Legacies lore entry on Neomuna."
+  },
+  "2376815636": {
+    "location": [
+      "Neomuna"
+    ],
+    "effort": "quick",
+    "summary": "Unlock a Cloud Strider Legacies lore entry on Neomuna."
+  },
+  "2376815637": {
+    "location": [
+      "Neomuna"
+    ],
+    "effort": "quick",
+    "summary": "Unlock a Cloud Strider Legacies lore entry on Neomuna."
+  },
+  "2376815638": {
+    "location": [
+      "Neomuna"
+    ],
+    "effort": "quick",
+    "summary": "Unlock a Cloud Strider Legacies lore entry on Neomuna."
+  },
+  "2376815639": {
+    "location": [
+      "Neomuna"
+    ],
+    "effort": "quick",
+    "summary": "Unlock a Cloud Strider Legacies lore entry on Neomuna."
+  },
+  "2376815641": {
+    "location": [
+      "Neomuna"
+    ],
+    "effort": "quick",
+    "summary": "Unlock a Cloud Strider Legacies lore entry on Neomuna."
+  },
+  "2388189655": {
+    "location": [
+      "The Leviathan"
+    ],
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete all Duality dungeon encounters with a full fireteam of clanmates."
+  },
+  "2390659185": {
+    "activityType": "Lost Sector",
+    "scope": "solo",
+    "effort": "moderate",
+    "summary": "Flawlessly solo any Expert Lost Sector."
+  },
+  "2400233569": {
+    "location": [
+      "Neomuna"
+    ],
+    "effort": "moderate",
+    "summary": "Collect trophies from Neomuna on Neptune."
+  },
+  "2408723191": {
+    "effort": "grind",
+    "summary": "Defeat combatants in Reclaim activities."
+  },
+  "2411018844": {
+    "location": [
+      "The Cosmodrome"
+    ],
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete the Grasp of Avarice dungeon on Master difficulty."
+  },
+  "2420530579": {
+    "effort": "grind",
+    "summary": "Collect candy during the Festival of the Lost event."
+  },
+  "2424611893": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Patrol",
+    "effort": "quick",
+    "summary": "Score or witness a perfect round of the Tire Game on the Moon."
+  },
+  "2426891225": {
+    "location": [
+      "Savathûn's Throne World"
+    ],
+    "activityType": "Patrol",
+    "effort": "quick",
+    "summary": "Find the hidden Imbaru chest in the Queen's Bailey."
+  },
+  "2427781869": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Defeat 20 combatants with explosive weapons without dying."
+  },
+  "2437772104": {
+    "activityType": "Iron Banner",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Earn a team score in the Iron Banner playlist."
+  },
+  "2438176321": {
+    "activityType": "Dungeon",
+    "effort": "moderate",
+    "summary": "Find all ten Ahamkara bones in the Warlord's Ruin dungeon."
+  },
+  "2438784599": {
+    "location": [
+      "Savathûn's Throne World"
+    ],
+    "activityType": "Story",
+    "effort": "quick",
+    "summary": "Find the Solar Scythe in The Ghosts mission and defeat combatants with it."
+  },
+  "2438963468": {
+    "summary": "Spend a Reroll Chip to reroll something."
+  },
+  "2447841190": {
+    "effort": "moderate",
+    "summary": "Collect all Arms Week Volatile Weapon mods."
+  },
+  "2452164086": {
+    "activityType": "Patrol",
+    "effort": "quick",
+    "summary": "Destroy a vent during the Cabal Injection Rig public event."
+  },
+  "2457737465": {
+    "effort": "moderate",
+    "summary": "Complete the Arms Week reward track."
+  },
+  "2460046098": {
+    "effort": "moderate",
+    "summary": "Spend Combat Telemetry during Arms Week."
+  },
+  "2463962671": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat 15 combatants with Strand damage."
+  },
+  "2467484432": {
+    "activityType": "Gambit",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Win a Gambit match where one player deposits 50 Motes without losing any."
+  },
+  "2467982350": {
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete each Year 6 raid and dungeon for the 2023 raid patch."
+  },
+  "2470696733": {
+    "effort": "grind",
+    "summary": "Defeat targets with any Super, with bonus progress against Guardians."
+  },
+  "2470795250": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Defeat 10 combatants with explosive weapons without dying."
+  },
+  "2471809288": {
+    "effort": "grind",
+    "summary": "Defeat combatants using Bows, with bonus progress in Fireteam Ops."
+  },
+  "2471809289": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat combatants with Bows for bonus progress in Crucible."
+  },
+  "2471809290": {
+    "effort": "moderate",
+    "summary": "Complete matches in Arms Week: Hardware."
+  },
+  "2471809291": {
+    "scope": "solo",
+    "effort": "grind",
+    "summary": "Defeat combatants with Bows, with more progress in Solo Ops."
+  },
+  "2471809292": {
+    "effort": "grind",
+    "summary": "Defeat combatants with a Bow equipped with a Volatile Weapon mod."
+  },
+  "2471809293": {
+    "effort": "grind",
+    "summary": "Deal precision final blows with Bows."
+  },
+  "2471809294": {
+    "effort": "grind",
+    "summary": "Rapidly defeat multiple combatants with Bows."
+  },
+  "2471809295": {
+    "effort": "grind",
+    "summary": "Deal final blows with Bows."
+  },
+  "2472740040": {
+    "effort": "grind",
+    "summary": "Complete all Joker's Wild Triumphs."
+  },
+  "2481980211": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat 5 combatants with Void damage."
+  },
+  "2482004751": {
+    "effort": "grind",
+    "summary": "Complete all Beyond Light Triumphs."
+  },
+  "2487544289": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete all Crota's End encounters with a full fireteam of Arc subclasses."
+  },
+  "2489106733": {
+    "effort": "grind",
+    "summary": "Complete all Witch Queen Triumphs."
+  },
+  "2490679949": {
+    "activityType": "Strike",
+    "summary": "Account-wide directives category triumph for raids and dungeons."
+  },
+  "2499679097": {
+    "effort": "grind",
+    "summary": "Complete all Season of the Worthy triumphs."
+  },
+  "2502902092": {
+    "activityType": "Trials of Osiris",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Earn wins in Trials of Osiris while on a Lighthouse passage."
+  },
+  "2510627428": {
+    "activityType": "Patrol",
+    "effort": "moderate",
+    "summary": "Complete Distortion Breaches after public events on Distorted Destinations."
+  },
+  "2515834570": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Earn the Crucible ornament for the Chivalric Fire sword."
+  },
+  "2516325821": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear Grasp of Avarice encounters with a full Strand-subclass fireteam."
+  },
+  "2518615106": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the Equilibrium dungeon with the Battalions feat active."
+  },
+  "2519069859": {
+    "activityType": "Story",
+    "effort": "quick",
+    "summary": "Defeat 52 combatants with Ace of Spades, then finish the Cayde's Fate mission."
+  },
+  "2519699290": {
+    "effort": "quick",
+    "summary": "Earn your first Festival of the Lost mask upgrade."
+  },
+  "2519881105": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "summary": "Collection of trophies from the Ghosts of the Deep dungeon."
+  },
+  "2535608645": {
+    "activityType": "Gambit",
+    "effort": "grind",
+    "summary": "Defeat combatants with hand cannons in Gambit."
+  },
+  "2546951240": {
+    "effort": "quick",
+    "summary": "Get multiple hand cannon precision final blows in a single life."
+  },
+  "2547616574": {
+    "location": [
+      "The Pale Heart"
+    ],
+    "activityType": "Exotic Mission",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the Dual Destiny exotic mission within a time limit."
+  },
+  "2548055997": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat 5 combatants with Strand damage."
+  },
+  "2556494539": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Capture zones in Control or become Surging in Eruption."
+  },
+  "2559649243": {
+    "effort": "moderate",
+    "summary": "Earn Dawning Spirit during the Dawning event."
+  },
+  "2563595194": {
+    "effort": "grind",
+    "summary": "Bake a cookie with each Dawning recipe."
+  },
+  "2569070679": {
+    "location": [
+      "The European Dead Zone"
+    ],
+    "effort": "quick",
+    "summary": "Defeat any Servitor boss in the EDZ."
+  },
+  "2572383496": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete Crota's End without dying or leaving the activity."
+  },
+  "2579096068": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete King's Fall and all encounter challenges within 24 hours of launch."
+  },
+  "2579161965": {
+    "effort": "moderate",
+    "summary": "Complete objectives in Reclaim activities."
+  },
+  "2579885968": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat 10 combatants with Arc damage."
+  },
+  "2584970263": {
+    "effort": "grind",
+    "summary": "Complete all Shadowkeep triumphs."
+  },
+  "2592624121": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat 10 combatants with Stasis damage."
+  },
+  "2596816806": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat 15 combatants with Solar damage."
+  },
+  "2604627899": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat Guardians in the Crucible with scout rifles."
+  },
+  "2617096704": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete Spire of the Watcher with a full Stasis-subclass fireteam."
+  },
+  "2624728885": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Dungeon",
+    "effort": "quick",
+    "summary": "Defeat Zulmak with a Hive Sword in Pit of Heresy."
+  },
+  "2629938090": {
+    "summary": "Unlock a lore entry in the Sintering collection."
+  },
+  "2636323743": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete Spire of the Watcher with a full Strand-subclass fireteam."
+  },
+  "2637144481": {
+    "effort": "moderate",
+    "summary": "Complete the Triumphs grouped under the Worlds: Vistas category."
+  },
+  "2647262827": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Without dying, defeat 30 combatants using long-range weapons in strikes."
+  },
+  "2648719098": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete any raid or dungeon on Master difficulty."
+  },
+  "2657312911": {
+    "location": [
+      "The Cosmodrome",
+      "The Moon"
+    ],
+    "activityType": "Patrol",
+    "effort": "quick",
+    "summary": "Dunk an Arc charge during a Fallen Walker public event."
+  },
+  "2659238005": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete all Desert Perpetual Epic raid encounters with feats active."
+  },
+  "2675172285": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the Teamwork: Dungeon Challenges Triumph category."
+  },
+  "2689013202": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Pass the Bronze score threshold in a Guardian Games playlist activity."
+  },
+  "2691582271": {
+    "effort": "moderate",
+    "summary": "Deliver Dawning gift cookies to various vendors."
+  },
+  "2692915060": {
+    "effort": "moderate",
+    "summary": "Gather lore stories from the Epochs & Orbits collection."
+  },
+  "2693589427": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete Grasp of Avarice dungeon as a fireteam without dying."
+  },
+  "2718707885": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete 3v3 Rotator Crucible matches."
+  },
+  "2720300694": {
+    "effort": "moderate",
+    "summary": "Reclaim lost territories for humanity across activities."
+  },
+  "2730634807": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete the Desert Perpetual raid without any fireteam death or orbit return."
+  },
+  "2744037442": {
+    "effort": "moderate",
+    "summary": "Complete Rushdown activities."
+  },
+  "2744217343": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat 5 combatants with Arc damage."
+  },
+  "2750566120": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete Duality dungeon with a full fireteam of Stasis subclasses."
+  },
+  "2756328801": {
+    "location": [
+      "The Dreaming City"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the Last Wish raid badge in Collections to claim this Triumph."
+  },
+  "2757330809": {
+    "activityType": "Gambit",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Win Gambit matches by topping motes banked, survival, or damage."
+  },
+  "2758399574": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete the Desert Perpetual Epic raid within 48 hours of release."
+  },
+  "2780814366": {
+    "activityType": "Strike",
+    "effort": "grind",
+    "summary": "Land precision kills, generate orbs, and complete strikes and Nightfalls."
+  },
+  "2789964551": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "As a Hunter, win Crucible matches and rack up kills, Supers, and orbs."
+  },
+  "2796658869": {
+    "effort": "grind",
+    "summary": "Complete all Season of the Splicer Triumphs."
+  },
+  "2797594178": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Tenets of AION collection."
+  },
+  "2797594179": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Tenets of AION collection."
+  },
+  "2797594184": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Tenets of AION collection."
+  },
+  "2797594185": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Tenets of AION collection."
+  },
+  "2797594186": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Tenets of AION collection."
+  },
+  "2797594188": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Tenets of AION collection."
+  },
+  "2797594189": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Tenets of AION collection."
+  },
+  "2797594190": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Tenets of AION collection."
+  },
+  "2797594191": {
+    "effort": "quick",
+    "summary": "Collect a lore book entry."
+  },
+  "2812041010": {
+    "effort": "grind",
+    "summary": "Earn Dawning ingredients from activities across the system to bake cookies."
+  },
+  "2812174196": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Defeat a powerful combatant with a finisher."
+  },
+  "2813574787": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete Ghosts of the Deep with a full fireteam all on Stasis subclasses."
+  },
+  "2813579642": {
+    "effort": "moderate",
+    "summary": "Complete matches, with bonus progress for using the Brig."
+  },
+  "2814649275": {
+    "location": [
+      "Dreadnaught"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Defeat Oryx in King's Fall while wielding Touch of Malice."
+  },
+  "2820906305": {
+    "activityType": "Exotic Mission",
+    "effort": "quick",
+    "summary": "Solve all three vault puzzles in the Zero Hour exotic mission."
+  },
+  "2824023915": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Win matches across different Crucible gametypes."
+  },
+  "2826165357": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat opponents holding Zone Advantage in Control or with abilities in Eruption."
+  },
+  "2829170247": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete the Pantheon: Insurrection Prime Revolutionary boss gauntlet."
+  },
+  "2830411595": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete any version of The Desert Perpetual raid."
+  },
+  "2833939184": {
+    "effort": "grind",
+    "summary": "Complete the Worlds: Treasure Hunting triumph category."
+  },
+  "2837864261": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat opponents holding Zone Advantage or neutralize zones in Fortress."
+  },
+  "2838167408": {
+    "effort": "quick",
+    "summary": "Unlock the Nightstalker Hunter subclass."
+  },
+  "2840536766": {
+    "location": [
+      "Dreadnaught"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the Gaze Amaze challenge mode in King's Fall."
+  },
+  "2855299547": {
+    "effort": "grind",
+    "summary": "Reach maximum rank with a Syndicate."
+  },
+  "2855838855": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete all Desert Perpetual encounters with Encounter Challenges active."
+  },
+  "2857791135": {
+    "effort": "moderate",
+    "summary": "Complete Snowball Fight matches during the Dawning."
+  },
+  "2859192412": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat three combatants frozen by Stasis."
+  },
+  "2861207630": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat three combatants with melee final blows."
+  },
+  "2867829930": {
+    "activityType": "Gambit",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Win a Gambit match summoning only medium Blockers."
+  },
+  "2870934347": {
+    "activityType": "Dungeon",
+    "effort": "moderate",
+    "summary": "Complete all Equilibrium encounters with the Phase Race feat active."
+  },
+  "2873177587": {
+    "effort": "quick",
+    "summary": "Feed Starhorse."
+  },
+  "2873226773": {
+    "location": [
+      "The Last City"
+    ],
+    "effort": "quick",
+    "summary": "Complete an Armor Synthesis bounty from Ada-1 in the Tower."
+  },
+  "2882895988": {
+    "activityType": "Iron Banner",
+    "effort": "quick",
+    "summary": "Deal two or more final blows in a single life in Iron Banner."
+  },
+  "2888692510": {
+    "effort": "moderate",
+    "summary": "Bake cookies in the Dawning Oven."
+  },
+  "2889189256": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "summary": "Category grouping triumphs for the Root of Nightmares raid."
+  },
+  "2895063261": {
+    "effort": "quick",
+    "summary": "Spend a reroll chip to reroll."
+  },
+  "2905044529": {
+    "activityType": "Dungeon",
+    "scope": "solo",
+    "effort": "grind",
+    "summary": "Complete all Warlord's Ruin encounters solo without leaving the activity."
+  },
+  "2905301155": {
+    "effort": "moderate",
+    "summary": "Collect fallen allies' coins."
+  },
+  "2905981236": {
+    "activityType": "Strike",
+    "effort": "moderate",
+    "summary": "Defeat 30 combatants with grenade or rocket launchers without dying for Vanguard medals."
+  },
+  "2911634139": {
+    "summary": "Reclaim lost territory areas."
+  },
+  "2913687800": {
+    "summary": "Unlock a lore entry."
+  },
+  "2949079885": {
+    "location": [
+      "Europa"
+    ],
+    "summary": "Collect trophies tied to Europa for the Beyond Light title."
+  },
+  "2956150176": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Defeat combatants with Void damage in the Haunted Altars of Sorrow event activity."
+  },
+  "2956150177": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Purchase defense upgrades in the Haunted Altars of Sorrow activity."
+  },
+  "2956150184": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Deposit treats at the altar in the Haunted Altars of Sorrow activity."
+  },
+  "2956150185": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Survive waves of combatants in Haunted Altars of Sorrow."
+  },
+  "2956150186": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Defeat Headless One bosses in the Haunted Altars of Sorrow activity."
+  },
+  "2956150187": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Defeat the miniboss creatures rushing the altar in Haunted Altars of Sorrow."
+  },
+  "2956150188": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Buy defenses with treats during the Haunted Altars of Sorrow activity."
+  },
+  "2956150189": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Throw Gourd Grenades in Haunted Altars of Sorrow or against enemy Guardians."
+  },
+  "2956150190": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "moderate",
+    "summary": "Destroy Void crystals during the Haunted Altars of Sorrow activity."
+  },
+  "2956150191": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "grind",
+    "summary": "Defeat combatants in Haunted Altars of Sorrow or Guardians elsewhere."
+  },
+  "2963918856": {
+    "activityType": "Dungeon",
+    "summary": "Complete objectives in the Sundered Doctrine dungeon."
+  },
+  "2964948820": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Defeat Guardians with grenade launchers and submachine guns in Crucible."
+  },
+  "2966008051": {
+    "location": [
+      "The Cosmodrome"
+    ],
+    "activityType": "Exotic Mission",
+    "effort": "moderate",
+    "summary": "Complete the Zero Hour exotic mission without dying."
+  },
+  "2966228227": {
+    "location": [
+      "Neomuna"
+    ],
+    "effort": "moderate",
+    "summary": "Purchase all Strand aspects, fragments, and abilities at the Pouka Pond on Neomuna."
+  },
+  "2967969114": {
+    "activityType": "Strike",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Complete the Liminality strike with No HUD modifier on Advanced or higher."
+  },
+  "2969029761": {
+    "location": [
+      "The Last City"
+    ],
+    "effort": "grind",
+    "summary": "Bank Medallions at the Tower podium to raise class standing."
+  },
+  "2969941647": {
+    "location": [
+      "The Cosmodrome"
+    ],
+    "activityType": "Exotic Mission",
+    "effort": "moderate",
+    "summary": "Survive the maze and reach the Cryptarch vault in Zero Hour without dying."
+  },
+  "2977359388": {
+    "activityType": "Iron Banner",
+    "effort": "moderate",
+    "summary": "Achieve a B+ or higher performance grade in the Iron Banner playlist."
+  },
+  "2980025326": {
+    "effort": "grind",
+    "summary": "Collect all seven Call to Arms attuned weapons."
+  },
+  "2980266417": {
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete all Season of Arrivals Grandmaster triumphs."
+  },
+  "2983818404": {
+    "effort": "moderate",
+    "summary": "Earn an A grade in Fireteam or Pinnacle Ops with a Volatile Weapon mod equipped."
+  },
+  "2983877236": {
+    "activityType": "Story",
+    "effort": "quick",
+    "summary": "Use the Interceptor vehicle to defeat combatants in the Imperium campaign mission."
+  },
+  "2991743002": {
+    "effort": "grind",
+    "summary": "Complete all Season of the Lost triumphs."
+  },
+  "3004245718": {
+    "location": [
+      "Europa"
+    ],
+    "effort": "grind",
+    "summary": "On Europa, defeat Vex with Void abilities or the Choir of One exotic."
+  },
+  "3004879830": {
+    "effort": "moderate",
+    "summary": "Complete Rushdown event activities."
+  },
+  "3006836031": {
+    "location": [
+      "Mars"
+    ],
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete all Spire of the Watcher dungeon encounters with a full clanmate fireteam."
+  },
+  "3014421316": {
+    "activityType": "Strike",
+    "effort": "moderate",
+    "summary": "Defeat 20 combatants with close-range weapons without dying."
+  },
+  "3021677923": {
+    "location": [
+      "The Cosmodrome",
+      "Mars",
+      "Mercury",
+      "Venus"
+    ],
+    "effort": "moderate",
+    "summary": "Complete Sparrow Racing League laps with excellent times across several tracks."
+  },
+  "3023886427": {
+    "activityType": "Iron Banner",
+    "effort": "quick",
+    "summary": "Deal two or more final blows in a single life in Iron Banner."
+  },
+  "3026159410": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Capture Control zones or become Surging in Eruption."
+  },
+  "3028275595": {
+    "location": [
+      "The Last City"
+    ],
+    "effort": "moderate",
+    "summary": "Purchase all Fragments of Light from Ikora in the Tower."
+  },
+  "3032670544": {
+    "activityType": "Iron Banner",
+    "effort": "moderate",
+    "summary": "Collect leaders' coins in Iron Banner's Heavy Metal mode."
+  },
+  "3034652948": {
+    "activityType": "Strike",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete six different Grandmaster Nightfall strikes."
+  },
+  "3046325659": {
+    "activityType": "Patrol",
+    "effort": "grind",
+    "summary": "Open chests and collect materials across the Lawless Frontier."
+  },
+  "3047534189": {
+    "effort": "grind",
+    "summary": "Complete all Episode: Revenant Triumphs for the Slayer Baron title."
+  },
+  "3047702042": {
+    "location": [
+      "Dreadnaught"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete any version of the King's Fall raid."
+  },
+  "3049052271": {
+    "activityType": "Story",
+    "effort": "grind",
+    "summary": "Complete all Renegades campaign missions on Legendary difficulty."
+  },
+  "3052006695": {
+    "activityType": "Iron Banner",
+    "effort": "grind",
+    "summary": "Complete matches in the Iron Banner playlist."
+  },
+  "3056675381": {
+    "effort": "grind",
+    "summary": "Complete event Triumphs during the Solstice event."
+  },
+  "3064133018": {
+    "location": [
+      "Mercury"
+    ],
+    "activityType": "Trials of Osiris",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Earn all weekly win streak rewards from the Lighthouse."
+  },
+  "3064332247": {
+    "effort": "grind",
+    "summary": "Defeat targets with Stasis damage, bonus for Guardians."
+  },
+  "3065247799": {
+    "effort": "grind",
+    "summary": "Complete Triumphs in the Stories: Allies category."
+  },
+  "3066731810": {
+    "effort": "grind",
+    "summary": "Defeat targets with Stasis damage."
+  },
+  "3078270667": {
+    "effort": "grind",
+    "summary": "Defeat combatants with Hand Cannon precision final blows."
+  },
+  "3089570959": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear Grasp of Avarice with a full fireteam of Void subclasses."
+  },
+  "3096041900": {
+    "effort": "grind",
+    "summary": "Defeat bosses in the Rushdown activity."
+  },
+  "3096262928": {
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Defeat combatants with Praxic Blades then complete a Lawless Frontier activity."
+  },
+  "3097916612": {
+    "location": [
+      "Savathûn's Throne World"
+    ],
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete Duality dungeon Triumphs to unlock the Title."
+  },
+  "3100783191": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat Guardians in the Crucible with any Sidearm."
+  },
+  "3110109247": {
+    "effort": "grind",
+    "summary": "Complete all Master difficulty Conquests from the Seasonal Hub."
+  },
+  "3110856053": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Complete matches in the Arms Week: Hardware playlist."
+  },
+  "3114091710": {
+    "effort": "quick",
+    "summary": "Complete a Master dungeon, raid, or Portal Ops with a Volatile Weapon mod."
+  },
+  "3125587741": {
+    "scope": "solo",
+    "effort": "grind",
+    "summary": "Defeat combatants with Hand Cannons, more progress in Solo Ops."
+  },
+  "3137935313": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete Triumphs for The Pantheon activity."
+  },
+  "3147255355": {
+    "location": [
+      "Dreadnaught"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete all King's Fall encounters with a full fireteam of Void subclasses."
+  },
+  "3152364228": {
+    "effort": "moderate",
+    "summary": "Collect targets' coins in an activity."
+  },
+  "3152385520": {
+    "effort": "quick",
+    "summary": "Complete an activity using only Swords or Glaives and defeat 50 combatants with them."
+  },
+  "3155244420": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Earn points in any Crucible playlist while using an Arc or Void subclass."
+  },
+  "3163902713": {
+    "effort": "quick",
+    "summary": "Complete the Reclaim activity."
+  },
+  "3166190369": {
+    "effort": "quick",
+    "summary": "Complete 5 Triumphs to earn a Bungie.net store token."
+  },
+  "3168403926": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear all Grasp of Avarice encounters with a full fireteam of Stasis subclasses."
+  },
+  "3169895614": {
+    "effort": "grind",
+    "summary": "Complete all Season of Arrivals Triumphs."
+  },
+  "3173292203": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Collect all Raider's Effigies across every dungeon activity."
+  },
+  "3175660257": {
+    "effort": "grind",
+    "summary": "Complete 26 of 30 feats of strength for Moments of Triumph 2023."
+  },
+  "3185495164": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry."
+  },
+  "3185495165": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry."
+  },
+  "3185495166": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry."
+  },
+  "3187362676": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear all Ghosts of the Deep encounters with a full fireteam of the same class."
+  },
+  "3189977160": {
+    "effort": "moderate",
+    "summary": "Gather lore stories for the Old Chicago recovered-materials collection."
+  },
+  "3191912777": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the Hands Off challenge mode in King's Fall."
+  },
+  "3193814626": {
+    "effort": "moderate",
+    "summary": "Earn the Exotic Sidearm Forerunner."
+  },
+  "3198225435": {
+    "effort": "moderate",
+    "summary": "Complete Event Challenges during the Arms Week event."
+  },
+  "3200086269": {
+    "effort": "moderate",
+    "summary": "Beat each Wheel of Adversity challenge in Dares of Eternity on Expert."
+  },
+  "3200960029": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear all Duality encounters with a full fireteam of the same class."
+  },
+  "3202440564": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear all Ghosts of the Deep encounters with a full fireteam of Arc subclasses."
+  },
+  "3205187101": {
+    "effort": "quick",
+    "summary": "Get multiple Hand Cannon precision final blows in a single life."
+  },
+  "3208678441": {
+    "location": [
+      "The Dreaming City"
+    ],
+    "effort": "quick",
+    "summary": "Find a scenic vista spot in The Strand in the Dreaming City."
+  },
+  "3219050304": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry."
+  },
+  "3219050305": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry."
+  },
+  "3219050307": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry."
+  },
+  "3219050308": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry."
+  },
+  "3219050309": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry."
+  },
+  "3219050310": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry."
+  },
+  "3219050311": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry."
+  },
+  "3219050314": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry."
+  },
+  "3219050315": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry."
+  },
+  "3224427364": {
+    "summary": "Collect coins dropped by allies."
+  },
+  "3230382654": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Defeat bosses across Pantheon raid-boss-gauntlet activities."
+  },
+  "3230611489": {
+    "activityType": "Iron Banner",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete matches in the Iron Banner playlist."
+  },
+  "3235828016": {
+    "summary": "Unlock a lore chapter in the Tales of the Forgotten collection."
+  },
+  "3235828017": {
+    "summary": "Unlock a Ghost Den lore entry."
+  },
+  "3235828018": {
+    "summary": "Unlock a lore chapter in the Tales of the Forgotten collection."
+  },
+  "3235828019": {
+    "summary": "Unlock a Ghost Den lore entry."
+  },
+  "3235828020": {
+    "summary": "Unlock a lore chapter in the Tales of the Forgotten collection."
+  },
+  "3235828021": {
+    "summary": "Unlock a Ghost Den lore entry."
+  },
+  "3235828022": {
+    "summary": "Unlock a lore chapter in the Tales of the Forgotten collection."
+  },
+  "3235828023": {
+    "summary": "Unlock a Ghost Den lore entry."
+  },
+  "3235828028": {
+    "summary": "Unlock a lore chapter in the Tales of the Forgotten collection."
+  },
+  "3235828029": {
+    "summary": "Unlock a Ghost Den lore entry."
+  },
+  "3241396275": {
+    "activityType": "Strike",
+    "summary": "Unlock Vanguard-related lore about the leaders who guide us."
+  },
+  "3244099165": {
+    "effort": "moderate",
+    "summary": "Complete the seasonal Event Track in the Event Home."
+  },
+  "3247637802": {
+    "effort": "quick",
+    "summary": "Acquire the base Renegade abilities."
+  },
+  "3249408038": {
+    "effort": "grind",
+    "summary": "Complete 28 of 30 Moments of Triumph 2022 feats."
+  },
+  "3260669767": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear the Duality dungeon with a full Strand-subclass fireteam."
+  },
+  "3270112463": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Win a Competitive Promotion Series to advance a Division."
+  },
+  "3271515791": {
+    "scope": "fireteam",
+    "summary": "Defeat targets as a team during a match."
+  },
+  "3285170890": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Defeat Guardians in Crucible with rocket launchers."
+  },
+  "3286558684": {
+    "effort": "moderate",
+    "summary": "Bank medallions at the Tower podium for class standing."
+  },
+  "3293215595": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Clear King's Fall Warpriest rotating the Brand fairly among players."
+  },
+  "3296185116": {
+    "activityType": "Strike",
+    "summary": "Defeat a Champion to earn a Vanguard medal."
+  },
+  "3298130972": {
+    "effort": "grind",
+    "summary": "Complete all Flawless triumphs."
+  },
+  "3315095100": {
+    "location": [
+      "The Pale Heart"
+    ],
+    "effort": "grind",
+    "summary": "Complete all The Final Shape triumphs."
+  },
+  "3318000699": {
+    "summary": "Collect coins dropped by defeated targets."
+  },
+  "3320998870": {
+    "activityType": "Strike",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete the Teamwork Strikes and Battlegrounds triumph category."
+  },
+  "3326449249": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear all encounters of The Desert Perpetual with the Battalions feat active."
+  },
+  "3331074127": {
+    "effort": "moderate",
+    "summary": "Complete Portal activities with a Solstice modifier active."
+  },
+  "3337964454": {
+    "activityType": "Gambit",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete Gambit matches, with wins giving bonus progress."
+  },
+  "3358913961": {
+    "location": [
+      "Savathûn's Throne World"
+    ],
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear the Ghosts of the Deep dungeon with a full Solar-subclass fireteam."
+  },
+  "3364492516": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat Guardians in Crucible using Grenade Launchers."
+  },
+  "3365965687": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Earn team score competing in Control or Fortress."
+  },
+  "3367991219": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Complete Arms Week: Hardware matches, with wins granting extra progress."
+  },
+  "3373762662": {
+    "effort": "quick",
+    "summary": "Collect allies' coins."
+  },
+  "3374513873": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat nine combatants with precision damage."
+  },
+  "3384926888": {
+    "location": [
+      "Europa"
+    ],
+    "activityType": "Story",
+    "effort": "quick",
+    "summary": "Destroy a corruption in the Concealed Void on Europa, then defeat Teliks."
+  },
+  "3385103507": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Earn trophies from The Desert Perpetual raid."
+  },
+  "3387118902": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat Guardians in Crucible using Fusion Rifles."
+  },
+  "3388215749": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the Master tier of the King's Fall raid."
+  },
+  "3402032811": {
+    "activityType": "Strike",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Finish a Guardian Games playlist activity with no fireteam deaths."
+  },
+  "3422590101": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Use Shadow Power to defeat 20 combatants in the Dredgen Sere encounter."
+  },
+  "3426903784": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat combatants with Hand Cannons, with bonus progress in Crucible Ops."
+  },
+  "3428142544": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Chirality collection."
+  },
+  "3428142545": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Chirality collection."
+  },
+  "3428142546": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Chirality collection."
+  },
+  "3428142548": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Chirality collection."
+  },
+  "3428142549": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Chirality collection."
+  },
+  "3428142550": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Chirality collection."
+  },
+  "3428142551": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Chirality collection."
+  },
+  "3428142554": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Chirality collection."
+  },
+  "3428142555": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Chirality collection."
+  },
+  "3429376109": {
+    "effort": "quick",
+    "summary": "Unlock a lore entry in the Last Days collection."
+  },
+  "3444540518": {
+    "effort": "grind",
+    "summary": "Deliver baked cookies to vendors during the Dawning event."
+  },
+  "3447671362": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Finish a Guardian Games playlist activity with a Platinum Tier score."
+  },
+  "3455875964": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the Devious Thievery challenge mode in King's Fall."
+  },
+  "3464145993": {
+    "activityType": "Gambit",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete Triumphs in the Competitions: Gambit category."
+  },
+  "3464275895": {
+    "activityType": "Strike",
+    "effort": "grind",
+    "summary": "Complete all Grandmaster Triumphs."
+  },
+  "3470726340": {
+    "activityType": "Iron Banner",
+    "effort": "grind",
+    "summary": "Defeat Guardians in Iron Banner, with bonus for precision blows."
+  },
+  "3471006836": {
+    "effort": "grind",
+    "summary": "Collect Dark Matter Crystals to upgrade the Praxic Blade in Renegades."
+  },
+  "3474221237": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Without dying, defeat ten combatants using long-range weapons."
+  },
+  "3475888069": {
+    "activityType": "Dungeon",
+    "effort": "moderate",
+    "summary": "Earn the Exotic Sword Heartshadow from the Duality dungeon."
+  },
+  "3478494658": {
+    "activityType": "Dungeon",
+    "effort": "moderate",
+    "summary": "Earn the Exotic Bow Heirloom from the Equilibrium dungeon."
+  },
+  "3481840232": {
+    "activityType": "Gambit",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Defeat Primeval envoys during Gambit matches."
+  },
+  "3496948359": {
+    "effort": "quick",
+    "summary": "Rapidly defeat multiple combatants with Hand Cannons."
+  },
+  "3498537948": {
+    "effort": "grind",
+    "summary": "Defeat combatants with precision final blows using Hand Cannons."
+  },
+  "3498814024": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Complete an activity with an Artifact holding seven perks equipped."
+  },
+  "3499574820": {
+    "effort": "moderate",
+    "summary": "Complete Event Challenges during the Heavy Metal event."
+  },
+  "3503942506": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear Grasp of Avarice with a full fireteam of Solar subclasses."
+  },
+  "3507453769": {
+    "effort": "quick",
+    "summary": "Defeat multiple targets without dying during Heavy Metal."
+  },
+  "3516137177": {
+    "effort": "moderate",
+    "summary": "Gather Aionian lore stories during Dusk and Dawn."
+  },
+  "3525041909": {
+    "activityType": "Dungeon",
+    "effort": "moderate",
+    "summary": "Earn the Buried Bloodline Exotic from the Warlord's Ruin dungeon."
+  },
+  "3525486243": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat Guardians in the Crucible using Hand Cannons."
+  },
+  "3526555351": {
+    "effort": "moderate",
+    "summary": "Bank Medallions at the Tower podium to raise class standing."
+  },
+  "3539714738": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear King's Fall encounters with a full fireteam of Stasis subclasses."
+  },
+  "3551483856": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat opponents during Zone Advantage in Control or with abilities in Eruption."
+  },
+  "3554166568": {
+    "effort": "moderate",
+    "summary": "Complete the Reclaim activity multiple times."
+  },
+  "3554262525": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Earn team score competing in Control or Eruption matches."
+  },
+  "3557539543": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat ten combatants with Solar damage."
+  },
+  "3559052610": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete a Pantheon encounter with the Token Limit feat active."
+  },
+  "3560266818": {
+    "effort": "quick",
+    "summary": "Collect aspects for the Warlock Shadebinder subclass."
+  },
+  "3561230229": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear Spire of the Watcher with a full fireteam of Arc subclasses."
+  },
+  "3570567217": {
+    "effort": "grind",
+    "summary": "Complete all Season of the Deep title Triumphs for the Aquanaut title."
+  },
+  "3574126143": {
+    "effort": "quick",
+    "summary": "Fully upgrade an ability in Renegades."
+  },
+  "3574496878": {
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Defeat combatants with a vehicle as a fireteam in Reclaim activities."
+  },
+  "3581224713": {
+    "activityType": "Gambit",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "As a fireteam, deposit sixty Motes at once in a Gambit match."
+  },
+  "3582661423": {
+    "location": [
+      "The Pale Heart"
+    ],
+    "effort": "quick",
+    "summary": "Find a scenic vista in the Lost City within the Pale Heart."
+  },
+  "3584441401": {
+    "activityType": "Dungeon",
+    "scope": "solo",
+    "effort": "grind",
+    "summary": "Complete all Ghosts of the Deep encounters solo without leaving."
+  },
+  "3588818798": {
+    "effort": "grind",
+    "summary": "Complete all 30th Anniversary Triumphs."
+  },
+  "3604299321": {
+    "location": [
+      "The European Dead Zone"
+    ],
+    "activityType": "Patrol",
+    "effort": "moderate",
+    "summary": "Defeat combatants with an Interceptor vehicle in the EDZ."
+  },
+  "3606343935": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat 9 combatants using Primary ammo weapons."
+  },
+  "3610349332": {
+    "location": [
+      "Mars"
+    ],
+    "activityType": "Dungeon",
+    "effort": "quick",
+    "summary": "Find and listen to all devilish recordings in Spire of the Watcher."
+  },
+  "3617341553": {
+    "effort": "grind",
+    "summary": "Earn Dawning Essence during the Dawning event."
+  },
+  "3621532773": {
+    "location": [
+      "The European Dead Zone"
+    ],
+    "activityType": "Patrol",
+    "scope": "solo",
+    "effort": "quick",
+    "summary": "Find a scenic vista spot in the Dark Forest in the EDZ."
+  },
+  "3623734410": {
+    "effort": "grind",
+    "summary": "Complete 14 Triumphs to earn the 2023 Moments of Triumph Ghost shell."
+  },
+  "3628049739": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat 3 combatants with Super abilities."
+  },
+  "3632054466": {
+    "effort": "grind",
+    "summary": "Complete Triumphs across different categories for the Monument of Triumph."
+  },
+  "3636219447": {
+    "location": [
+      "The Cosmodrome"
+    ],
+    "activityType": "Story",
+    "scope": "solo",
+    "effort": "quick",
+    "summary": "Open Maeve's stash near Shaw Han in the Cosmodrome."
+  },
+  "3640619179": {
+    "location": [
+      "The Cosmodrome",
+      "The European Dead Zone"
+    ],
+    "activityType": "Patrol",
+    "effort": "quick",
+    "summary": "Destroy a Glimmer refiner during a Fallen Glimmer Extraction public event."
+  },
+  "3641037667": {
+    "location": [
+      "The Moon"
+    ],
+    "effort": "quick",
+    "summary": "Deposit treats at the altar during the Haunted Altars of Sorrow activity."
+  },
+  "3642623255": {
+    "effort": "moderate",
+    "summary": "Complete event Triumphs during the Call to Arms event."
+  },
+  "3642657378": {
+    "effort": "grind",
+    "summary": "Defeat targets with Heavy ammo weapons, bonus for Micromort rocket launcher."
+  },
+  "3642657379": {
+    "effort": "grind",
+    "summary": "Defeat targets with Special ammo weapons, bonus for Action Item trace rifle."
+  },
+  "3642657380": {
+    "effort": "grind",
+    "summary": "Defeat targets with Special ammo weapons, bonus for The Heron glaive."
+  },
+  "3642657381": {
+    "effort": "grind",
+    "summary": "Defeat targets with Primary ammo weapons, bonus for King Orfeo bow."
+  },
+  "3642657382": {
+    "effort": "grind",
+    "summary": "Defeat targets with Special ammo weapons, bonus for Gizmo Weft grenade launcher."
+  },
+  "3645084861": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat 6 combatants with Strand Tangles, Threadlings, or Unraveling."
+  },
+  "3645718200": {
+    "effort": "moderate",
+    "summary": "Defeat combatants with a Shotgun running a Volatile Weapon mod."
+  },
+  "3645718201": {
+    "effort": "moderate",
+    "summary": "Defeat combatants with a close-range Shotgun."
+  },
+  "3645718202": {
+    "effort": "moderate",
+    "summary": "Rapidly defeat multiple combatants using Shotguns."
+  },
+  "3645718203": {
+    "effort": "moderate",
+    "summary": "Deal final blows with a Shotgun."
+  },
+  "3645718204": {
+    "effort": "moderate",
+    "summary": "Defeat combatants with Shotguns, bonus progress in Fireteam Ops."
+  },
+  "3645718205": {
+    "effort": "moderate",
+    "summary": "Defeat combatants with Shotguns, bonus progress in Crucible Ops."
+  },
+  "3645718206": {
+    "effort": "moderate",
+    "summary": "Complete matches in the Arms Week: Hardware event."
+  },
+  "3645718207": {
+    "scope": "solo",
+    "effort": "moderate",
+    "summary": "Defeat combatants with Shotguns, bonus progress in Solo Ops."
+  },
+  "3646306576": {
+    "effort": "moderate",
+    "summary": "Complete Event Challenges during the Guardian Games event."
+  },
+  "3665545491": {
+    "activityType": "Gambit",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Defeat invading enemy Guardians in Gambit matches."
+  },
+  "3666607158": {
+    "location": [
+      "Dreadnaught"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete all King's Fall encounters with a full Solar-subclass fireteam."
+  },
+  "3667438640": {
+    "effort": "moderate",
+    "summary": "Collect every Ghost scattered throughout the Renegades content."
+  },
+  "3668181374": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Analyze anchors to purge anomaly interference in the Epic Desert Perpetual raid."
+  },
+  "3673658750": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat six combatants using primary-ammo weapons in strikes."
+  },
+  "3674703185": {
+    "effort": "moderate",
+    "summary": "Spend Dawning Spirit currency during the Dawning event."
+  },
+  "3675266603": {
+    "location": [
+      "The Pale Heart"
+    ],
+    "effort": "grind",
+    "summary": "Defeat enemies in the Pale Heart with abilities while running Prismatic."
+  },
+  "3682719981": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Defeat opponents in Control or Eruption Crucible matches."
+  },
+  "3685101448": {
+    "location": [
+      "Dreadnaught"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Detonate enough bombs to trigger Oryx's last stand in one round."
+  },
+  "3688855296": {
+    "summary": "Unlock a collectible lore entry from Tales of the Forgotten."
+  },
+  "3688855297": {
+    "summary": "Unlock a collectible lore entry from Tales of the Forgotten."
+  },
+  "3688855305": {
+    "summary": "Unlock a collectible lore entry from Tales of the Forgotten."
+  },
+  "3688855306": {
+    "summary": "Unlock a collectible lore entry from Tales of the Forgotten."
+  },
+  "3688855307": {
+    "summary": "Unlock a collectible lore entry from Tales of the Forgotten."
+  },
+  "3688855308": {
+    "summary": "Unlock a collectible lore entry from Tales of the Forgotten."
+  },
+  "3688855309": {
+    "summary": "Unlock a collectible lore entry from Tales of the Forgotten."
+  },
+  "3688855310": {
+    "summary": "Unlock a collectible lore entry from Tales of the Forgotten."
+  },
+  "3688855311": {
+    "summary": "Unlock a collectible lore entry from Tales of the Forgotten."
+  },
+  "3692514386": {
+    "effort": "moderate",
+    "summary": "Complete bounty-hunting, smuggling, and sabotage objectives in the Lawless Frontier."
+  },
+  "3702810582": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Complete the Conservation of Energy challenge in the Crota's End raid."
+  },
+  "3703157870": {
+    "effort": "moderate",
+    "summary": "Collect Candy while a Candy perk is active on your Festival mask."
+  },
+  "3703297530": {
+    "effort": "quick",
+    "summary": "Finish a Sparrow Racing lap hitting every boost gate and place top three."
+  },
+  "3705633010": {
+    "summary": "Unlock a collectible lore entry from Tales of the Forgotten."
+  },
+  "3705633011": {
+    "summary": "Unlock a collectible lore entry from Tales of the Forgotten."
+  },
+  "3705633016": {
+    "summary": "Unlock a collectible lore entry from Tales of the Forgotten."
+  },
+  "3705633017": {
+    "summary": "Unlock a collectible lore entry from Tales of the Forgotten."
+  },
+  "3705633018": {
+    "summary": "Unlock a collectible lore entry from Tales of the Forgotten."
+  },
+  "3705633019": {
+    "summary": "Unlock a collectible lore entry from Tales of the Forgotten."
+  },
+  "3705633020": {
+    "summary": "Unlock a collectible lore entry from Tales of the Forgotten."
+  },
+  "3705633021": {
+    "summary": "Unlock a collectible lore entry from Tales of the Forgotten."
+  },
+  "3705633022": {
+    "summary": "Unlock a collectible lore entry from Tales of the Forgotten."
+  },
+  "3705633023": {
+    "summary": "Unlock a collectible lore entry from Tales of the Forgotten."
+  },
+  "3714519537": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Defeat 10 combatants with close-range weapons without dying."
+  },
+  "3718561848": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Complete Crucible matches, bonus for using the Behemoth subclass."
+  },
+  "3718971745": {
+    "activityType": "Dungeon",
+    "scope": "solo",
+    "effort": "grind",
+    "summary": "Solo flawless all encounters of the Grasp of Avarice dungeon."
+  },
+  "3722410600": {
+    "effort": "quick",
+    "summary": "Unlock a collectible lore entry in the Tales of the Forgotten book."
+  },
+  "3722410601": {
+    "effort": "quick",
+    "summary": "Unlock a collectible lore entry in the Tales of the Forgotten book."
+  },
+  "3722410602": {
+    "effort": "quick",
+    "summary": "Unlock a collectible lore entry in the Tales of the Forgotten book."
+  },
+  "3722410603": {
+    "effort": "quick",
+    "summary": "Unlock a collectible lore entry in the Tales of the Forgotten book."
+  },
+  "3722410604": {
+    "effort": "quick",
+    "summary": "Unlock a collectible lore entry in the Tales of the Forgotten book."
+  },
+  "3722410605": {
+    "effort": "quick",
+    "summary": "Unlock a collectible lore entry in the Tales of the Forgotten book."
+  },
+  "3722410606": {
+    "effort": "quick",
+    "summary": "Unlock a collectible lore entry in the Tales of the Forgotten book."
+  },
+  "3722410607": {
+    "effort": "quick",
+    "summary": "Unlock a collectible lore entry in the Tales of the Forgotten book."
+  },
+  "3726011289": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Pass the Silver score threshold in a Guardian Games playlist activity."
+  },
+  "3726088278": {
+    "activityType": "Iron Banner",
+    "effort": "moderate",
+    "summary": "Complete matches in the Iron Banner playlist."
+  },
+  "3727846184": {
+    "effort": "grind",
+    "summary": "Defeat targets with Special ammo weapons anywhere."
+  },
+  "3727846185": {
+    "effort": "grind",
+    "summary": "Defeat targets with Heavy ammo weapons anywhere."
+  },
+  "3727846189": {
+    "effort": "grind",
+    "summary": "Defeat targets with Special ammo weapons anywhere."
+  },
+  "3727846190": {
+    "effort": "grind",
+    "summary": "Defeat targets with Primary ammo weapons anywhere."
+  },
+  "3727846191": {
+    "effort": "grind",
+    "summary": "Defeat targets with Special ammo weapons anywhere."
+  },
+  "3730746991": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete The Desert Perpetual Epic raid with no deaths or orbit returns."
+  },
+  "3730763182": {
+    "activityType": "Gambit",
+    "effort": "grind",
+    "summary": "Reach the Legend rank division in Gambit."
+  },
+  "3737431915": {
+    "effort": "quick",
+    "summary": "Complete a Sparrow Racing League race without dying."
+  },
+  "3743825725": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Finish a Guardian Games playlist activity without dying."
+  },
+  "3745805545": {
+    "effort": "grind",
+    "summary": "Defeat combatants with snowballs or Shatter damage during the Dawning."
+  },
+  "3751004057": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Collect trophies from the Pantheon boss-rush raid activity."
+  },
+  "3753712786": {
+    "effort": "moderate",
+    "summary": "Complete matches in the Arms Week: Hardware event."
+  },
+  "3753910451": {
+    "activityType": "Exotic Mission",
+    "effort": "moderate",
+    "summary": "Complete the Zero Hour Exotic mission in under 15 minutes."
+  },
+  "3754218902": {
+    "effort": "moderate",
+    "summary": "Complete dungeons, raids, Trials rounds, or Master Ops while wearing a mask."
+  },
+  "3760059996": {
+    "effort": "grind",
+    "summary": "Complete all Conquests at Ultimate difficulty this Season."
+  },
+  "3766199186": {
+    "effort": "grind",
+    "summary": "Complete all Lore Triumphs."
+  },
+  "3770889143": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Defeat opponents in Control or destroy Honored Scorpius Turrets in Fortress."
+  },
+  "3771397009": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Earn team score competing in Control or Tribute Crucible matches."
+  },
+  "3775956279": {
+    "activityType": "Gambit",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Defeat four Guardians in one invasion without Power weapon or Super."
+  },
+  "3779362264": {
+    "activityType": "Iron Banner",
+    "effort": "grind",
+    "summary": "Hold the Iron Banner lead to earn the leader title."
+  },
+  "3779882910": {
+    "summary": "Triumph category for balancing Light and Darkness."
+  },
+  "3782809943": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Complete one strike with a Light subclass and one with Darkness."
+  },
+  "3792989757": {
+    "location": [
+      "The Pale Heart"
+    ],
+    "activityType": "Story",
+    "effort": "quick",
+    "summary": "Destroy storm splinters to summon a foe in mission Dissent."
+  },
+  "3800818323": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "summary": "Triumph category for the Pantheon boss-rush activity."
+  },
+  "3803874302": {
+    "effort": "quick",
+    "summary": "Rapidly defeat 15 combatants with Stasis damage."
+  },
+  "3804384646": {
+    "effort": "grind",
+    "summary": "Defeat targets, with bonus progress against Guardians."
+  },
+  "3809920296": {
+    "effort": "quick",
+    "summary": "Earn Kinetic, Energy, and Power weapon final blow medals rapidly."
+  },
+  "3816696004": {
+    "activityType": "Gambit",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Win a Gambit match summoning only large Blockers."
+  },
+  "3817062456": {
+    "location": [
+      "Savathûn's Throne World"
+    ],
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete all Ghosts of the Deep encounters with a full clan fireteam."
+  },
+  "3822684272": {
+    "effort": "quick",
+    "summary": "Defeat 20 combatants with mid-range weapons without dying."
+  },
+  "3828243410": {
+    "activityType": "Exotic Mission",
+    "effort": "quick",
+    "summary": "Complete Zero Hour with Outbreak Perfected equipped."
+  },
+  "3843261847": {
+    "effort": "moderate",
+    "summary": "Reach Event Rank 15 in a seasonal event."
+  },
+  "3845383229": {
+    "location": [
+      "Savathûn's Throne World"
+    ],
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Obtain The Navigator Exotic Trace Rifle from Ghosts of the Deep."
+  },
+  "3863702102": {
+    "activityType": "Iron Banner",
+    "effort": "grind",
+    "summary": "Defeat opponents in the Iron Banner playlist."
+  },
+  "3877296707": {
+    "effort": "grind",
+    "summary": "Achieve cumulative score by completing weekly Reclaim activities."
+  },
+  "3879862064": {
+    "effort": "grind",
+    "summary": "Defeat combatants in Reclaim activities."
+  },
+  "3880724091": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Defeat opponents during Zone Advantage in Control or via abilities in Eruption."
+  },
+  "3888842466": {
+    "summary": "Triumph category for The Edge of Fate expansion."
+  },
+  "3897735344": {
+    "location": [
+      "The Last City"
+    ],
+    "effort": "moderate",
+    "summary": "Complete Rendezvous Triumphs then speak with Lodi at the Tower."
+  },
+  "3898858795": {
+    "effort": "grind",
+    "summary": "Defeat combatants with Hand Cannons, bonus in Crucible Ops."
+  },
+  "3902249513": {
+    "effort": "moderate",
+    "summary": "Complete each Call to Arms activity once."
+  },
+  "3906538939": {
+    "summary": "Triumph category for the Lightfall expansion."
+  },
+  "3910736783": {
+    "location": [
+      "Dreadnaught"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "summary": "Triumph category for the King's Fall raid."
+  },
+  "3911959437": {
+    "location": [
+      "Neomuna"
+    ],
+    "effort": "quick",
+    "summary": "Find a scenic vista spot in Límíng Harbor on Neomuna."
+  },
+  "3915960278": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete all four tether puzzles within the Pantheon."
+  },
+  "3918836030": {
+    "location": [
+      "The Dreaming City"
+    ],
+    "activityType": "Dungeon",
+    "effort": "quick",
+    "summary": "Defeat Dûl Incaru in Shattered Throne using Wish-Ender."
+  },
+  "3919447110": {
+    "activityType": "Iron Banner",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Earn team score competing in the Iron Banner playlist."
+  },
+  "3922046691": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "summary": "Earn the meta-title for completing all Crota's End raid Triumphs."
+  },
+  "3937029060": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat Guardians in Crucible using Auto Rifles."
+  },
+  "3941501820": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat nine combatants with special-ammo weapons in playlist activities."
+  },
+  "3947410852": {
+    "effort": "grind",
+    "summary": "Complete all Season of the Haunted Title Triumphs to earn Reaper."
+  },
+  "3952021245": {
+    "location": [
+      "The Leviathan"
+    ],
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear all Duality encounters with a full Arc-subclass fireteam."
+  },
+  "3955882973": {
+    "location": [
+      "The Dreaming City"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Defeat Riven in Last Wish after progressing back to the chamber top."
+  },
+  "3958740669": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete any version of The Desert Perpetual raid."
+  },
+  "3963073769": {
+    "effort": "quick",
+    "summary": "Complete a weekly Vault of Glass Deepsight quest from Hawthorne."
+  },
+  "3964505893": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat six combatants with special-ammo weapons in playlist activities."
+  },
+  "3965173089": {
+    "effort": "moderate",
+    "summary": "Collect all mask upgrades for the Festival of the Lost event."
+  },
+  "3968094121": {
+    "effort": "moderate",
+    "summary": "Defeat combatant vehicles during the Heavy Metal event."
+  },
+  "3974717227": {
+    "location": [
+      "Titan"
+    ],
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "summary": "Earn the meta-title for completing all Ghosts of the Deep dungeon Triumphs."
+  },
+  "3984168074": {
+    "location": [
+      "Dreadnaught"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear King's Fall Basilica without two players near a Totem simultaneously."
+  },
+  "4001408878": {
+    "location": [
+      "The Cosmodrome"
+    ],
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the Grasp of Avarice dungeon."
+  },
+  "4001674405": {
+    "effort": "grind",
+    "summary": "Defeat targets in Guardian Games activities for event progress."
+  },
+  "4006849630": {
+    "effort": "grind",
+    "summary": "Reach Event Rank 30 during Guardian Games."
+  },
+  "4007096795": {
+    "activityType": "Iron Banner",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Earn cumulative team score in the Iron Banner playlist."
+  },
+  "4007234633": {
+    "activityType": "Crucible",
+    "effort": "quick",
+    "summary": "Complete your Competitive playlist Placement Series matches."
+  },
+  "4009943274": {
+    "effort": "moderate",
+    "summary": "Complete Rushdown or Supremacy activities with a B-grade performance or higher."
+  },
+  "4010412130": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear all Warlord's Ruin encounters with a full Void-subclass fireteam."
+  },
+  "4011815996": {
+    "location": [
+      "The Moon"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear all Crota's End encounters with a full Stasis-subclass fireteam."
+  },
+  "4018593209": {
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete Grandmaster-difficulty Conquests from the Seasonal Hub."
+  },
+  "4022932554": {
+    "summary": "Earn a score in a Golden Age-themed event activity."
+  },
+  "4024183569": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat Guardians in Crucible using Swords."
+  },
+  "4026057232": {
+    "effort": "grind",
+    "summary": "Complete activities, with bonus for the Exotic mission Kell's Fall."
+  },
+  "4026057233": {
+    "effort": "grind",
+    "summary": "Complete activities, with bonus for Arms Dealer or Creation."
+  },
+  "4026057234": {
+    "effort": "grind",
+    "summary": "Complete activities, with bonus for Nightmare Containment or Lockdown."
+  },
+  "4027017747": {
+    "effort": "moderate",
+    "summary": "Reach Event Rank 15 during Festival of the Lost."
+  },
+  "4030330920": {
+    "effort": "grind",
+    "summary": "Defeat targets with Stasis final blows anywhere."
+  },
+  "4032136335": {
+    "location": [
+      "Mars"
+    ],
+    "activityType": "Dungeon",
+    "scope": "solo",
+    "effort": "grind",
+    "summary": "Solo-flawlessly complete all Spire of the Watcher dungeon encounters."
+  },
+  "4033016071": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Defeat the enemy team's leader in Heavy Metal Crucible matches."
+  },
+  "4037290772": {
+    "location": [
+      "The Last City"
+    ],
+    "effort": "grind",
+    "summary": "Complete Triumphs across categories, then meet Zavala in the Tower."
+  },
+  "4041671251": {
+    "effort": "grind",
+    "summary": "Defeat targets anywhere."
+  },
+  "4050558210": {
+    "activityType": "Dungeon",
+    "effort": "moderate",
+    "summary": "Clear all Ghosts of the Deep dungeon encounters without dying or leaving."
+  },
+  "4059453911": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Clear all Equilibrium dungeon encounters as a fireteam without dying or leaving."
+  },
+  "4060329176": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Unlock the Golden Age lore entry via Vanguard strike activity."
+  },
+  "4060329178": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Unlock the City Age lore entry via Vanguard strike activity."
+  },
+  "4060329179": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Unlock the Collapse and Dark Age lore entry via Vanguard strike activity."
+  },
+  "4062961115": {
+    "location": [
+      "Europa"
+    ],
+    "activityType": "Exotic Mission",
+    "effort": "moderate",
+    "summary": "Complete the Vesper's Host exotic mission on Europa."
+  },
+  "4067313462": {
+    "effort": "quick",
+    "summary": "Earn a B grade in any Ops activity with a Solstice modifier active."
+  },
+  "4072018160": {
+    "scope": "solo",
+    "effort": "quick",
+    "summary": "Unlock the Arcstrider Hunter subclass."
+  },
+  "4076704393": {
+    "location": [
+      "The Last City"
+    ],
+    "effort": "quick",
+    "summary": "Earn a Medallion from completions and bank it at the Tower podium."
+  },
+  "4079164337": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Capture zones in Control or collect Crests in Tribute."
+  },
+  "4081088317": {
+    "effort": "moderate",
+    "summary": "Collect all masks during the Festival of the Lost event."
+  },
+  "4082510051": {
+    "scope": "solo",
+    "effort": "moderate",
+    "summary": "Complete Solo Ops activities with any Solstice modifier active."
+  },
+  "4083696547": {
+    "effort": "grind",
+    "summary": "Complete all Season of the Wish title Triumphs to earn Wishbearer."
+  },
+  "4088152994": {
+    "location": [
+      "The Last City"
+    ],
+    "effort": "grind",
+    "summary": "Bank Medallions at the Tower podium toward class standing."
+  },
+  "4091377593": {
+    "effort": "grind",
+    "summary": "Claim weekly Syndicate shipments from the Renegades activity."
+  },
+  "4093874420": {
+    "effort": "moderate",
+    "summary": "Defeat Nightmares in the Haunted Altars of Sorrow activity."
+  },
+  "4101513814": {
+    "activityType": "Iron Banner",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Earn team score competing in the Iron Banner playlist."
+  },
+  "4104207016": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the Under Construction challenge in King's Fall raid."
+  },
+  "4107780895": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat Guardians with Sniper Rifles in the Crucible."
+  },
+  "4125308883": {
+    "activityType": "Crucible",
+    "effort": "grind",
+    "summary": "Defeat Guardians with Hand Cannons and Shotguns in PvP."
+  },
+  "4126703847": {
+    "activityType": "Dungeon",
+    "scope": "solo",
+    "effort": "moderate",
+    "summary": "Solo-clear all Duality dungeon encounters without dying or leaving."
+  },
+  "4129265056": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the current Featured Raid."
+  },
+  "4136119953": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete the Ghosts of the Deep dungeon."
+  },
+  "4137566436": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Solve a Deepsight puzzle in any raid and open the Deepsight chest."
+  },
+  "4141599814": {
+    "effort": "grind",
+    "summary": "Collect all weapon types and complete select gilding Triumphs."
+  },
+  "4141971983": {
+    "location": [
+      "Venus"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "summary": "Track Triumphs for the Vault of Glass raid on Venus."
+  },
+  "4143892469": {
+    "activityType": "Strike",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete all seasonal Conquests at Grandmaster difficulty."
+  },
+  "4145066179": {
+    "activityType": "Crucible",
+    "effort": "moderate",
+    "summary": "Complete Crucible matches during the Arms Week: Hardware event."
+  },
+  "4157156956": {
+    "activityType": "Iron Banner",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Complete matches in the Iron Banner playlist."
+  },
+  "4159436958": {
+    "activityType": "Iron Banner",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Win Iron Banner matches as Hunter, Titan, and Warlock."
+  },
+  "4159878288": {
+    "activityType": "Iron Banner",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Earn a cumulative team score in the Iron Banner playlist."
+  },
+  "4160641767": {
+    "activityType": "Story",
+    "effort": "quick",
+    "summary": "Defeat Premier Lume with a Praxic Blade in the Glory Beyond mission."
+  },
+  "4163051594": {
+    "effort": "moderate",
+    "summary": "Complete optional objectives in The Lawless Frontier activity."
+  },
+  "4165950753": {
+    "effort": "moderate",
+    "summary": "Use keycards and cash out extractables in The Lawless Frontier."
+  },
+  "4167244320": {
+    "activityType": "Strike",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete all Season 12 Grandmaster Nightfall Triumphs."
+  },
+  "4168416534": {
+    "effort": "quick",
+    "summary": "Unlock a Strand lore entry in the Warp and Weft collection."
+  },
+  "4168416536": {
+    "effort": "quick",
+    "summary": "Unlock a Strand lore entry in the Warp and Weft collection."
+  },
+  "4168416537": {
+    "effort": "quick",
+    "summary": "Unlock a Strand lore log entry in the Warp and Weft collection."
+  },
+  "4168416538": {
+    "effort": "quick",
+    "summary": "Unlock a Strand lore entry in the Warp and Weft collection."
+  },
+  "4168416539": {
+    "effort": "quick",
+    "summary": "Unlock a Strand lore log entry in the Warp and Weft collection."
+  },
+  "4168416540": {
+    "effort": "quick",
+    "summary": "Unlock a Strand lore entry in the Warp and Weft collection."
+  },
+  "4168416541": {
+    "effort": "quick",
+    "summary": "Unlock a Strand lore log entry in the Warp and Weft collection."
+  },
+  "4168416543": {
+    "effort": "quick",
+    "summary": "Unlock a Strand lore log entry in the Warp and Weft collection."
+  },
+  "4175768391": {
+    "activityType": "Exotic Mission",
+    "effort": "moderate",
+    "summary": "Complete Zero Hour on Master to unlock Outbreak Perfected crafting options."
+  },
+  "4176879201": {
+    "effort": "grind",
+    "summary": "Complete all Season of Plunder Triumphs."
+  },
+  "4179614523": {
+    "effort": "grind",
+    "summary": "Defeat targets in Guardian Games activities for points."
+  },
+  "4183243824": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Rapidly defeat three combatants with grenades in strikes."
+  },
+  "4184932885": {
+    "activityType": "Strike",
+    "effort": "quick",
+    "summary": "Earn melee, grenade, and Super final blow medals in rapid succession."
+  },
+  "4186853167": {
+    "effort": "quick",
+    "summary": "Complete the upper obstacle path after the first encounter in Dares of Eternity."
+  },
+  "4191407745": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete Warlord's Ruin dungeon using only Swords, Bows, and Glaives."
+  },
+  "4193075530": {
+    "effort": "grind",
+    "summary": "Achieve a cumulative score across weekly Reclaim activities."
+  },
+  "4194303319": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete the Teamwork Raid Challenges category Triumphs."
+  },
+  "4200405790": {
+    "effort": "quick",
+    "summary": "Unlock the Stormcaller Warlock subclass."
+  },
+  "4208360978": {
+    "effort": "grind",
+    "summary": "Defeat targets with Arc damage final blows anywhere."
+  },
+  "4213978314": {
+    "activityType": "Exotic Mission",
+    "effort": "moderate",
+    "summary": "Complete The Whisper exotic mission with Whisper of the Worm equipped."
+  },
+  "4233243597": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Defeat opponents during Zone Advantage or deposit Crests in Tribute."
+  },
+  "4233323731": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Earn the Exotic rocket launcher Gjallarhorn in Grasp of Avarice."
+  },
+  "4234448353": {
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete all encounters in The Pantheon: Calus Resplendent boss gauntlet."
+  },
+  "4235993550": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Defeat enemy Guardians in the Crucible using Bows."
+  },
+  "4250626982": {
+    "effort": "grind",
+    "summary": "Complete all Season of the Seraph Triumphs."
+  },
+  "4259447007": {
+    "location": [
+      "Dreadnaught"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "Defeat all Swordbearers from across the chasm in Crota's End bridge encounter."
+  },
+  "4267224753": {
+    "activityType": "Strike",
+    "scope": "fireteam",
+    "effort": "quick",
+    "summary": "As a fireteam, rapidly defeat 30 combatants in a strike."
+  },
+  "4268824781": {
+    "location": [
+      "Dreadnaught"
+    ],
+    "activityType": "Raid",
+    "scope": "fireteam",
+    "summary": "Earn the trophies/Triumphs from the King's Fall raid."
+  },
+  "4272358785": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Defeat enemy Guardians in the Crucible using Submachine Guns."
+  },
+  "4288088327": {
+    "activityType": "Dungeon",
+    "scope": "fireteam",
+    "effort": "grind",
+    "summary": "Complete the Warlord's Ruin dungeon on Master difficulty."
+  },
+  "4294065294": {
+    "activityType": "Crucible",
+    "scope": "fireteam",
+    "effort": "moderate",
+    "summary": "Capture zones in Control or Fortress Crucible modes."
+  }
+}

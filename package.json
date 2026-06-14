@@ -19,6 +19,7 @@
     "pack:mcpb": "bash scripts/build_mcpb.sh",
     "pack:mcpb:debug": "MCPB_DEBUG=1 bash scripts/build_mcpb.sh",
     "scrape:builds": "tsx scripts/scrape_builds.ts",
+    "build:triumphs": "tsx scripts/triumphs/build_index.ts",
     "extract:test_manifest": "tsx scripts/extract_test_manifest.ts",
     "test": "vitest run"
   },

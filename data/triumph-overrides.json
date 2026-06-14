@@ -1,0 +1,10 @@
+{
+  "_comment": "Hand-curated location/activity tags for Triumphs the manifest's presentation tree doesn't place (the residue from scripts/triumphs/build_index.ts). Keyed by recordHash. Each entry may set location (array of canonical world names from src/bungie/locations.ts CANONICAL_WORLDS) and/or activityType (a CANONICAL_ACTIVITY_TYPES name). Overrides win over every manifest-derived signal. Keys starting with _ are ignored.",
+  "_example": {
+    "0000000000": {
+      "location": ["Mars"],
+      "activityType": "Dungeon",
+      "note": "why this record was placed here by hand"
+    }
+  }
+}
