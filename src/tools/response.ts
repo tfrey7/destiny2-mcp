@@ -4,6 +4,12 @@ import { ELEMENT_PIP, iconBlocks, iconMap } from "../format/loadout/images.js";
 import { renderLoadoutCardText, type LoadoutCard } from "../format/loadout/index.js";
 import { cardModel } from "../format/loadout/model.js";
 import {
+  recapCardModel,
+  recapIconMap,
+  renderRecapCardText,
+  type RecapCard,
+} from "../format/recap/index.js";
+import {
   renderTriumphCardText,
   triumphCardModel,
   triumphIconMap,
@@ -132,6 +138,33 @@ export async function weaponCard(spec: WeaponCard, opts?: { ui?: boolean }) {
   };
 
   return { content: [{ type: "text" as const, text: note }, ...images], structuredContent };
+}
+
+/**
+ * Wrap an activity recap as a tool response carrying its rendered dashboard card.
+ *
+ * Mirrors `triumphCard()`: the text card is the universal, model-visible fallback. When `ui` is
+ * supplied (UI-capable hosts only; see clientSupportsUi), the RecapCardModel rides along as
+ * structuredContent — the host forwards it to the iframe rendered from the `ui://destiny2/recap`
+ * template (registered separately, linked via the tool's `_meta.ui.resourceUri`). On a UI host the
+ * model gets a terse note instead of the full text card, so it doesn't restate the recap in prose;
+ * plain hosts and the CLI just get the text card. The PGCR backdrop inlines as a data: URI (Claude
+ * Desktop's sandbox blocks remote hosts but allows data:).
+ */
+export async function recapCard(spec: RecapCard, opts?: { ui?: boolean }) {
+  if (!opts?.ui) {
+    return { content: [{ type: "text" as const, text: renderRecapCardText(spec) }] };
+  }
+
+  const model = recapCardModel(spec);
+  const note = `Activity recap shown to the user — ${spec.summary.totalActivities} activities over ${model.subtitle}, with the headline totals, a by-mode breakdown, and notable runs. The card is the answer; don't restate its contents in prose.`;
+
+  const structuredContent: Record<string, unknown> = {
+    ...model,
+    icons: await recapIconMap(model),
+  };
+
+  return { content: [{ type: "text" as const, text: note }], structuredContent };
 }
 
 /**
