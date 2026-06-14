@@ -1,0 +1,24 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>
+<script>
+window.__CFG__ = {
+  img: 'armor-detail.jpg',
+  title: 'A PIECE OF ARMOR, INSPECTED',
+  subtitle: 'Armor 3.0 — definition (name, set, stats) joined with the live instance (energy, power, rolled mods)',
+  ann: [
+    { t:[185,100], side:'l', ay:120, code:'DestinyInventoryItemDefinition[itemHash]',
+      sub:'<b>Manifest.</b> displayProperties.name + itemTypeDisplayName (“Leg Armor”). classType locks it to one class — class is to armor what element is to weapons.' },
+    { t:[700,258], side:'l', ay:280, y:true, code:'instances.data[id].energy.energyCapacity',
+      sub:'<i>Live.</i> “Energy: 11/11” — the budget mods are spent against. Armor has energy + power and no damageType; weapons are the reverse.' },
+    { t:[320,338], side:'l', ay:438, y:true, code:'sockets.data[itemInstanceId].sockets[]',
+      sub:'<b>component 305.</b> The mod row — masterwork + inserted mod plugs (the numbers are each mod’s energy cost). Same insert path as weapon perks (InsertSocketPlugFree).' },
+    { t:[250,470], side:'l', ay:660, code:'equippingBlock.equipableItemSetHash',
+      sub:'→ DestinyEquipableItemSetDefinition. “Aion Renewal Suit”, with its <b>2-piece</b> / <b>4-piece</b> set bonuses — the perks that fire when you wear enough of the set.' },
+    { t:[840,595], side:'r', ay:540, y:true, code:'instances.data[id].primaryStat.value',
+      sub:'<b>component 300.</b> Power 310 = 200 base cap + 110 Seasonal Bonus Power.' },
+    { t:[1250,625], side:'r', ay:715, y:true, code:'itemComponents.stats (304)',
+      sub:'This piece’s six Armor 3.0 archetype stats — <i>Health · Melee · Grenade · Super · Class · Weapons</i> (Total 100). The masterwork “Upgrade Armor” plug adds the gear tier (1–5) to all six; the character screen sums these across all armor.' },
+  ]
+};
+</script>
+<script src="render.js"></script>
+</body></html>

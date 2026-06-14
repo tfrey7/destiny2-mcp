@@ -1,0 +1,26 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>
+<script>
+window.__CFG__ = {
+  img: 'character-screen.jpg',
+  title: 'THE CHARACTER SCREEN',
+  subtitle: 'getProfile([200, 205, 304]) — one character’s equipped gear + aggregate stats',
+  ann: [
+    { t:[120,26], side:'l', ay:96, code:'characters.data[characterId]',
+      sub:'<b>component 200.</b> DestinyCharacter: <b>classType</b> (0 Titan / 1 Hunter / 2 Warlock), <b>light</b> (the Power number), <b>dateLastPlayed</b>. The characterId string keys everything per-character.' },
+    { t:[300,150], side:'l', ay:236, code:'subclass',
+      sub:'Its own equip bucket, class-locked by classType. The Aspects &amp; Fragments around it are <b>sockets</b> — plugs set with InsertSocketPlugFree, not separate items.' },
+    { t:[312,330], side:'l', ay:400, code:'characterEquipment.data[charId].items[]',
+      sub:'<b>component 205</b> — the three weapon slots. The item entry is tiny ({itemHash, itemInstanceId, bucketHash}); <b>bucketHash</b> sets the slot: 1498876634 Kinetic · 2465295065 Energy · 953998645 Power.' },
+    { t:[775,110], side:'r', ay:100, y:true, code:'character.light  →  Power 300',
+      sub:'The tooltip’s “200 +100” = base Power cap plus Seasonal Bonus Power. Per-item power is instances.data[id].primaryStat.value (component 300).' },
+    { t:[855,150], side:'r', ay:228, code:'characterEquipment … armor',
+      sub:'The five armor buckets: 3448274439 Helmet · 3551918588 Gauntlets · 14239492 Chest · 20886954 Legs · 1585787867 Class item. Armor is class-locked by classType.' },
+    { t:[760,270], side:'r', ay:392, y:true, code:'itemComponents.stats (304)',
+      sub:'The six Armor 3.0 archetype stats summed across your armor: <i>Weapons · Health · Grenade · Super · Class · Melee</i>. Per-piece values come from each instance’s stats / investmentStats.' },
+    { t:[940,662], side:'r', ay:540, code:'Vault  →  profileInventory (102)',
+      sub:'The bottom bar’s Vault is profileInventory.data.items[] — account-wide storage shared by all characters, no characterId.' },
+  ]
+};
+</script>
+<script src="render.js"></script>
+</body></html>

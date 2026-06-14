@@ -1,0 +1,26 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>
+<script>
+window.__CFG__ = {
+  img: 'weapon-detail.jpg',
+  title: 'A WEAPON, INSPECTED',
+  subtitle: 'one equip entry × its definition (manifest) × its instance (components 300/304/305)',
+  ann: [
+    { t:[185,72], side:'l', ay:120, code:'DestinyInventoryItemDefinition[itemHash]',
+      sub:'<b>Manifest.</b> The identity: displayProperties.name, itemTypeDisplayName (“Hand Cannon”), inventory.tierTypeName (rarity). Same hash for every copy that exists.' },
+    { t:[95,60], side:'l', ay:285, y:true, code:'instances.data[id].damageType',
+      sub:'The element icon by the name. <i>Live, per-instance.</i> Damage type — not the slot’s name — is the real element, and it decides which bucket the weapon equips into.' },
+    { t:[235,250], side:'l', ay:440, y:true, code:'sockets.data[itemInstanceId].sockets[]',
+      sub:'<b>component 305.</b> Each socket’s inserted <i>plugHash</i> = your actual roll (barrel · mag · two traits). The other option per column = reusablePlugs (310). Every plugHash is itself an itemHash → look it up for the perk’s name.' },
+    { t:[110,392], side:'l', ay:632, code:'… more sockets: weapon mods',
+      sub:'Mods and the masterwork are just more plugs in the same sockets component — same insert path (InsertSocketPlugFree).' },
+    { t:[92,488], side:'l', ay:772, code:'intrinsic frame (a socket)',
+      sub:'“Spread Shot” is the intrinsic plug. Its rules text lives on the plug’s perks[] → DestinySandboxPerkDefinition, not the weapon’s own description.' },
+    { t:[865,525], side:'r', ay:470, y:true, code:'instances.data[id].primaryStat.value',
+      sub:'<b>component 300.</b> Power 300 = 200 base cap + 100 Seasonal Bonus Power.' },
+    { t:[1330,600], side:'r', ay:660, y:true, code:'itemComponents.stats (304)',
+      sub:'The live stat block — Impact, Range, Stability, Handling, Reload, RPM, Magazine… Base values come from the definition’s stats, then the rolled plugs modify them.' },
+  ]
+};
+</script>
+<script src="render.js"></script>
+</body></html>
