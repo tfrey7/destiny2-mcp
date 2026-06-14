@@ -6,11 +6,11 @@ attribute fields this server actually emits.
 
 ## Sources (real in-game screenshots, not mockups)
 
-| File | Screen | Source |
-|---|---|---|
-| `character-screen.jpg` | Character / equipment screen (Season 27) | wowvendor.com — Edge of Fate hub |
-| `weapon-detail.jpg` | Weapon inspect (Phoneutria Fera, Hand Cannon) | thegamepost.com — EoF legendary weapons & perks |
-| `armor-detail.jpg` | Armor inspect (Aion Renewal Strides, Leg Armor) | thegamer.com — EoF armor rework guide |
+| File                   | Screen                                          | Source                                          |
+| ---------------------- | ----------------------------------------------- | ----------------------------------------------- |
+| `character-screen.jpg` | Character / equipment screen (Season 27)        | wowvendor.com — Edge of Fate hub                |
+| `weapon-detail.jpg`    | Weapon inspect (Phoneutria Fera, Hand Cannon)   | thegamepost.com — EoF legendary weapons & perks |
+| `armor-detail.jpg`     | Armor inspect (Aion Renewal Strides, Leg Armor) | thegamer.com — EoF armor rework guide           |
 
 ## Regenerating the annotated PNGs
 

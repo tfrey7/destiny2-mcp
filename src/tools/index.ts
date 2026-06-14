@@ -28,6 +28,7 @@ import { registerShowEquipped } from "./show_equipped.js";
 import { registerShowItem } from "./show_item.js";
 import { registerShowLoadout } from "./show_loadout.js";
 import { registerSnapshotLoadout } from "./snapshot_loadout.js";
+import { registerSuggestTriumphs } from "./suggest_triumphs.js";
 import { registerTransferItem } from "./transfer_item.js";
 import { registerUpdateLoadoutIdentifiers } from "./update_loadout_identifiers.js";
 import { registerVaultInventory } from "./vault_inventory.js";
@@ -54,6 +55,7 @@ export function registerTools(server: McpServer): void {
   registerShowArtifact(server);
   registerGetTriumphs(server);
   registerSearchRecords(server);
+  registerSuggestTriumphs(server);
   registerListActiveQuests(server);
 
   registerEquipLoadout(server);

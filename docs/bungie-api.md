@@ -7,17 +7,17 @@ the code under `src/bungie/` — file/symbol references are included so you can 
 
 Every fact about your account is assembled by joining **two completely separate sources**:
 
-| | **Manifest** (definitions) | **Live profile** (components) |
-|---|---|---|
-| What it is | The static game dictionary — every item, perk, stat, bucket that *can* exist | *Your* account right now — what you own, where it is, how it's rolled |
-| Keyed by | `hash` (a uint32 definition id) | `itemInstanceId` (a per-copy string id) and `characterId` |
+|                | **Manifest** (definitions)                                                                               | **Live profile** (components)                                                        |
+| -------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| What it is     | The static game dictionary — every item, perk, stat, bucket that _can_ exist                             | _Your_ account right now — what you own, where it is, how it's rolled                |
+| Keyed by       | `hash` (a uint32 definition id)                                                                          | `itemInstanceId` (a per-copy string id) and `characterId`                            |
 | Where it lives | A SQLite DB Bungie ships as a versioned zip; cached at `~/.destiny2-mcp/manifest/<version>/world.sqlite` | Fetched per request from `GET /Destiny2/{type}/{membershipId}/Profile/?components=…` |
-| Changes | Only when Bungie patches the game (checked every 6h, `manifest_db.ts`) | Every time you play |
-| In this repo | `manifest.ts`, `manifest_db.ts` | `profile.ts` |
+| Changes        | Only when Bungie patches the game (checked every 6h, `manifest_db.ts`)                                   | Every time you play                                                                  |
+| In this repo   | `manifest.ts`, `manifest_db.ts`                                                                          | `profile.ts`                                                                         |
 
-The manifest tells you *"hash `1363886209` is GjallarhornHorn, a Power-slot Exotic rocket launcher."*
-The live profile tells you *"you own one, instance `6917529…`, it's in your Titan's Power slot, rolled
-with these perks."* **Neither is useful alone.** Reading any item is always: get the live instance, then
+The manifest tells you _"hash `1363886209` is GjallarhornHorn, a Power-slot Exotic rocket launcher."_
+The live profile tells you _"you own one, instance `6917529…`, it's in your Titan's Power slot, rolled
+with these perks."_ **Neither is useful alone.** Reading any item is always: get the live instance, then
 look up its `itemHash` in the manifest to learn what it is.
 
 ```
@@ -31,7 +31,7 @@ live item  ──itemHash──▶  DestinyInventoryItemDefinition   (name, slot
 Every request carries two headers (`client.ts`):
 
 - `X-API-Key: <app key>` — identifies the application. Required even for public, read-only calls.
-- `Authorization: Bearer <accessToken>` — identifies *the user*. Required for anything account-specific.
+- `Authorization: Bearer <accessToken>` — identifies _the user_. Required for anything account-specific.
 
 OAuth is the standard authorization-code flow against `https://www.bungie.net/en/OAuth/Authorize` →
 token exchange at `…/Platform/App/OAuth/token/`. Tokens land in `~/.destiny2-mcp/tokens.json`
@@ -56,20 +56,20 @@ anything else (`client.ts`).
 `getProfile([…])` takes a list of **component numbers** and returns only those branches. The ones this
 server uses (`profile.ts`, `Component`):
 
-| # | Component | Gives you |
-|---|---|---|
-| 102 | ProfileInventories | The **Vault** — account-wide storage (`profileInventory.data.items[]`) |
-| 200 | Characters | The 3 characters and their power |
-| 201 | CharacterInventories | Each character's **carried, unequipped** items |
-| 202 | CharacterProgressions | Seasonal artifact, ranks |
-| 205 | CharacterEquipment | What's **equipped** on each character right now |
-| 206 | CharacterLoadouts | Saved in-game loadout slots |
-| 300 | ItemInstances | Per-copy: `primaryStat.value` (power), `damageType`, armor `energy` |
-| 301 | ItemObjectives | Quest/bounty step progress on instanced items |
-| 304 | ItemStats | The stat block on an instance |
-| 305 | ItemSockets | The **actual plugs** inserted in each socket (perks, mods, shaders) |
-| 310 | ItemReusablePlugs | The *other* options selectable in each socket |
-| 700/800/900 | PresentationNodes / Collectibles / Records | Triumphs, catalog/ownership, seals |
+| #           | Component                                  | Gives you                                                              |
+| ----------- | ------------------------------------------ | ---------------------------------------------------------------------- |
+| 102         | ProfileInventories                         | The **Vault** — account-wide storage (`profileInventory.data.items[]`) |
+| 200         | Characters                                 | The 3 characters and their power                                       |
+| 201         | CharacterInventories                       | Each character's **carried, unequipped** items                         |
+| 202         | CharacterProgressions                      | Seasonal artifact, ranks                                               |
+| 205         | CharacterEquipment                         | What's **equipped** on each character right now                        |
+| 206         | CharacterLoadouts                          | Saved in-game loadout slots                                            |
+| 300         | ItemInstances                              | Per-copy: `primaryStat.value` (power), `damageType`, armor `energy`    |
+| 301         | ItemObjectives                             | Quest/bounty step progress on instanced items                          |
+| 304         | ItemStats                                  | The stat block on an instance                                          |
+| 305         | ItemSockets                                | The **actual plugs** inserted in each socket (perks, mods, shaders)    |
+| 310         | ItemReusablePlugs                          | The _other_ options selectable in each socket                          |
+| 700/800/900 | PresentationNodes / Collectibles / Records | Triumphs, catalog/ownership, seals                                     |
 
 Components 300–310 are **per-instance**: they come back under `itemComponents`, keyed by
 `itemInstanceId`, not nested inside the item entries. That's the join you do constantly — see the
@@ -90,7 +90,7 @@ the item's definition. The buckets that matter (`manifest.ts`):
 - Armor — `3448274439` Helmet · `3551918588` Gauntlets · `14239492` Chest · `20886954` Legs ·
   `1585787867` Class item
 - `215593132` — **Postmaster** (Lost Items inbox). An item here can't be equipped or vaulted directly;
-  its *current* bucket is the only signal it's in the inbox rather than your loadout.
+  its _current_ bucket is the only signal it's in the inbox rather than your loadout.
 
 Three locations, three places in the response:
 
@@ -99,7 +99,7 @@ Three locations, three places in the response:
 - **Vault** → `profileInventory.data.items[]` (no character — account-wide)
 
 > **Slot is set by damage type, and the top slot's name is not an element.** The "Kinetic" bucket holds
-> Kinetic, Stasis, *and* Strand weapons; a Strand weapon there still deals Strand damage. Always take
+> Kinetic, Stasis, _and_ Strand weapons; a Strand weapon there still deals Strand damage. Always take
 > element from the instance's `damageType` (300), never from the bucket name. (`DamageType`:
 > `1 Kinetic · 2 Arc · 3 Solar · 4 Void · 6 Stasis · 7 Strand`.)
 
@@ -107,12 +107,12 @@ Three locations, three places in the response:
 
 An item's perks, mods, masterwork, shader, and ornament are all **plugs** inserted into **sockets**.
 
-- The **definition** (`DestinyInventoryItemDefinition.sockets.socketEntries[]`) describes the *shape*:
+- The **definition** (`DestinyInventoryItemDefinition.sockets.socketEntries[]`) describes the _shape_:
   how many sockets, what each can accept (a `reusablePlugSetHash`, a `randomizedPlugSetHash`, or an
   inline list).
-- The **live instance** (component 305) gives `sockets[]` with the `plugHash` *actually inserted* in
+- The **live instance** (component 305) gives `sockets[]` with the `plugHash` _actually inserted_ in
   each — that's your real roll.
-- Component 310 + the plug-set components (`profilePlugSets` / `characterPlugSets`) give the *other*
+- Component 310 + the plug-set components (`profilePlugSets` / `characterPlugSets`) give the _other_
   options you could insert, with a `canInsert` / unlock flag. Universal ornaments and shaders live in
   these plug sets, not in 310's partial list — see `sockets.ts` for the resolution order.
 
@@ -146,13 +146,14 @@ joined by `itemInstanceId`.
   // ── component 200: the characters ──────────────────────────────────────────
   "characters": {
     "data": {
-      "2305843009260000001": {            // ← this string IS the characterId
+      "2305843009260000001": {
+        // ← this string IS the characterId
         "characterId": "2305843009260000001",
-        "classType": 0,                   // 0 Titan · 1 Hunter · 2 Warlock
-        "light": 300,                     // the big "Power 300" number in-game (200 cap + seasonal bonus)
-        "dateLastPlayed": "2026-06-13T22:14:00Z"
-      }
-    }
+        "classType": 0, // 0 Titan · 1 Hunter · 2 Warlock
+        "light": 300, // the big "Power 300" number in-game (200 cap + seasonal bonus)
+        "dateLastPlayed": "2026-06-13T22:14:00Z",
+      },
+    },
   },
 
   // ── component 205: what's equipped on that character ───────────────────────
@@ -161,14 +162,39 @@ joined by `itemInstanceId`.
     "data": {
       "2305843009260000001": {
         "items": [
-          { "itemHash": 1363886209, "itemInstanceId": "6917529111111111", "bucketHash": 953998645,  "quantity": 1 }, // Gjallarhorn → Power slot
-          { "itemHash": 3325463374, "itemInstanceId": "6917529222222222", "bucketHash": 1498876634, "quantity": 1 }, // a Hand Cannon → Kinetic slot
-          { "itemHash": 1591777841, "itemInstanceId": "6917529333333333", "bucketHash": 2465295065, "quantity": 1 }, // a Pulse Rifle → Energy slot
-          { "itemHash":  192377242, "itemInstanceId": "6917529444444444", "bucketHash": 3448274439, "quantity": 1 }, // an Exotic helmet → Helmet slot
-          { "itemHash": 2243798457, "itemInstanceId": "6917529555555555", "bucketHash": 1585787867, "quantity": 1 }  // a class item → Class slot
-        ]
-      }
-    }
+          {
+            "itemHash": 1363886209,
+            "itemInstanceId": "6917529111111111",
+            "bucketHash": 953998645,
+            "quantity": 1,
+          }, // Gjallarhorn → Power slot
+          {
+            "itemHash": 3325463374,
+            "itemInstanceId": "6917529222222222",
+            "bucketHash": 1498876634,
+            "quantity": 1,
+          }, // a Hand Cannon → Kinetic slot
+          {
+            "itemHash": 1591777841,
+            "itemInstanceId": "6917529333333333",
+            "bucketHash": 2465295065,
+            "quantity": 1,
+          }, // a Pulse Rifle → Energy slot
+          {
+            "itemHash": 192377242,
+            "itemInstanceId": "6917529444444444",
+            "bucketHash": 3448274439,
+            "quantity": 1,
+          }, // an Exotic helmet → Helmet slot
+          {
+            "itemHash": 2243798457,
+            "itemInstanceId": "6917529555555555",
+            "bucketHash": 1585787867,
+            "quantity": 1,
+          }, // a class item → Class slot
+        ],
+      },
+    },
   },
 
   // ── component 300: per-instance live numbers, keyed by itemInstanceId ───────
@@ -177,8 +203,8 @@ joined by `itemInstanceId`.
       "data": {
         "6917529222222222": { "primaryStat": { "value": 300 }, "damageType": 6 }, // Hand Cannon, power 300, Stasis (6) — note it lives in the *Kinetic* bucket!
         "6917529333333333": { "primaryStat": { "value": 298 }, "damageType": 3 }, // Pulse Rifle, Solar (3)
-        "6917529444444444": { "primaryStat": { "value": 301 }, "energy": { "energyCapacity": 11 } } // armor: power + energy, no damageType
-      }
+        "6917529444444444": { "primaryStat": { "value": 301 }, "energy": { "energyCapacity": 11 } }, // armor: power + energy, no damageType
+      },
     },
 
     // ── component 305: the ACTUAL plugs in each socket (the real roll) ─────────
@@ -186,15 +212,15 @@ joined by `itemInstanceId`.
       "data": {
         "6917529222222222": {
           "sockets": [
-            { "plugHash": 1840239774, "isEnabled": true, "isVisible": true },  // ← barrel perk; look up 1840239774 in the manifest for its name
-            { "plugHash": 1467527085, "isEnabled": true, "isVisible": true },  // ← magazine perk
-            { "plugHash": 3993098925, "isEnabled": true, "isVisible": true },  // ← trait 1
-            { "plugHash":  247421694, "isEnabled": true, "isVisible": true }   // ← trait 2
-          ]
-        }
-      }
-    }
-  }
+            { "plugHash": 1840239774, "isEnabled": true, "isVisible": true }, // ← barrel perk; look up 1840239774 in the manifest for its name
+            { "plugHash": 1467527085, "isEnabled": true, "isVisible": true }, // ← magazine perk
+            { "plugHash": 3993098925, "isEnabled": true, "isVisible": true }, // ← trait 1
+            { "plugHash": 247421694, "isEnabled": true, "isVisible": true }, // ← trait 2
+          ],
+        },
+      },
+    },
+  },
 }
 ```
 

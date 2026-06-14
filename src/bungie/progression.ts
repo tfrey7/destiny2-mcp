@@ -1,5 +1,7 @@
 import { allDefinitions, findDefinition, getDefinition } from "./manifest_db.js";
 import { itemInfo } from "./manifest.js";
+import { matchActivityType, matchWorld } from "./locations.js";
+import { loadTriumphIndex, triumphTag, type TriumphTag } from "./triumph_index.js";
 import {
   type ObjectiveProgress,
   type PresentationNodeState,
@@ -35,6 +37,12 @@ interface TriumphView {
   percent: number;
   score: number;
   seal?: string;
+  location?: string[];
+  activityType?: string;
+  scope?: "solo" | "fireteam";
+  effort?: "quick" | "moderate" | "grind";
+  expires?: string;
+  summary?: string;
   redeemed?: boolean;
   obscured?: boolean;
   objectives: ObjectiveView[];
@@ -45,6 +53,8 @@ interface RecordFilters {
   name?: string;
   state?: "completed" | "incomplete";
   seal?: string;
+  location?: string;
+  activity?: string;
   limit?: number;
   offset?: number;
 }
@@ -135,6 +145,7 @@ async function describeRecord(
   const objectives = await resolveObjectives(
     live?.objectives ?? meta.objectiveHashes.map(emptyObjective),
   );
+  const tag = await triumphTag(meta.hash);
 
   return {
     recordHash: meta.hash,
@@ -145,6 +156,12 @@ async function describeRecord(
     percent: status.completed ? 100 : objectivePercent(objectives),
     score: meta.score,
     ...(seal ? { seal } : {}),
+    ...(tag?.location ? { location: tag.location } : {}),
+    ...(tag?.activityType ? { activityType: tag.activityType } : {}),
+    ...(tag?.scope ? { scope: tag.scope } : {}),
+    ...(tag?.effort ? { effort: tag.effort } : {}),
+    ...(tag?.expires ? { expires: tag.expires } : {}),
+    ...(tag?.summary ? { summary: tag.summary } : {}),
     ...(status.completed ? { redeemed: status.redeemed } : {}),
     ...(status.obscured ? { obscured: true } : {}),
     objectives,
@@ -162,9 +179,13 @@ export async function searchRecords(
   const catalog = await recordCatalog();
   const live = collectRecords(profile);
   const seals = await sealMembership(profile.profileRecords?.data?.recordSealsRootNodeHash);
+  const tags = filters.location || filters.activity ? await loadTriumphIndex() : undefined;
 
   const name = filters.name?.toLowerCase();
   const seal = filters.seal?.toLowerCase();
+  // Normalize the location/activity filters to the canonical vocabulary so "moon" matches "The Moon".
+  const location = filters.location ? matchWorld(filters.location) : undefined;
+  const activity = filters.activity ? matchActivityType(filters.activity) : undefined;
 
   const matches = catalog.filter((record) => {
     if (name && !record.lowerName.includes(name)) {
@@ -189,6 +210,13 @@ export async function searchRecords(
       }
     }
 
+    if (
+      (filters.location || filters.activity) &&
+      !matchesPlace(tags?.get(record.hash), filters, location, activity)
+    ) {
+      return false;
+    }
+
     return true;
   });
 
@@ -201,6 +229,40 @@ export async function searchRecords(
   );
 
   return { count: matches.length, truncated: offset + records.length < matches.length, records };
+}
+
+// Whether a Triumph's tag satisfies the location/activity filters. A filter that normalized to a
+// canonical value matches exactly; one that didn't (a partial like "dreaming") falls back to a
+// case-insensitive substring against the tag, so a loose query still narrows.
+function matchesPlace(
+  tag: TriumphTag | undefined,
+  filters: RecordFilters,
+  location: string | undefined,
+  activity: string | undefined,
+): boolean {
+  if (filters.location) {
+    const places = tag?.location ?? [];
+    const hit = location
+      ? places.includes(location)
+      : places.some((place) => place.toLowerCase().includes(filters.location!.toLowerCase()));
+
+    if (!hit) {
+      return false;
+    }
+  }
+
+  if (filters.activity) {
+    const type = tag?.activityType;
+    const hit = activity
+      ? type === activity
+      : Boolean(type && type.toLowerCase().includes(filters.activity.toLowerCase()));
+
+    if (!hit) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 // The seal overview: total Triumph score plus every seal with its live completion counts, so a
@@ -225,6 +287,162 @@ export async function triumphSummary(profile: ProfileResponse): Promise<TriumphS
     // Closest-to-done first — that's the seal worth focusing on — but earned seals sink to the bottom.
     seals: seals.sort((a, b) => Number(a.earned) - Number(b.earned) || b.percent - a.percent),
   };
+}
+
+export interface SuggestFilters {
+  location?: string;
+  activity?: string;
+  limit?: number;
+}
+
+export interface TriumphSuggestion extends TriumphView {
+  why: string[];
+}
+
+export interface SuggestResult {
+  count: number;
+  truncated: boolean;
+  location?: string;
+  activity?: string;
+  caveat?: string;
+  suggestions: TriumphSuggestion[];
+}
+
+// Rank the player's incomplete Triumphs by what's worth chasing next: how close it is (live
+// completion), whether it's expiring, whether it feeds a title the player hasn't earned, and its
+// Triumph score. Optionally scoped to a location/activity so "what next on the Moon" composes the
+// location filter with the ranking. Only the returned slice is described, like searchRecords.
+export async function suggestTriumphs(
+  profile: ProfileResponse,
+  filters: SuggestFilters,
+): Promise<SuggestResult> {
+  const catalog = await recordCatalog();
+  const live = collectRecords(profile);
+  const seals = await sealMembership(profile.profileRecords?.data?.recordSealsRootNodeHash);
+  const tags = await loadTriumphIndex();
+  const nodes = collectNodes(profile);
+  const sealHashes = await sealNodeHashes(profile.profileRecords?.data?.recordSealsRootNodeHash);
+  const sealViews = await Promise.all(
+    sealHashes.map((sealHash) => describeSeal(sealHash, nodes.get(sealHash), live)),
+  );
+  const sealByName = new Map(sealViews.map((seal) => [seal.name, seal]));
+
+  const location = filters.location ? matchWorld(filters.location) : undefined;
+  const activity = filters.activity ? matchActivityType(filters.activity) : undefined;
+
+  const ranked: RankedRecord[] = [];
+
+  for (const record of catalog) {
+    const state = live.get(record.hash);
+
+    if (recordStatus(state?.state ?? OBJECTIVE_NOT_COMPLETED).completed) {
+      continue;
+    }
+
+    const tag = tags.get(record.hash);
+
+    if ((filters.location || filters.activity) && !matchesPlace(tag, filters, location, activity)) {
+      continue;
+    }
+
+    const sealName = seals.get(record.hash);
+    const seal = sealName ? sealByName.get(sealName) : undefined;
+    const percent = livePercent(state);
+    const sealBoost = seal && !seal.earned ? seal.percent * 0.3 : 0;
+
+    // Closeness drives the ranking; an in-progress, expiring, or title-feeding Triumph is bumped up,
+    // with a small nudge for raw Triumph score so high-value goals edge out trivial ones when tied.
+    const priority =
+      percent +
+      (percent > 0 ? 15 : 0) +
+      (tag?.expires ? 30 : 0) +
+      sealBoost +
+      Math.min(record.score, 150) * 0.05;
+
+    ranked.push({ record, state, sealName, seal, tag, percent, priority });
+  }
+
+  ranked.sort((a, b) => b.priority - a.priority);
+
+  const limit = filters.limit ?? 15;
+  const suggestions = await Promise.all(
+    ranked.slice(0, limit).map(async (entry) => ({
+      ...(await describeRecord(entry.record, entry.state, entry.sealName)),
+      why: reasons(entry),
+    })),
+  );
+
+  return {
+    count: ranked.length,
+    truncated: ranked.length > limit,
+    ...(location ? { location } : {}),
+    ...(activity ? { activity } : {}),
+    ...(filters.location || filters.activity
+      ? {
+          caveat:
+            "Location/activity filtering only surfaces Triumphs the index could tie to a destination or mode. Seasonal, account-wide, and Moments of Triumph goals usually aren't location-scoped and are excluded — so a thin result for a place means few of its Triumphs are place-bound, not that there's nothing to do there.",
+        }
+      : {}),
+    suggestions,
+  };
+}
+
+interface RankedRecord {
+  record: CatalogRecord;
+  state: RecordComponentState | undefined;
+  sealName: string | undefined;
+  seal: SealView | undefined;
+  tag: TriumphTag | undefined;
+  percent: number;
+  priority: number;
+}
+
+function reasons(entry: RankedRecord): string[] {
+  const why: string[] = [];
+
+  if (entry.percent > 0) {
+    why.push(`${entry.percent}% complete`);
+  }
+
+  if (entry.tag?.expires) {
+    why.push(entry.tag.expires);
+  }
+
+  if (entry.seal && !entry.seal.earned) {
+    why.push(`feeds the ${entry.seal.name} title (${entry.seal.percent}% earned)`);
+  }
+
+  if (entry.tag?.effort) {
+    why.push(`${entry.tag.effort} effort`);
+  }
+
+  if (entry.record.score > 0) {
+    why.push(`${entry.record.score} Triumph points`);
+  }
+
+  return why;
+}
+
+// Live completion of a single Triumph from its profile objectives, without the manifest reads
+// describeRecord does — used to rank the whole incomplete set before describing just the top slice.
+function livePercent(state: RecordComponentState | undefined): number {
+  if (!state) {
+    return 0;
+  }
+
+  if (recordStatus(state.state ?? OBJECTIVE_NOT_COMPLETED).completed) {
+    return 100;
+  }
+
+  let progress = 0;
+  let total = 0;
+
+  for (const objective of state.objectives ?? []) {
+    progress += Math.min(objective.progress ?? 0, objective.completionValue ?? 0);
+    total += objective.completionValue ?? 0;
+  }
+
+  return total > 0 ? Math.round((progress / total) * 100) : 0;
 }
 
 // A record definition, projected to the fields the tools need. `obscured*` fields back the hidden
