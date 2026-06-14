@@ -11,6 +11,7 @@ import {
   statName,
 } from "../bungie/manifest.js";
 import { Component, DamageType, getProfile } from "../bungie/profile.js";
+import { judgeRoll } from "./godrolls/logic.js";
 import { instanceMap } from "./inventory.js";
 import { json } from "./response.js";
 
@@ -61,11 +62,22 @@ export function registerInspectItem(server: McpServer): void {
           gearTierFromPlugs(plugHashes),
         ]);
 
+        // Only weapons carry a slot here (slotFromBucketHash is weapon-only), and only they have
+        // community god rolls — judge the equipped perks against the wishlist for that copy.
+        const godRoll = described.slot
+          ? await judgeRoll(
+              hash,
+              plugHashes,
+              described.perks.map((perk) => perk.name),
+            )
+          : undefined;
+
         return json({
           ...described,
           element: instance?.damageType ? DamageType[instance.damageType] : undefined,
           power: instance?.primaryStat?.value,
           gearTier,
+          godRoll,
         });
       }
 

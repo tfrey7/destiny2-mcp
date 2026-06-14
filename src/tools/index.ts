@@ -6,6 +6,7 @@ import { registerEquipItem } from "./equip_item.js";
 import { registerEquipItems } from "./equip_items.js";
 import { registerEquipLoadout } from "./equip_loadout.js";
 import { registerGetArtifact } from "./get_artifact.js";
+import { registerGodRoll } from "./godrolls/index.js";
 import { registerGetEquipped } from "./get_equipped.js";
 import { registerGetTriumphs } from "./get_triumphs.js";
 import { registerHowToAcquire } from "./how_to_acquire.js";
@@ -50,6 +51,7 @@ export function registerTools(server: McpServer): void {
   registerListInventory(server);
   registerInspectItem(server);
   registerInspectSockets(server);
+  registerGodRoll(server);
   registerHowToAcquire(server);
   registerSearchItems(server);
   registerShowItem(server);

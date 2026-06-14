@@ -8,6 +8,7 @@ import {
 } from "../bungie/manifest.js";
 import { Component, getProfile } from "../bungie/profile.js";
 import { availablePlugHashes, mergedPlugSets } from "../bungie/sockets.js";
+import { recommendedPlugHashes } from "./godrolls/logic.js";
 import { instanceMap } from "./inventory.js";
 import { json } from "./response.js";
 
@@ -49,6 +50,7 @@ export function registerInspectSockets(server: McpServer): void {
       const liveSockets = profile.itemSockets[itemInstanceId]?.sockets ?? [];
       const livePlugs = profile.itemReusablePlugs[itemInstanceId]?.plugs ?? {};
       const plugSets = mergedPlugSets(profile);
+      const recommended = await recommendedPlugHashes(hash);
 
       const sockets = (
         await Promise.all(
@@ -69,12 +71,14 @@ export function registerInspectSockets(server: McpServer): void {
               ? await availablePlugHashes(index, livePlugs, entry, plugSets)
               : [];
             const cap = socketIndex === undefined ? PLUGS_PER_SOCKET : allHashes.length;
-            const available = await Promise.all(allHashes.slice(0, cap).map(plugView));
+            const available = await Promise.all(
+              allHashes.slice(0, cap).map((plugHash) => plugView(plugHash, recommended)),
+            );
 
             return {
               socketIndex: index,
               category: categoryHash ? await socketCategoryName(categoryHash) : undefined,
-              current: currentHash ? await plugView(currentHash) : undefined,
+              current: currentHash ? await plugView(currentHash, recommended) : undefined,
               ...(enabled ? {} : { enabled: false }),
               ...(available.length ? { available } : {}),
               ...(allHashes.length > available.length
@@ -106,6 +110,10 @@ function categoryHashByIndex(categories: SocketCategoryEntry[]): Map<number, num
   return map;
 }
 
-async function plugView(plugItemHash: number) {
-  return { plugItemHash, name: await itemName(plugItemHash) };
+async function plugView(plugItemHash: number, recommended: Set<number>) {
+  return {
+    plugItemHash,
+    name: await itemName(plugItemHash),
+    ...(recommended.has(plugItemHash) ? { recommended: true } : {}),
+  };
 }

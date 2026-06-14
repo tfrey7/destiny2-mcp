@@ -22,6 +22,16 @@ respect, and how to reason when helping a player.
   Shaders have no screenshot — only a swatch icon — and no applied-to-armor preview exists anywhere, so
   `data/shaders.json` is a vision-captioned palette index (colors/warmth/brightness/finish) keyed by
   hash; regenerate with `scripts/shaders/build_index.ts`. Account-wide, so no per-class resolution.
+- `src/tools/godrolls/` — `god_roll`: the community god roll(s) for a weapon (recommended perks per
+  column + trash perks), compiled from the DIM community wishlist (voltron.txt). `data/god-rolls.json`
+  is keyed by weapon item hash and stores perks as bare hashes (names resolve from the manifest at read
+  time, so a renamed perk never goes stale); regenerate with `scripts/godrolls/build_index.ts`
+  (`npm run build:godrolls`). The wishlist enumerates the full cartesian product of acceptable perks, so
+  the build script transposes each block back into per-column option sets and filters to current
+  weapons. `logic.ts` also powers two enrichments: `inspect_item` on an owned weapon instance attaches a
+  `godRoll` verdict (matched rolls / closest miss), and `inspect_sockets` flags each candidate plug that
+  appears in a recommended roll. The qualitative "what makes a roll good" reasoning lives in the
+  `god-rolls` knowledge topic, not here.
 - `src/bungie/` — the API client, OAuth, the SQLite manifest reader (`manifest.ts`), and profile/account
   fetches. `manifest.ts` is the source of truth for an item's `slot`, `element`, `tier`, `ammoType`.
   It also holds the **reverse-lookup indexes** behind `search_items`' `perk` and `setBonus` filters —

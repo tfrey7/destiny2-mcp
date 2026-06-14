@@ -485,4 +485,43 @@ weapon perk that feeds it. Treat exotic/weapon names as examples and verify owne
 - Prismatic Transcendence cycle: alternate Light and Dark damage to fill both gauges, go
   Transcendent for the damage/regen spike, and time it for burst windows or to reset a tough room.`,
   },
+  {
+    id: "god-rolls",
+    title: "God rolls: what makes a weapon roll great",
+    body: `A "god roll" is the most desirable combination of random perks a Legendary weapon can drop with.
+A weapon rolls one plug per column — barrel/sight, magazine, then two trait columns (and an origin trait)
+— so the roll is which option landed in each column. The roll that maximizes the weapon's job is the god
+roll. Exotics and fixed-roll weapons don't have one (no random perks to chase).
+
+What makes the two trait columns good — this is where a roll is won or lost:
+- The two traits should combine into a loop, not just be individually fine. The first trait usually
+  primes or enables (reload/handling/accuracy buffs, charges a state), the second pays off (a damage or
+  add-clear verb). E.g. a reload-on-kill trait feeding a damage trait, or Voltshot (applies Jolt) behind
+  a perk that keeps it loaded.
+- Match the trait to the weapon's role and your build's engine: a damage-perk (Rampage, Onslaught,
+  Frenzy) on a DPS weapon; a verb-applier (Voltshot, Incandescent, Destabilizing, Hatchling) on an
+  add-clear weapon to feed the same verb your subclass runs — see the verbs and recipes topics.
+- Barrel and magazine matter less; they tune stability, range, reload, and magazine size. Pick the ones
+  that fix the weapon's weakness (e.g. a recoil-direction barrel on a loose-recoil auto). They rarely
+  define the roll.
+
+God rolls are activity-dependent. The PvE roll and the PvP roll for the same weapon are usually
+different — PvE leans into damage and verb uptime, PvP into range, accuracy, and dueling consistency.
+Always say which you mean, and infer it from the player's question and build.
+
+How the tools serve this — these are grounded in the community DIM wishlist (top theorycrafters'
+recommendations), keyed by item hash and resolved against the live manifest:
+- god_roll(weapon or itemHash) — the recommended roll(s) for a weapon, each with a label, PvE/PvP tags,
+  and the accepted perks per column, plus any community-flagged trash perks. This answers "what's the god
+  roll for X" and tells the player which perks to chase.
+- inspect_item on an owned instance — judges the perks actually rolled on that copy: which recommended
+  rolls it fully matches (isGodRoll), or the closest roll and which columns are missing. This is the
+  "is my roll any good" answer.
+- inspect_sockets — flags each candidate plug in a socket that appears in a recommended roll, so when
+  comparing two copies or deciding what to keep you can see the wishlisted options at a glance.
+
+Use them rather than reciting a roll from memory: the wishlist and the manifest are the source of truth,
+and a recall answer will miss reissues, new perks, and recent rebalances. When a weapon isn't covered
+(brand-new, or niche), fall back to the trait-column reasoning above and name the perks explicitly.`,
+  },
 ];
