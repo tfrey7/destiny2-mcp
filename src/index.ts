@@ -4,6 +4,7 @@ import { loadManifest } from "./bungie/manifest_db.js";
 import { registerKnowledgeResources, registerKnowledgeTools } from "./knowledge/index.js";
 import { registerTools } from "./tools/index.js";
 import { registerLoadoutUi } from "./tools/loadout_ui.js";
+import { registerRecapUi } from "./tools/recap_ui.js";
 import { registerTriumphsUi } from "./tools/triumphs_ui.js";
 import { registerWeaponUi } from "./tools/weapon_ui.js";
 
@@ -15,6 +16,7 @@ registerKnowledgeResources(server);
 registerLoadoutUi(server);
 registerTriumphsUi(server);
 registerWeaponUi(server);
+registerRecapUi(server);
 
 try {
   await loadManifest();

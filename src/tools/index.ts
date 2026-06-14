@@ -1,4 +1,6 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { registerActivityHistory } from "./activity_history.js";
+import { registerActivityRecap } from "./activity_recap.js";
 import { registerBuildTools } from "./builds/index.js";
 import { registerEquipItem } from "./equip_item.js";
 import { registerEquipItems } from "./equip_items.js";
@@ -60,6 +62,8 @@ export function registerTools(server: McpServer): void {
   registerSearchRecords(server);
   registerSuggestTriumphs(server);
   registerShowTriumphs(server);
+  registerActivityHistory(server);
+  registerActivityRecap(server);
   registerListActiveQuests(server);
 
   registerEquipLoadout(server);
