@@ -1,5 +1,5 @@
 import { allDefinitions, findDefinition, getDefinition } from "./manifest_db.js";
-import { itemInfo } from "./manifest.js";
+import { itemInfo, itemMeta } from "./manifest.js";
 import { matchActivityType, matchWorld } from "./locations.js";
 import { loadTriumphIndex, triumphTag, type TriumphTag } from "./triumph_index.js";
 import {
@@ -475,6 +475,39 @@ async function recordMeta(hash: number): Promise<RecordMeta | undefined> {
   return projectRecord(hash, record);
 }
 
+// A Triumph's manifest icon path, for the card renderer. Kept off the read-tool projection (the
+// JSON tools surface no icon) and resolved only when a card actually needs the art, so the
+// model-visible payload stays free of icon-path noise.
+export async function recordIcon(hash: number): Promise<string | undefined> {
+  const record = await findDefinition<RawRecord>("DestinyRecordDefinition", hash);
+
+  return record?.displayProperties?.icon || undefined;
+}
+
+// A reward item a Triumph grants, resolved to its name and icon path for the card.
+export interface RecordReward {
+  name: string;
+  icon?: string;
+}
+
+// A Triumph's reward items resolved to name + icon, for the card. Like recordIcon, kept off the
+// read-tool JSON — search_records / suggest_triumphs list reward *names* only (see TriumphView) —
+// and resolved on the card path. Reads the record's deduped reward hashes, then each item's name and
+// icon from the manifest; items the manifest doesn't know drop out.
+export async function recordRewards(hash: number): Promise<RecordReward[]> {
+  const record = await findDefinition<RawRecord>("DestinyRecordDefinition", hash);
+  const hashes = [...new Set((record?.rewardItems ?? []).map((reward) => reward.itemHash))];
+  const rewards = await Promise.all(
+    hashes.map(async (itemHash) => {
+      const meta = await itemMeta(itemHash);
+
+      return meta ? { name: meta.name, ...(meta.icon ? { icon: meta.icon } : {}) } : undefined;
+    }),
+  );
+
+  return rewards.filter((reward): reward is RecordReward => reward !== undefined);
+}
+
 // A Triumph objective's human-readable label ("Medals earned", "Enemies defeated"). The live
 // progress numbers ride on the profile component; only the wording comes from the manifest.
 async function objectiveDescription(hash: number): Promise<string | undefined> {
@@ -510,7 +543,7 @@ const RECORD_TABLE = "DestinyRecordDefinition";
 const NODE_TABLE = "DestinyPresentationNodeDefinition";
 
 interface RawRecord {
-  displayProperties?: { name?: string; description?: string };
+  displayProperties?: { name?: string; description?: string; icon?: string };
   completionInfo?: { ScoreValue?: number };
   stateInfo?: { obscuredName?: string; obscuredDescription?: string };
   titleInfo?: { hasTitle?: boolean; titlesByGender?: Record<string, string> };

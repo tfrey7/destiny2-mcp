@@ -4,6 +4,7 @@ import { loadManifest } from "./bungie/manifest_db.js";
 import { registerKnowledgeResources, registerKnowledgeTools } from "./knowledge/index.js";
 import { registerTools } from "./tools/index.js";
 import { registerLoadoutUi } from "./tools/loadout_ui.js";
+import { registerTriumphsUi } from "./tools/triumphs_ui.js";
 
 const server = new McpServer({ name: "destiny2-mcp", version: "1.0.0" });
 
@@ -11,6 +12,7 @@ registerTools(server);
 registerKnowledgeTools(server);
 registerKnowledgeResources(server);
 registerLoadoutUi(server);
+registerTriumphsUi(server);
 
 try {
   await loadManifest();

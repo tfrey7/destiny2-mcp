@@ -3,6 +3,12 @@ import type { UiAction } from "../format/loadout/html.js";
 import { ELEMENT_PIP, iconBlocks, iconMap } from "../format/loadout/images.js";
 import { renderLoadoutCardText, type LoadoutCard } from "../format/loadout/index.js";
 import { cardModel } from "../format/loadout/model.js";
+import {
+  renderTriumphCardText,
+  triumphCardModel,
+  triumphIconMap,
+  type TriumphCard,
+} from "../format/triumphs/index.js";
 
 /** How a card's gear art is delivered to the model. Only the bare icon blocks, for now. */
 type ImageStyle = "icons";
@@ -64,6 +70,35 @@ export async function card(
   };
 
   return { content, structuredContent };
+}
+
+/**
+ * Wrap the advisor's Triumph suggestions as a tool response carrying the rendered grid card.
+ *
+ * Mirrors `card()`: the text card is the universal, model-visible fallback. When `ui` is supplied
+ * (UI-capable hosts only; see clientSupportsUi), the TriumphCardModel rides along as
+ * structuredContent — the host forwards it to the iframe rendered from the `ui://destiny2/triumphs`
+ * template (registered separately, linked via the tool's `_meta.ui.resourceUri`). On a UI host the
+ * model gets a terse note instead of the full text card, so it doesn't restate the grid in prose;
+ * plain hosts and the CLI just get the text card.
+ */
+export async function triumphCard(spec: TriumphCard, opts?: { ui?: boolean }) {
+  if (!opts?.ui) {
+    return { content: [{ type: "text" as const, text: renderTriumphCardText(spec) }] };
+  }
+
+  const model = triumphCardModel(spec);
+  const note = `Triumph grid shown to the user — ${model.tiles.length} ranked Triumph${model.tiles.length === 1 ? "" : "s"} to chase, each with its score, progress, objectives, and the reasons it's worth doing. The card is the answer; don't restate its contents in prose.`;
+
+  // The iframe renders client-side from structuredContent, which never reaches the model — so the
+  // base64 icon map rides here at zero token cost (Claude Desktop's sandbox blocks remote hosts but
+  // allows data: URIs).
+  const structuredContent: Record<string, unknown> = {
+    ...model,
+    icons: await triumphIconMap(model),
+  };
+
+  return { content: [{ type: "text" as const, text: note }], structuredContent };
 }
 
 /**
