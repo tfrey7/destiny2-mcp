@@ -12,7 +12,7 @@ export interface Shader {
   tags: string[];
 }
 
-export interface ShaderMatch {
+interface ShaderMatch {
   name: string;
   colors: string[];
   warmth: string;
@@ -29,7 +29,7 @@ interface ShadersFile {
 
 let cache: Promise<Shader[]> | null = null;
 
-export async function loadShaders(): Promise<Shader[]> {
+async function loadShaders(): Promise<Shader[]> {
   cache ??= readShaders();
 
   return cache;

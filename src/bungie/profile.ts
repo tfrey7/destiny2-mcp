@@ -33,7 +33,7 @@ export const DamageType: Record<number, Element> = {
   7: "Strand",
 };
 
-export interface Membership {
+interface Membership {
   membershipType: number;
   destinyMembershipId: string;
 }
@@ -59,13 +59,13 @@ export interface DestinyLoadout {
   items: { itemInstanceId: string; plugItemHashes: number[] }[];
 }
 
-export interface ArtifactPerk {
+interface ArtifactPerk {
   itemHash: number;
   isActive: boolean;
   isVisible?: boolean;
 }
 
-export interface ArtifactTier {
+interface ArtifactTier {
   tierHash: number;
   isUnlocked: boolean;
   pointsToUnlock: number;
@@ -79,13 +79,13 @@ export interface SeasonalArtifact {
   tiers: ArtifactTier[];
 }
 
-export interface ItemInstance {
+interface ItemInstance {
   primaryStat?: { value: number };
   damageType?: number;
   energy?: { energyCapacity?: number };
 }
 
-export interface ItemSocket {
+interface ItemSocket {
   plugHash?: number;
   isEnabled?: boolean;
   isVisible?: boolean;

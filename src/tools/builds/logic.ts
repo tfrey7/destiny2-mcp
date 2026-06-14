@@ -1,6 +1,6 @@
 import type { DestinyItem, ProfileResponse } from "../../bungie/profile.js";
 
-export type ItemLocation = "equipped" | "inventory" | "vault";
+type ItemLocation = "equipped" | "inventory" | "vault";
 
 export interface OwnedItem {
   itemInstanceId: string;

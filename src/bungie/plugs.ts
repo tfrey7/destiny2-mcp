@@ -17,7 +17,7 @@ export interface PlugView {
   shape: PlugShape;
 }
 
-export type PlugShape = "circle" | "square";
+type PlugShape = "circle" | "square";
 
 /** The loadout card section an item belongs to — decides which socket categories count as display plugs. */
 export type LoadoutSection = "WEAPONS" | "ARMOR" | "SUBCLASS";

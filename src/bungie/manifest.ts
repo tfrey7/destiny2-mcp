@@ -1,7 +1,7 @@
 import type { Element, ItemCategory } from "../schemas.js";
 import { allDefinitions, findDefinition, getDefinition, onManifestSwap } from "./manifest_db.js";
 
-export interface ItemInfo {
+interface ItemInfo {
   name: string;
   tier?: string;
   itemType?: string;
@@ -37,7 +37,7 @@ export interface SocketCategoryEntry {
   socketIndexes: number[];
 }
 
-export interface ItemDefinition {
+interface ItemDefinition {
   displayProperties?: { name?: string; description?: string; icon?: string };
   itemTypeDisplayName?: string;
   flavorText?: string;
@@ -59,13 +59,13 @@ interface SandboxPerkDefinition {
   displayProperties?: { description?: string };
 }
 
-export interface SetPerk {
+interface SetPerk {
   requiredCount: number;
   name: string;
   description: string;
 }
 
-export interface ItemSet {
+interface ItemSet {
   name: string;
   perks: SetPerk[];
 }
@@ -103,7 +103,7 @@ export function ammoTypeLabel(ammoType: number | undefined): string | undefined 
 }
 
 // The class an armor piece is restricted to, or "Any" for class-agnostic gear; undefined when absent.
-export function classTypeLabel(classType: number | undefined): string | undefined {
+function classTypeLabel(classType: number | undefined): string | undefined {
   return classType === undefined ? undefined : CLASS_TYPE[classType];
 }
 
@@ -378,7 +378,7 @@ export async function findItemByName(name: string): Promise<number | undefined> 
   return [...candidates].sort((a, b) => compareByTier(a, b) || owned(b) - owned(a))[0].hash;
 }
 
-export interface CatalogEntry {
+interface CatalogEntry {
   hash: number;
   name: string;
   tier?: string;
@@ -396,7 +396,7 @@ export interface CatalogEntry {
   index?: number;
 }
 
-export interface SearchFilters {
+interface SearchFilters {
   name?: string;
   element?: string;
   type?: string;
@@ -415,7 +415,7 @@ export interface SearchFilters {
 // Ownership lives in the player's account, not the manifest, so the caller supplies the lookup.
 export type OwnershipLookup = (entry: { name: string; collectibleHash?: number }) => boolean;
 
-export interface SearchResult {
+interface SearchResult {
   count: number;
   truncated: boolean;
   items: CatalogEntry[];
@@ -697,7 +697,7 @@ export function categoryInGroup(
   return category === requested;
 }
 
-export function inCategoryGroup(item: Categorizable, requested: ItemCategory): boolean {
+function inCategoryGroup(item: Categorizable, requested: ItemCategory): boolean {
   return categoryInGroup(categoryOf(item), requested);
 }
 

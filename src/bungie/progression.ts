@@ -10,7 +10,7 @@ import {
 
 // A Triumph's completion lifecycle, derived from the DestinyRecordState bitmask: whether its
 // objectives are done, whether the reward was claimed, and whether the game is hiding it.
-export interface RecordStatus {
+interface RecordStatus {
   completed: boolean;
   redeemed: boolean;
   obscured: boolean;
@@ -27,7 +27,7 @@ export interface ObjectiveView {
 
 // The narrow projection of a Triumph the read tools surface — enough to filter, sort by how close
 // it is, and explain what's left, without the raw record/objective payloads.
-export interface TriumphView {
+interface TriumphView {
   recordHash: number;
   name: string;
   description?: string;
@@ -41,7 +41,7 @@ export interface TriumphView {
   rewards: string[];
 }
 
-export interface RecordFilters {
+interface RecordFilters {
   name?: string;
   state?: "completed" | "incomplete";
   seal?: string;
@@ -49,7 +49,7 @@ export interface RecordFilters {
   offset?: number;
 }
 
-export interface RecordSearch {
+interface RecordSearch {
   count: number;
   truncated: boolean;
   records: TriumphView[];
@@ -57,7 +57,7 @@ export interface RecordSearch {
 
 // One seal: a title a player earns by completing a set of Triumphs. The live counts say how close
 // the seal is, which is exactly what "which title should I chase" needs.
-export interface SealView {
+interface SealView {
   sealHash: number;
   name: string;
   title?: string;
@@ -67,7 +67,7 @@ export interface SealView {
   earned: boolean;
 }
 
-export interface TriumphSummary {
+interface TriumphSummary {
   score: { total: number; active: number; legacy: number; lifetime: number };
   seals: SealView[];
 }
@@ -89,7 +89,7 @@ export function recordStatus(state: number): RecordStatus {
 // Records live in two scopes — account-wide (profileRecords) and per-character (characterRecords) —
 // so a lookup has to consult both. Character entries win on overlap since they carry the live copy
 // for character-scoped Triumphs.
-export function collectRecords(profile: ProfileResponse): Map<number, RecordComponentState> {
+function collectRecords(profile: ProfileResponse): Map<number, RecordComponentState> {
   const merged = new Map<number, RecordComponentState>();
   const absorb = (records?: Record<string, RecordComponentState>) => {
     for (const [hash, state] of Object.entries(records ?? {})) {
@@ -107,7 +107,7 @@ export function collectRecords(profile: ProfileResponse): Map<number, RecordComp
 
 // Presentation-node rollups are split the same way as records; merge both scopes so every seal has
 // its live progress, since some seals are tracked per-character.
-export function collectNodes(profile: ProfileResponse): Map<number, PresentationNodeState> {
+function collectNodes(profile: ProfileResponse): Map<number, PresentationNodeState> {
   const merged = new Map<number, PresentationNodeState>();
   const absorb = (nodes?: Record<string, PresentationNodeState>) => {
     for (const [hash, state] of Object.entries(nodes ?? {})) {
@@ -126,7 +126,7 @@ export function collectNodes(profile: ProfileResponse): Map<number, Presentation
 // Resolve a Triumph's manifest label, current progress, and rewards into the read-tool projection.
 // Objective labels and reward names are extra manifest reads, so callers should describe only the
 // records they're returning (post-filter, post-limit), not the whole catalog.
-export async function describeRecord(
+async function describeRecord(
   meta: RecordMeta,
   live: RecordComponentState | undefined,
   seal?: string,
@@ -229,7 +229,7 @@ export async function triumphSummary(profile: ProfileResponse): Promise<TriumphS
 
 // A record definition, projected to the fields the tools need. `obscured*` fields back the hidden
 // display the game shows for locked Triumphs.
-export interface RecordMeta {
+interface RecordMeta {
   hash: number;
   name: string;
   description?: string;
@@ -242,7 +242,7 @@ export interface RecordMeta {
   rewardItemHashes: number[];
 }
 
-export async function recordMeta(hash: number): Promise<RecordMeta | undefined> {
+async function recordMeta(hash: number): Promise<RecordMeta | undefined> {
   const record = await findDefinition<RawRecord>("DestinyRecordDefinition", hash);
 
   if (!record) {
@@ -254,7 +254,7 @@ export async function recordMeta(hash: number): Promise<RecordMeta | undefined> 
 
 // A Triumph objective's human-readable label ("Medals earned", "Enemies defeated"). The live
 // progress numbers ride on the profile component; only the wording comes from the manifest.
-export async function objectiveDescription(hash: number): Promise<string | undefined> {
+async function objectiveDescription(hash: number): Promise<string | undefined> {
   const objective = await findDefinition<{ progressDescription?: string }>(
     "DestinyObjectiveDefinition",
     hash,

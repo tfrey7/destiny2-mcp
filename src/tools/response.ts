@@ -5,7 +5,7 @@ import { renderLoadoutCardText, type LoadoutCard } from "../format/loadout/index
 import { cardModel } from "../format/loadout/model.js";
 
 /** How a card's gear art is delivered to the model. Only the bare icon blocks, for now. */
-export type ImageStyle = "icons";
+type ImageStyle = "icons";
 
 /**
  * Wrap any value as a tool response carrying its pretty-printed JSON.

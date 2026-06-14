@@ -8,7 +8,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
  * matches the mimeType `card()` puts on its `ui://` resource. We read it back to decide
  * whether a tool may return the interactive card instead of plain text.
  */
-export const UI_EXTENSION = "io.modelcontextprotocol/ui";
+const UI_EXTENSION = "io.modelcontextprotocol/ui";
 
 /**
  * True when the connected client declared the MCP Apps UI extension. Claude Code (CLI) does

@@ -16,7 +16,7 @@ export interface Ornament {
   crossClass: boolean;
 }
 
-export interface OrnamentMatch {
+interface OrnamentMatch {
   name: string;
   slot: OrnamentSlot;
   look: string;

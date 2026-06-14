@@ -1,7 +1,7 @@
 import type { CardModel } from "./model.js";
 
 /** An MCP image content block: base64 bytes plus their MIME type, fed straight into the model's view. */
-export interface ImageBlock {
+interface ImageBlock {
   type: "image";
   data: string;
   mimeType: string;

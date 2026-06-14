@@ -1,7 +1,7 @@
 import { collectibleSource, itemInfo } from "./manifest.js";
 import { Component, getProfile, type DestinyItem, type ProfileResponse } from "./profile.js";
 
-export interface Acquisition {
+interface Acquisition {
   name: string;
   tier?: string;
   itemType?: string;
@@ -9,7 +9,7 @@ export interface Acquisition {
   owned?: boolean;
 }
 
-export interface OwnedGear {
+interface OwnedGear {
   // Names of gear the player currently holds. Name is the join key on purpose: crafted/variant
   // exotics carry a different item hash (and collectibleHash) than the catalog entry, so matching
   // by hash misses them while the name still lines up.
@@ -109,14 +109,6 @@ export async function acquisitionFor(itemHash: number, owned?: OwnedGear): Promi
   }
 
   return acquisition;
-}
-
-// The embeddable building block: annotate a set of gear with where to find it and whether the
-// account already owns it, fetching the account's held gear and Collections once for the batch.
-export async function acquisitionForMany(itemHashes: number[]): Promise<Acquisition[]> {
-  const owned = await ownedGear();
-
-  return Promise.all(itemHashes.map((hash) => acquisitionFor(hash, owned)));
 }
 
 // Bit 0 of DestinyCollectibleState; set means the account has never acquired the item. Collections

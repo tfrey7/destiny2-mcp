@@ -8,7 +8,7 @@ export interface DimItem {
   socketOverrides?: Record<string, number>;
 }
 
-export interface DimParameters {
+interface DimParameters {
   mods?: number[];
   modsByBucket?: Record<string, number[]>;
   inGameIdentifiers?: { nameHash?: number; colorHash?: number; iconHash?: number };
@@ -33,7 +33,7 @@ export interface BuildRecipe {
   loadout: DimLoadout;
 }
 
-export interface BuildsFile {
+interface BuildsFile {
   source: string;
   scrapedAt: string;
   builds: BuildRecipe[];

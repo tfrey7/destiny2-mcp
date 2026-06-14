@@ -5,7 +5,7 @@ import { type DestinyItem, type ProfileResponse } from "../bungie/profile.js";
 
 // An in-progress quest step a player is actively working: the current step, where it sits in its
 // quest line, what's left on its objectives, and what completing it grants.
-export interface ActiveQuest {
+interface ActiveQuest {
   name: string;
   questLine?: string;
   step?: string;

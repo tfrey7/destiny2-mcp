@@ -4,7 +4,7 @@ import { join } from "node:path";
 import selfsigned from "selfsigned";
 import { CERT_DIR } from "./config.js";
 
-export interface Cert {
+interface Cert {
   key: string;
   cert: string;
   /** True when the cert chains to a trust store the browser honors (mkcert), so no warning is shown. */

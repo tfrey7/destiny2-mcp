@@ -1,9 +1,9 @@
-export interface ArtifactPerkView {
+interface ArtifactPerkView {
   name: string;
   active: boolean;
 }
 
-export interface ArtifactTierView {
+interface ArtifactTierView {
   tier: number;
   unlocked: boolean;
   perks: ArtifactPerkView[];

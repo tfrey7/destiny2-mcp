@@ -47,7 +47,7 @@ export interface CardRow {
   empty?: boolean;
 }
 
-export interface CardSection {
+interface CardSection {
   label: Section;
   rows: CardRow[];
 }

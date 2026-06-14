@@ -1,4 +1,4 @@
-export interface KnowledgeSection {
+interface KnowledgeSection {
   id: string;
   title: string;
   body: string;
