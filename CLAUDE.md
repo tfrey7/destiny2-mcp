@@ -24,6 +24,21 @@ respect, and how to reason when helping a player.
   hash; regenerate with `scripts/shaders/build_index.ts`. Account-wide, so no per-class resolution.
 - `src/bungie/` — the API client, OAuth, the SQLite manifest reader (`manifest.ts`), and profile/account
   fetches. `manifest.ts` is the source of truth for an item's `slot`, `element`, `tier`, `ammoType`.
+  It also holds the **reverse-lookup indexes** behind `search_items`' `perk` and `setBonus` filters —
+  the inverses of the manifest's forward data (item→its-perks, set→its-bonuses). `perk:<name|hash>`
+  lists the gear that can roll/insert a perk; `setBonus:<name>` lists the armor whose set grants a
+  bonus. These are built **live in-memory** (`buildPerkIndex` / `buildSetBonusIndex`), lazily on first
+  use and cached for the process lifetime, then dropped on a manifest swap via `onManifestSwap` —
+  exactly like the `catalog` / `nameIndex` caches in the same file. They are **not** committed JSON
+  artifacts (unlike `data/ornaments.json` / `data/shaders.json`): the perk/set data is 100% derivable
+  from the local manifest, so a baked-in file would only go stale against newer manifest versions,
+  whereas the in-memory index always matches the manifest actually loaded. The ornament/shader indexes
+  are committed only because they carry vision-caption data that does **not** exist in the manifest.
+  The perk index is scoped to the perk-bearing socket categories (`WEAPON PERKS`, `INTRINSIC TRAITS`,
+  `ARMOR PERKS` — origin traits ride in `WEAPON PERKS`); armor-mod, masterwork/energy, shader, and
+  ornament sockets are excluded because every armor piece accepts the same huge mod plug sets, which
+  would balloon the inversion ~60× into mostly noise. No regeneration command exists or is needed —
+  the index rebuilds itself whenever the manifest changes.
 - `src/knowledge/` — `get_build_knowledge`. Curated, qualitative build knowledge as code
   (`data.ts` = the sections; `index.ts` = the tool). This is where Destiny _facts and mechanics_ live.
 - `src/format/loadout/` — renders the loadout card. `model.ts` reduces a loadout to sections/rows

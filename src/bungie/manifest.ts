@@ -420,6 +420,11 @@ interface SearchFilters {
   category?: ItemCategory;
   class?: string;
   set?: string;
+  // Reverse lookups, resolved against the perk/set-bonus indexes built from the live manifest. `perk`
+  // is a perk name (substring) or a plug item hash → the gear that can roll/insert it; `setBonus` is a
+  // set-bonus perk name (or set name, substring) → the armor pieces that grant it.
+  perk?: string;
+  setBonus?: string;
   owned?: boolean;
   // "newest" orders by manifest index descending (latest-added first) instead of the default
   // tier-then-name, so "the newest exotic hand cannon" resolves without guessing from memory.
@@ -455,6 +460,11 @@ export async function searchItems(
   const catalog = await catalogPromise;
   const setNames = await setNamesByHash(catalog);
 
+  // Reverse-lookup filters resolve to a set of allowed item hashes up front, so the per-entry test is a
+  // single O(1) membership check rather than a re-derivation per row.
+  const perkItems = filters.perk ? await perkItemHashes(filters.perk) : undefined;
+  const setBonusItems = filters.setBonus ? await setBonusItemHashes(filters.setBonus) : undefined;
+
   const name = filters.name?.toLowerCase();
   const type = filters.type?.toLowerCase();
   const set = filters.set?.toLowerCase();
@@ -479,6 +489,14 @@ export async function searchItems(
     }
 
     if (set && !setNameOf(entry)?.toLowerCase().includes(set)) {
+      return false;
+    }
+
+    if (perkItems && !perkItems.has(entry.hash)) {
+      return false;
+    }
+
+    if (setBonusItems && !setBonusItems.has(entry.hash)) {
       return false;
     }
 
@@ -722,6 +740,8 @@ let catalogPromise: Promise<CatalogEntry[]> | null = null;
 onManifestSwap(() => {
   nameIndexPromise = null;
   catalogPromise = null;
+  perkIndexPromise = null;
+  setBonusIndexPromise = null;
 });
 
 // Searching by attribute means scanning the whole item table once; cache the catalog for the
@@ -802,4 +822,293 @@ function dedupeByName(entries: CatalogEntry[]): CatalogEntry[] {
   }
 
   return [...byName.values()];
+}
+
+// ---- Reverse-lookup indexes ----------------------------------------------------------------------
+//
+// Two inverted maps built lazily from the open manifest and cached for the process lifetime, the same
+// shape as the catalog/name indexes above (and dropped together on a manifest swap). They invert data
+// that the manifest only stores forward — item→its-perks and set→its-bonuses — so search_items can
+// answer "which gear rolls this perk" / "what grants this set bonus" without a per-request full scan.
+
+interface PerkIndex {
+  // Plug item hash → the perk's name and every weapon/armor that can roll or insert it.
+  byHash: Map<number, { name: string; items: number[] }>;
+  // Lowercased perk name → the union of those items, so a name resolves without knowing the hash.
+  // (Enhanced and base copies of a perk share a name but differ by hash, so the union spans both.)
+  itemsByName: Map<string, number[]>;
+}
+
+interface SetBonusEntry {
+  perkName: string;
+  setName: string;
+  setHash: number;
+  items: number[];
+}
+
+interface PlugSetDefinition {
+  reusablePlugItems?: { plugItemHash: number }[];
+}
+
+interface PerkScanItem {
+  displayProperties?: { name?: string };
+  itemType?: number;
+  sockets?: { socketEntries?: SocketEntry[]; socketCategories?: SocketCategoryEntry[] };
+}
+
+interface SetBonusDefinition {
+  displayProperties?: { name?: string };
+  setItems?: number[];
+  setPerks?: { sandboxPerkHash: number }[];
+}
+
+// The socket categories whose plugs are the loadout-defining perks a player searches for — weapon
+// perks (origin traits ride in this category), the weapon intrinsic/frame, and exotic armor perks.
+// Compared case-insensitively because the manifest carries both "WEAPON PERKS" and "Weapon Perks".
+// ARMOR MODS, masterwork/energy, shaders, and ornaments are deliberately excluded: every armor piece
+// accepts the same enormous mod plug sets, which would balloon the inversion ~60× into mostly noise.
+const PERK_SOCKET_CATEGORIES = new Set(["weapon perks", "intrinsic traits", "armor perks"]);
+
+let perkIndexPromise: Promise<PerkIndex> | null = null;
+let setBonusIndexPromise: Promise<SetBonusEntry[]> | null = null;
+
+// The item hashes a perk filter admits: a bare number is a plug item hash; anything else is a perk
+// name matched case-insensitively (exact first, then substring union). Empty set = no such perk.
+async function perkItemHashes(query: string): Promise<Set<number>> {
+  if (!perkIndexPromise) {
+    perkIndexPromise = (async () => {
+      try {
+        return await buildPerkIndex();
+      } catch (error) {
+        perkIndexPromise = null;
+        throw error;
+      }
+    })();
+  }
+
+  const index = await perkIndexPromise;
+  const trimmed = query.trim();
+
+  if (/^\d+$/.test(trimmed)) {
+    return new Set(index.byHash.get(Number(trimmed))?.items ?? []);
+  }
+
+  const key = trimmed.toLowerCase();
+  const exact = index.itemsByName.get(key);
+
+  if (exact) {
+    return new Set(exact);
+  }
+
+  const union = new Set<number>();
+
+  for (const [name, items] of index.itemsByName) {
+    if (name.includes(key)) {
+      for (const hash of items) {
+        union.add(hash);
+      }
+    }
+  }
+
+  return union;
+}
+
+// The item hashes a setBonus filter admits: armor whose set grants a bonus matching the query, by the
+// bonus perk's name or the set's own name (substring) — so "Supercyclical" and "Iron Battalion" both land.
+async function setBonusItemHashes(query: string): Promise<Set<number>> {
+  if (!setBonusIndexPromise) {
+    setBonusIndexPromise = (async () => {
+      try {
+        return await buildSetBonusIndex();
+      } catch (error) {
+        setBonusIndexPromise = null;
+        throw error;
+      }
+    })();
+  }
+
+  const entries = await setBonusIndexPromise;
+  const key = query.trim().toLowerCase();
+  const union = new Set<number>();
+
+  for (const entry of entries) {
+    if (entry.perkName.toLowerCase().includes(key) || entry.setName.toLowerCase().includes(key)) {
+      for (const hash of entry.items) {
+        union.add(hash);
+      }
+    }
+  }
+
+  return union;
+}
+
+// Invert weapon/armor perk sockets into plug→items. One pass over the item table captures every item's
+// name (to resolve plug names cheaply afterward) and, for weapons/armor, walks each perk-category socket
+// — its initial plug, any inline reusable plugs, and the randomized/reusable plug set — to the gear hash.
+async function buildPerkIndex(): Promise<PerkIndex> {
+  const plugSets = new Map<number, number[]>();
+
+  for await (const { hash, def } of allDefinitions<PlugSetDefinition>("DestinyPlugSetDefinition")) {
+    plugSets.set(
+      hash,
+      (def.reusablePlugItems ?? []).map((plug) => plug.plugItemHash),
+    );
+  }
+
+  const perkCategories = new Set<number>();
+
+  for await (const { hash, def } of allDefinitions<NameDefinition>(
+    "DestinySocketCategoryDefinition",
+  )) {
+    const name = def.displayProperties?.name?.toLowerCase();
+
+    if (name && PERK_SOCKET_CATEGORIES.has(name)) {
+      perkCategories.add(hash);
+    }
+  }
+
+  const nameByHash = new Map<number, string>();
+  const itemsByPlug = new Map<number, Set<number>>();
+
+  for await (const { hash, def } of allDefinitions<PerkScanItem>(ITEM_TABLE)) {
+    const name = def.displayProperties?.name;
+
+    if (name) {
+      nameByHash.set(hash, name);
+    }
+
+    if (def.itemType !== 2 && def.itemType !== 3) {
+      continue;
+    }
+
+    const entries = def.sockets?.socketEntries;
+
+    if (!entries) {
+      continue;
+    }
+
+    const perkIndexes = perkSocketIndexes(def.sockets?.socketCategories ?? [], perkCategories);
+
+    entries.forEach((entry, index) => {
+      if (!perkIndexes.has(index)) {
+        return;
+      }
+
+      for (const plugHash of socketPlugHashes(entry, plugSets)) {
+        const items = itemsByPlug.get(plugHash) ?? new Set<number>();
+
+        items.add(hash);
+        itemsByPlug.set(plugHash, items);
+      }
+    });
+  }
+
+  return finishPerkIndex(itemsByPlug, nameByHash);
+}
+
+// Resolve each plug hash to its name, drop empty/tracker sockets, and build both the by-hash and
+// by-name lookups. Split out of buildPerkIndex so the scan reads as a single linear pass.
+function finishPerkIndex(
+  itemsByPlug: Map<number, Set<number>>,
+  nameByHash: Map<number, string>,
+): PerkIndex {
+  const byHash = new Map<number, { name: string; items: number[] }>();
+  const itemsByName = new Map<string, Set<number>>();
+
+  for (const [plugHash, items] of itemsByPlug) {
+    const name = nameByHash.get(plugHash);
+
+    if (!name || /^Empty\b/.test(name) || /Tracker$/.test(name)) {
+      continue;
+    }
+
+    byHash.set(plugHash, { name, items: [...items] });
+
+    const key = name.toLowerCase();
+    const merged = itemsByName.get(key) ?? new Set<number>();
+
+    for (const hash of items) {
+      merged.add(hash);
+    }
+
+    itemsByName.set(key, merged);
+  }
+
+  return {
+    byHash,
+    itemsByName: new Map([...itemsByName].map(([key, items]) => [key, [...items]])),
+  };
+}
+
+// The socket indexes belonging to a perk-bearing category, so the scan walks only those sockets.
+function perkSocketIndexes(
+  categories: SocketCategoryEntry[],
+  perkCategories: Set<number>,
+): Set<number> {
+  const indexes = new Set<number>();
+
+  for (const category of categories) {
+    if (perkCategories.has(category.socketCategoryHash)) {
+      for (const index of category.socketIndexes) {
+        indexes.add(index);
+      }
+    }
+  }
+
+  return indexes;
+}
+
+// Every plug a socket can hold: its default plug, any inline reusable plugs, and the contents of its
+// reusable/randomized plug sets — the same sources displayPlugs reads, flattened to bare hashes.
+function socketPlugHashes(entry: SocketEntry, plugSets: Map<number, number[]>): number[] {
+  const hashes: number[] = [];
+
+  if (entry.singleInitialItemHash) {
+    hashes.push(entry.singleInitialItemHash);
+  }
+
+  for (const plug of entry.reusablePlugItems ?? []) {
+    hashes.push(plug.plugItemHash);
+  }
+
+  for (const setHash of [entry.reusablePlugSetHash, entry.randomizedPlugSetHash]) {
+    if (setHash !== undefined) {
+      hashes.push(...(plugSets.get(setHash) ?? []));
+    }
+  }
+
+  return hashes;
+}
+
+// The set-bonus table is tiny (~56 sets × 2 bonuses), so a flat list scanned per query is cheaper than
+// an inverted map. Each entry pairs a bonus perk (name resolved via its sandbox perk) with the set's
+// member item hashes — every class's pieces, so classType still narrows the result the usual way.
+async function buildSetBonusIndex(): Promise<SetBonusEntry[]> {
+  const entries: SetBonusEntry[] = [];
+
+  for await (const { hash, def } of allDefinitions<SetBonusDefinition>(
+    "DestinyEquipableItemSetDefinition",
+  )) {
+    const setName = def.displayProperties?.name;
+
+    if (!setName) {
+      continue;
+    }
+
+    const items = def.setItems ?? [];
+
+    for (const perk of def.setPerks ?? []) {
+      const sandbox = await getDefinition<NameDefinition>(
+        "DestinySandboxPerkDefinition",
+        perk.sandboxPerkHash,
+      );
+      const perkName = sandbox.displayProperties?.name;
+
+      if (perkName) {
+        entries.push({ perkName, setName, setHash: hash, items });
+      }
+    }
+  }
+
+  return entries;
 }
