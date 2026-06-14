@@ -37,6 +37,7 @@ import { registerSuggestTriumphs } from "./suggest_triumphs.js";
 import { registerTransferItem } from "./transfer_item.js";
 import { registerUpdateLoadoutIdentifiers } from "./update_loadout_identifiers.js";
 import { registerVaultInventory } from "./vault_inventory.js";
+import { registerWeaponKills } from "./weapon_kills.js";
 
 export function registerTools(server: McpServer): void {
   registerLogin(server);
@@ -66,6 +67,7 @@ export function registerTools(server: McpServer): void {
   registerShowTriumphs(server);
   registerActivityHistory(server);
   registerActivityRecap(server);
+  registerWeaponKills(server);
   registerListActiveQuests(server);
 
   registerEquipLoadout(server);
