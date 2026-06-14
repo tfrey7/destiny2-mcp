@@ -9,6 +9,8 @@ import {
   triumphIconMap,
   type TriumphCard,
 } from "../format/triumphs/index.js";
+import { weaponIconBlock, weaponIconMap } from "../format/weapon/images.js";
+import { renderWeaponCardText, type WeaponCard } from "../format/weapon/index.js";
 
 /** How a card's gear art is delivered to the model. Only the bare icon blocks, for now. */
 type ImageStyle = "icons";
@@ -99,6 +101,37 @@ export async function triumphCard(spec: TriumphCard, opts?: { ui?: boolean }) {
   };
 
   return { content: [{ type: "text" as const, text: note }], structuredContent };
+}
+
+/**
+ * Wrap a weapon as a tool response carrying its inspect card (see renderWeaponCardText).
+ *
+ * The weapon's own icon rides along as a model-visible image block (like show_item), and the text
+ * card is the model-visible content on plain hosts and the CLI. When `ui` is true (a UI-capable host;
+ * see clientSupportsUi), the WeaponCard rides as structuredContent — forwarded to the iframe rendered
+ * from the `ui://destiny2/weapon` template — and the model gets a terse note instead of the text card,
+ * so it doesn't echo the perk grid back in prose. The inlined icon map (perk + element icons as data
+ * URIs) rides in structuredContent at zero token cost, as Claude Desktop's sandbox blocks remote hosts.
+ */
+export async function weaponCard(spec: WeaponCard, opts?: { ui?: boolean }) {
+  const block = await weaponIconBlock(spec);
+  const images = block ? [block] : [];
+
+  if (!opts?.ui) {
+    return {
+      content: [{ type: "text" as const, text: renderWeaponCardText(spec) }, ...images],
+    };
+  }
+
+  const rolled = spec.instance ? ", with the equipped roll highlighted" : "";
+  const note = `Weapon inspect card for ${spec.name} shown to the user — its intrinsic frame and the candidate perks per column${rolled}. The card is the answer; don't restate its perks in prose.`;
+  const structuredContent: Record<string, unknown> = {
+    ...spec,
+    icons: await weaponIconMap(spec),
+    elementPips: ELEMENT_PIP,
+  };
+
+  return { content: [{ type: "text" as const, text: note }, ...images], structuredContent };
 }
 
 /**

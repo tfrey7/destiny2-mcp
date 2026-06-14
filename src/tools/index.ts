@@ -28,6 +28,7 @@ import { registerShowEquipped } from "./show_equipped.js";
 import { registerShowItem } from "./show_item.js";
 import { registerShowLoadout } from "./show_loadout.js";
 import { registerShowTriumphs } from "./show_triumphs.js";
+import { registerShowWeapon } from "./show_weapon.js";
 import { registerSnapshotLoadout } from "./snapshot_loadout.js";
 import { registerSuggestTriumphs } from "./suggest_triumphs.js";
 import { registerTransferItem } from "./transfer_item.js";
@@ -50,6 +51,7 @@ export function registerTools(server: McpServer): void {
   registerHowToAcquire(server);
   registerSearchItems(server);
   registerShowItem(server);
+  registerShowWeapon(server);
   registerFindOrnaments(server);
   registerFindShaders(server);
   registerGetArtifact(server);

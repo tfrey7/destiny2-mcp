@@ -5,6 +5,7 @@ import { registerKnowledgeResources, registerKnowledgeTools } from "./knowledge/
 import { registerTools } from "./tools/index.js";
 import { registerLoadoutUi } from "./tools/loadout_ui.js";
 import { registerTriumphsUi } from "./tools/triumphs_ui.js";
+import { registerWeaponUi } from "./tools/weapon_ui.js";
 
 const server = new McpServer({ name: "destiny2-mcp", version: "1.0.0" });
 
@@ -13,6 +14,7 @@ registerKnowledgeTools(server);
 registerKnowledgeResources(server);
 registerLoadoutUi(server);
 registerTriumphsUi(server);
+registerWeaponUi(server);
 
 try {
   await loadManifest();

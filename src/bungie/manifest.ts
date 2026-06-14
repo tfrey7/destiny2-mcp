@@ -267,6 +267,22 @@ export async function plugSetItemHashes(plugSetHash: number): Promise<number[]> 
   return (plugSet.reusablePlugItems ?? []).map((plug) => plug.plugItemHash);
 }
 
+// The plugs a weapon's perk column can roll, read straight from the manifest plug set — the pool a
+// vendor/Collections preview shows, independent of any owned copy. Prefers plugs flagged
+// `currentlyCanRoll`, so the grid reflects today's loot pool and drops sunset perks; but a fully
+// retired copy (every plug `currentlyCanRoll: false`) falls back to the whole historical set, since a
+// populated grid of past perks beats an empty column. A plug set with no flag keeps all its entries.
+export async function rollablePlugHashes(plugSetHash: number): Promise<number[]> {
+  const plugSet = await getDefinition<{
+    reusablePlugItems?: { plugItemHash: number; currentlyCanRoll?: boolean }[];
+  }>("DestinyPlugSetDefinition", plugSetHash);
+
+  const plugs = plugSet.reusablePlugItems ?? [];
+  const rollable = plugs.filter((plug) => plug.currentlyCanRoll !== false);
+
+  return (rollable.length > 0 ? rollable : plugs).map((plug) => plug.plugItemHash);
+}
+
 // The name of the armor set a piece belongs to — the cheap lookup for list projections that only
 // need to group pieces, not explain the bonuses.
 export async function itemSetName(setHash: number): Promise<string | undefined> {
