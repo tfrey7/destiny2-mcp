@@ -409,6 +409,7 @@ export interface SearchFilters {
   // tier-then-name, so "the newest exotic hand cannon" resolves without guessing from memory.
   sort?: "newest";
   limit?: number;
+  offset?: number;
 }
 
 // Ownership lives in the player's account, not the manifest, so the caller supplies the lookup.
@@ -488,9 +489,12 @@ export async function searchItems(
   );
 
   const limit = filters.limit ?? 50;
-  const items = sorted.slice(0, limit).map((entry) => ({ ...entry, setName: setNameOf(entry) }));
+  const offset = filters.offset ?? 0;
+  const items = sorted
+    .slice(offset, offset + limit)
+    .map((entry) => ({ ...entry, setName: setNameOf(entry) }));
 
-  return { count: sorted.length, truncated: sorted.length > limit, items };
+  return { count: sorted.length, truncated: offset + items.length < sorted.length, items };
 }
 
 const ITEM_TABLE = "DestinyInventoryItemDefinition";

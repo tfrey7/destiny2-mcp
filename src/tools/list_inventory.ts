@@ -11,7 +11,7 @@ export function registerListInventory(server: McpServer): void {
     "list_inventory",
     {
       description:
-        "List items in character inventories and the vault. Filter by any combination of character, case-insensitive name search, element, category (weapon/armor/shader/…), item type (the specific kind, e.g. 'Auto Rifle' — not a category word like 'weapon'; use category for that), rarity tier, gear tier (the 1-5 Edge of Fate quality scale, armor only), and armor set name. Each item also reports its element, type, category, rarity tier, gear tier, and set so results can be refined without inspect_item. Items sitting in the Postmaster (uncollected mail) are listed under a separate per-character `postmaster` array, not mixed into `items` — they can't be equipped or transferred until pulled in-game, so they're kept out of the actionable inventory and the summary counts. The full inventory is large: narrow with filters, or pass summary:true to get counts by element/type/slot/tier/gearTier instead of the item list. Results are capped at `limit` (default 200) with a `truncated` flag.",
+        "List items in character inventories and the vault. Filter by any combination of character, case-insensitive name search, element, category (weapon/armor/shader/…), item type (the specific kind, e.g. 'Auto Rifle' — not a category word like 'weapon'; use category for that), rarity tier, gear tier (the 1-5 Edge of Fate quality scale, armor only), and armor set name. Each item also reports its element, type, category, rarity tier, gear tier, and set so results can be refined without inspect_item. Items sitting in the Postmaster (uncollected mail) are listed under a separate per-character `postmaster` array, not mixed into `items` — they can't be equipped or transferred until pulled in-game, so they're kept out of the actionable inventory and the summary counts. The full inventory is large: narrow with filters, or pass summary:true to get counts by element/type/slot/tier/gearTier instead of the item list. Results are capped at `limit` (default 200); `total` is the full match count and `truncated` flags more beyond the current page — pass `offset` to page through the rest (the page spans characters then the vault in order).",
       inputSchema: {
         characterId: z.string().optional(),
         search: z.string().optional(),
@@ -23,6 +23,7 @@ export function registerListInventory(server: McpServer): void {
         set: z.string().optional(),
         summary: z.boolean().optional(),
         limit: z.number().int().min(1).max(500).optional(),
+        offset: z.number().int().min(0).optional(),
       },
       annotations: { readOnlyHint: true },
     },
@@ -37,6 +38,7 @@ export function registerListInventory(server: McpServer): void {
       set,
       summary,
       limit,
+      offset,
     }) => {
       const profile = await getProfile([
         Component.Characters,
@@ -104,11 +106,18 @@ export function registerListInventory(server: McpServer): void {
       }
 
       const cap = limit ?? 200;
+      const start = offset ?? 0;
       const total =
         charGroups.reduce((sum, group) => sum + group.items.length, 0) + vaultItems.length;
+      let toSkip = start;
       let budget = cap;
+      // The page spans groups in order (each character, then the vault), so the offset is consumed
+      // across them rather than applied per group.
       const take = (items: InventoryItem[]) => {
-        const slice = items.slice(0, Math.max(0, budget));
+        const afterSkip = items.slice(Math.min(toSkip, items.length));
+
+        toSkip = Math.max(0, toSkip - items.length);
+        const slice = afterSkip.slice(0, Math.max(0, budget));
 
         budget -= slice.length;
         return slice;
@@ -121,12 +130,15 @@ export function registerListInventory(server: McpServer): void {
         ...(group.postmaster.length ? { postmaster: group.postmaster } : {}),
       }));
       const vault = take(vaultItems);
+      const shown = cap - budget;
 
       return json({
         total,
-        truncated: total > cap,
-        ...(total > cap
-          ? { note: `Showing ${cap} of ${total} items. Narrow with filters or use summary:true.` }
+        truncated: start + shown < total,
+        ...(start + shown < total
+          ? {
+              note: `Showing ${start + 1}-${start + shown} of ${total} items. Pass offset to page, narrow with filters, or use summary:true.`,
+            }
           : {}),
         characters,
         vault,

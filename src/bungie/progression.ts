@@ -46,6 +46,7 @@ export interface RecordFilters {
   state?: "completed" | "incomplete";
   seal?: string;
   limit?: number;
+  offset?: number;
 }
 
 export interface RecordSearch {
@@ -192,13 +193,14 @@ export async function searchRecords(
   });
 
   const limit = filters.limit ?? 25;
+  const offset = filters.offset ?? 0;
   const records = await Promise.all(
     matches
-      .slice(0, limit)
+      .slice(offset, offset + limit)
       .map((record) => describeRecord(record, live.get(record.hash), seals.get(record.hash))),
   );
 
-  return { count: matches.length, truncated: matches.length > limit, records };
+  return { count: matches.length, truncated: offset + records.length < matches.length, records };
 }
 
 // The seal overview: total Triumph score plus every seal with its live completion counts, so a
