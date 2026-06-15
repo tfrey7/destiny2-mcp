@@ -183,31 +183,34 @@ export async function plugDescription(definition: ItemDefinition): Promise<strin
   return "";
 }
 
-// Resolve plug hashes to the atoms a player reasons with: each plug's name and rules text, following
-// the sandbox-perk link for aspects/fragments whose own description is blank. Deduped by name. This
-// is the shared resolver behind inspect_item's perk list and the mechanics the build tools surface
-// inline, so a loadout's loop can be reasoned out from its parts rather than looked up one by one.
+// Resolve plug hashes to the atoms a player reasons with: each plug's hash, name, and rules text,
+// following the sandbox-perk link for aspects/fragments whose own description is blank. Deduped by
+// name. This is the shared resolver behind inspect_item's perk list and the mechanics the build tools
+// surface inline, so a loadout's loop can be reasoned out from its parts rather than looked up one by
+// one. The hash is kept so a resolved plug (notably a subclass aspect/fragment, which search_items
+// cannot reach) can be fed straight back into show_build's plug list.
 export async function describePlugs(
   plugHashes: number[],
-): Promise<{ name: string; description: string }[]> {
+): Promise<{ hash: number; name: string; description: string }[]> {
   const definitions = await Promise.all(plugHashes.map((hash) => itemDefinition(hash)));
   const described = await Promise.all(
-    definitions.map(async (definition) => ({
+    definitions.map(async (definition, i) => ({
+      hash: plugHashes[i],
       name: definition.displayProperties?.name,
       description: await plugDescription(definition),
     })),
   );
 
   const seen = new Set<string>();
-  const plugs: { name: string; description: string }[] = [];
+  const plugs: { hash: number; name: string; description: string }[] = [];
 
-  for (const { name, description } of described) {
+  for (const { hash, name, description } of described) {
     if (!name || seen.has(name)) {
       continue;
     }
 
     seen.add(name);
-    plugs.push({ name, description });
+    plugs.push({ hash, name, description });
   }
 
   return plugs;
@@ -217,7 +220,7 @@ export async function describePlugs(
 // its flavor text. Reads the item definition's initial plugs, so it works for gear you don't own.
 export async function intrinsicPerks(
   itemHash: number,
-): Promise<{ name: string; description: string }[]> {
+): Promise<{ hash: number; name: string; description: string }[]> {
   const definition = await itemDefinition(itemHash);
   const plugHashes = (definition.sockets?.socketEntries ?? [])
     .map((entry) => entry.singleInitialItemHash)

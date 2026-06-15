@@ -168,8 +168,9 @@ function subclassItem(build: BuildRecipe): DimItem | undefined {
 }
 
 // Keep only plugs that actually carry rules text — drops empty ability/fragment sockets, whose names
-// are noise, so what's left is the mechanical atoms worth reasoning from.
-function withRules(plugs: { name: string; description: string }[]) {
+// are noise, so what's left is the mechanical atoms worth reasoning from. Generic so the plug's hash
+// (which show_build needs to render a subclass tile) survives the filter.
+function withRules<T extends { description: string }>(plugs: T[]): T[] {
   return plugs.filter((plug) => plug.description);
 }
 
@@ -194,5 +195,5 @@ async function exoticPerks(hashes: number[]): Promise<ExoticPerk[]> {
 
 interface ExoticPerk {
   name: string;
-  perks: { name: string; description: string }[];
+  perks: { hash: number; name: string; description: string }[];
 }

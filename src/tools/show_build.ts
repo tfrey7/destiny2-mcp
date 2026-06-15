@@ -28,7 +28,7 @@ const itemSchema = z.object({
     .array(z.number())
     .optional()
     .describe(
-      "Target plug hashes in display order — weapon perks, armor mods, or subclass aspects + fragments. Source them from inspect_sockets (plugItemHash), search_items with category 'perk' (itemHash), or a build's subclass socketOverrides from import_build. Omit to show a held copy's real rolled plugs (or the item's defaults).",
+      "Target plug hashes in display order — weapon perks, armor mods, or subclass aspects + fragments. For weapon/armor perks: inspect_sockets (plugItemHash) or search_items with category 'perk' (itemHash). For subclass aspects/fragments/abilities (which search_items cannot resolve): the hash on each plug in import_build's subclass.plugs, or inspect_item on a subclass instance. Omit to show a held copy's real rolled plugs (or the item's defaults).",
     ),
   owned: z
     .boolean()
