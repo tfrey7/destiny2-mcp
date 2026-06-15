@@ -1,5 +1,8 @@
 export type Section = "WEAPONS" | "ARMOR" | "SUBCLASS";
 
+/** Card section labels: the bucket-backed sections plus the artifact, which has no bucket. */
+export type CardSectionLabel = Section | "ARTIFACT";
+
 export const CLASS_ITEM_BUCKET = 1585787867;
 
 export const BUCKET: Record<number, { section: Section; label: string; order: number }> = {

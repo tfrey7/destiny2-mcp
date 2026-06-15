@@ -64,6 +64,9 @@ export function renderLoadoutTemplate(): string {
   .tip b { display: block; margin-bottom: 3px; font-size: 12.5px; color: #fff; }
   .tip .td { white-space: pre-line; color: #aeb3bb; }
   .plug:hover .tip { opacity: 1; visibility: visible; }
+  .artifact { padding: 6px 0; }
+  .aperks { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .aperk { font-size: 12px; padding: 3px 9px; border-radius: 999px; background: #24272f; color: #c7cad3; }
   footer { padding: 12px 16px; border-top: 1px solid #2b2d36; background: #1c1e26; border-radius: 0 0 12px 12px; }
   button { width: 100%; padding: 9px 12px; border: none; border-radius: 8px; cursor: pointer; font: inherit; font-weight: 600; background: #3b5bdb; color: #fff; }
   button:hover { background: #4263eb; }
@@ -148,6 +151,15 @@ const CLIENT_SCRIPT = `
       '<div class="meta">' + nameHtml(row) + badge(row) + plugsHtml(row.plugs) + "</div></div>";
   }
 
+  // The artifact's perks have no manifest icons yet, so they render as name chips rather than the
+  // hover-icon plugs used for gear.
+  function artifactHtml(row) {
+    var perks = (row.perkNames || []).map(function (p) {
+      return '<span class="aperk">' + esc(p) + "</span>";
+    }).join("");
+    return '<div class="artifact">' + nameHtml(row) + '<div class="aperks">' + perks + "</div></div>";
+  }
+
   function section(data, label) {
     var found = (data.sections || []).filter(function (s) { return s.label === label; })[0];
     return found ? (found.rows || []) : [];
@@ -159,12 +171,14 @@ const CLIENT_SCRIPT = `
     var subclass = section(data, "SUBCLASS").map(function (r) { return itemHtml(r, false); }).join("");
     var weapons = section(data, "WEAPONS").map(function (r) { return itemHtml(r, true); }).join("");
     var armor = section(data, "ARMOR").map(function (r) { return itemHtml(r, false); }).join("");
+    var artifact = section(data, "ARTIFACT")[0];
 
     var body = "";
     if (subclass) body += '<div class="seclabel">SUBCLASS</div>' + subclass;
     body += '<div class="cols">' +
       '<div class="col"><div class="seclabel">WEAPONS</div>' + weapons + "</div>" +
       '<div class="col"><div class="seclabel">ARMOR</div>' + armor + "</div></div>";
+    if (artifact) body += '<div class="seclabel">ARTIFACT</div>' + artifactHtml(artifact);
 
     var footer = data.action ? '<footer><button id="act">' + esc(data.action.label) + "</button></footer>" : "";
     document.getElementById("card").innerHTML =

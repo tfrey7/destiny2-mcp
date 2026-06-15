@@ -76,7 +76,7 @@ export async function card(
   // UI host: the human sees the rendered card. Give the model a terse note rather than the full text
   // card, so it doesn't echo the whole loadout back in prose underneath the card. (The text card
   // stays the output on non-UI hosts above.)
-  const note = `Loadout card for ${spec.className} shown to the user — subclass, weapons, and armor with their perks, mods, and aspects. The card is the answer; don't restate its contents in prose.`;
+  const note = `Loadout card for ${spec.className} shown to the user — subclass, weapons, and armor with their perks, mods, and aspects${spec.artifact ? ", plus the seasonal artifact and its perks" : ""}. The card is the answer; don't restate its contents in prose.`;
   const content = [{ type: "text" as const, text: note }, ...images];
 
   // The iframe renders client-side from structuredContent, which never reaches the model — so the

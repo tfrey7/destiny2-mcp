@@ -1,5 +1,5 @@
 import type { PlugView } from "../../bungie/plugs.js";
-import { BUCKET, CLASS_ITEM_BUCKET, type Section } from "./data.js";
+import { BUCKET, type CardSectionLabel, CLASS_ITEM_BUCKET, type Section } from "./data.js";
 
 export interface LoadoutCardItem {
   name: string;
@@ -28,6 +28,9 @@ export interface LoadoutCard {
   /** Overrides the detail shown after the class name. Defaults to `slot N` when slot is set. */
   subtitle?: string;
   items: LoadoutCardItem[];
+  /** The seasonal artifact to equip and the perks to choose on it, by name. Read-only over the API
+   * (the player sets it in-game), so it renders as a names-only section — no icons or ownership. */
+  artifact?: { name: string; perks: string[] };
 }
 
 export interface CardRow {
@@ -45,6 +48,9 @@ export interface CardRow {
   hash?: number;
   /** Socketed plugs (perks / mods / aspects + fragments) shown as icons with tooltips. */
   plugs?: PlugView[];
+  /** Artifact perk names, listed as plain text under the row — the ARTIFACT section's perks have no
+   * manifest icons yet, so they render as names rather than the icon plugs above. */
+  perkNames?: string[];
   /** Whether the player holds this piece, when the card is a target build (see LoadoutCardItem.owned). */
   owned?: boolean;
   /** The placeholder row for a loadout with no class item equipped. */
@@ -52,7 +58,7 @@ export interface CardRow {
 }
 
 interface CardSection {
-  label: Section;
+  label: CardSectionLabel;
   rows: CardRow[];
 }
 
@@ -145,6 +151,22 @@ export function cardModel(card: LoadoutCard): CardModel {
   }
 
   sections.push({ label: "ARMOR", rows: armorRows });
+
+  // The artifact sits outside the gear buckets, so it isn't in card.items — it rides on its own field
+  // and renders as a names-only section after the gear.
+  if (card.artifact) {
+    sections.push({
+      label: "ARTIFACT",
+      rows: [
+        {
+          name: card.artifact.name,
+          rarity: "Basic",
+          middle: "Artifact",
+          perkNames: card.artifact.perks,
+        },
+      ],
+    });
+  }
 
   return { title: card.title, subtitle, sections };
 }

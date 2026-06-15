@@ -58,11 +58,25 @@ export function registerShowBuild(server: McpServer): void {
         items: z
           .array(itemSchema)
           .describe("The weapons, armor, and subclass that make up the build."),
+        artifact: z
+          .object({
+            name: z
+              .string()
+              .describe("The seasonal artifact to equip, e.g. 'Implement of Curiosity'."),
+            perks: z
+              .array(z.string())
+              .optional()
+              .describe("The perks to choose on it, by name, in display order."),
+          })
+          .optional()
+          .describe(
+            "The seasonal artifact and the perks to pick on it. The artifact is read-only over the API, so this is shown for the player to set manually in-game — name it on a complete build (get_build_knowledge('artifact')).",
+          ),
       },
       annotations: { readOnlyHint: true },
       _meta: { ui: { resourceUri: LOADOUT_UI_RESOURCE_URI, visibility: ["model", "app"] } },
     },
-    async ({ title, subtitle, className, items }) => {
+    async ({ title, subtitle, className, items, artifact }) => {
       // Ownership and live rolls are best-effort enrichment: a logged-out (or failed) fetch yields
       // null, so the build still renders — just without owned markers or real held rolls.
       const profile = await tryProfile();
@@ -85,6 +99,7 @@ export function registerShowBuild(server: McpServer): void {
         className: className ?? recentClass(profile) ?? "Guardian",
         subtitle,
         items: resolved,
+        artifact: artifact ? { name: artifact.name, perks: artifact.perks ?? [] } : undefined,
       };
 
       // UI-capable hosts get the interactive card via structuredContent; the CLI falls through to the

@@ -41,6 +41,19 @@ export function renderLoadoutCardText(card: LoadoutCard): string {
     }
 
     lines.push(boxLine(section.label));
+
+    // The artifact has no columns or element — just a name and its chosen perks, listed as text.
+    if (section.label === "ARTIFACT") {
+      const artifact = section.rows[0];
+
+      lines.push(boxLine(`  ${truncate(artifact.name, BOX_WIDTH - 2)}`));
+      for (const perk of artifact.perkNames ?? []) {
+        lines.push(boxLine(`  ${PERK_MARK} ${truncate(perk, BOX_WIDTH - 4)}`));
+      }
+
+      return;
+    }
+
     for (const row of section.rows) {
       lines.push(rowLine(row));
     }
@@ -63,6 +76,7 @@ const MIDDLE_WIDTH = 13;
 const EXOTIC_MARK = "★";
 const OWNED_MARK = "✓";
 const NEEDED_MARK = "+";
+const PERK_MARK = "●";
 
 function pad(text: string, width: number): string {
   return text + " ".repeat(Math.max(0, width - text.length));
