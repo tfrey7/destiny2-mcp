@@ -72,9 +72,10 @@ Deliver the spec in this shape:
 
 A build is complete or it is not delivered. Every weapon names its perks per column; every armor piece
 names its mods; the subclass names super, grenade, melee, class ability, movement, BOTH aspects, and ALL
-fragments; plus a stat priority. A card with empty sockets — or "the exotic + the subclass element" alone
-— is not a build. Fill every socket before showing it. "Farm a set whose bonus supports your engine" is
-not a recommendation either — name the set and the bonus.
+fragments; plus a stat priority; plus the seasonal artifact to equip and the perks to choose on it (set
+manually in-game — the API can't apply it; see the artifact topic). A card with empty sockets — or "the
+exotic + the subclass element" alone — is not a build. Fill every socket before showing it. "Farm a set
+whose bonus supports your engine" is not a recommendation either — name the set and the bonus.
 
 Pin the engine first; do not reverse-engineer it from current gear. A build collapses out of ONE seed —
 the subclass + exotic + engine (e.g. "Voidwalker, Contraverse Hold, Vortex/Devour"). Get that seed from
@@ -155,6 +156,40 @@ set-bonus progress: which perks are active now and how many more pieces the next
 and list_inventory report a piece's \`set\`. Guidance: completing a 2- or 4-piece bonus is often worth
 more than a marginal stat or gear-tier gain, so when a player is one piece away from a strong set perk,
 say so. Set bonuses are armor-only; weapons have no set. Legacy armor belongs to no set.`,
+  },
+  {
+    id: "artifact",
+    title: "Seasonal artifact: Artifacts 2.0",
+    body: `The seasonal artifact is a separate source of build-bonus perks that sits outside the
+three-weapon / five-armor / subclass loadout — but it is part of a complete build, so a recommendation
+names it. As of the game's final major update (Monument of Triumph) the artifact runs the "Artifacts 2.0"
+model:
+
+- SEVEN artifacts, ONE active. Six artifacts from past seasons were brought back alongside the one already
+  live, and you equip exactly one at a time. Switching the active artifact swaps the entire slate of perks
+  it offers, so the artifact is itself a build choice — pick the one whose perks match the kit.
+- Perks are chosen on the artifact screen. Each artifact offers a slate of build-bonus perks (ability,
+  weapon, and economy buffs); you select the ones the build wants. get_artifact reads the live state — the
+  active artifact and which perks are chosen.
+- Anti-Champion is NO LONGER on the artifact. The old anti-barrier / overload / unstoppable artifact mods
+  were removed; champion-stunning is now INTRINSIC to every weapon, tied to its archetype/frame and applied
+  just by firing or hitting. Champion readiness is therefore a WEAPON pick, not an artifact pick — to cover
+  a champion type, bring a weapon of the archetype that stuns it (see the systems topic). Never tell a
+  player to slot an anti-champion artifact mod; that mechanic is gone.
+- Selection saves with in-game Loadouts. The chosen artifact and its perks are remembered per in-game
+  Loadout, so an in-game loadout swap carries its artifact setup along.
+
+API boundary — the artifact is READ-ONLY. The server can READ the active artifact and its chosen perks
+(get_artifact) but CANNOT switch the artifact or set its perks: Bungie exposes no write endpoint for it, and
+an InsertSocketPlugFree into an artifact socket is rejected (DestinySocketActionNotAllowed). Unlike
+weapon / armor / subclass plugs — which equip_build and insert_plug apply — the artifact step is one the
+PLAYER sets by hand on the artifact screen. A recommendation NAMES the artifact to equip and the perks to
+choose, then says to set them in-game; never imply the tools will apply it.
+
+The per-artifact perk slate is read live from the manifest, so get_artifact reflects exactly what the loaded
+manifest knows. While the manifest is still catching up to a new patch it may surface only the
+previously-active artifact; the full set appears once the manifest version advances. Report what the tool
+returns — do not backfill missing artifacts or perks from memory or the web.`,
   },
   {
     id: "equipping",
@@ -522,10 +557,13 @@ subclass engine and exotic that powers it.
   melee kills, Firepower on grenade kills). Orbs are the fuel for the Armor Charge economy and super.
 - Surges: damage mods that boost a matching element. Match weapon elements to your subclass to keep
   surge bonuses active. This is why element-matched weapons are preferred.
-- Champions: in endgame content, special enemies require specific stuns. Many subclass verbs gained
-  intrinsic champion-stun properties in The Final Shape. As a rule of thumb (confirm in-game or via
-  the active artifact): Blind / Jolt / Suppress disrupt Overload; Freeze / Suspend / Scorch-Ignition
-  lock down Unstoppable; Radiant weapons and Unraveling / Volatile rounds pierce Barrier.
+- Champions: in endgame content, special enemies require specific stuns. As of the final update the
+  artifact NO LONGER carries anti-champion mods — every weapon stuns champions INTRINSICALLY by its
+  archetype/frame, applied just by firing or hitting (confirm a weapon's stun in inspect_item). Subclass
+  verbs also stun: Blind / Jolt / Suppress disrupt Overload; Freeze / Suspend / Scorch-Ignition lock down
+  Unstoppable; Radiant weapons and Unraveling / Volatile rounds pierce Barrier. Cover a champion type with
+  the right weapon archetype or the right verb — not an artifact mod (that mechanic is gone; see the
+  artifact topic).
 - Stats: ability regeneration and effectiveness scale with the character's six stats (Weapons, Health,
   Class, Grenade, Super, Melee — see the armor section for what each governs). Build around the one or
   two your engine depends on — the Grenade, Melee, or Class stat for an ability loop — plus Health for
