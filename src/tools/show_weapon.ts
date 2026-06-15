@@ -6,6 +6,7 @@ import { weaponSockets, type WeaponSockets, type WeaponSocketProfile } from "../
 import { WEAPON_UI_RESOURCE_URI } from "../format/weapon/html.js";
 import type { WeaponCard } from "../format/weapon/index.js";
 import { perkTip } from "../knowledge/perk_tips.js";
+import { intrinsicTip } from "../knowledge/playstyle_tips.js";
 import { instanceMap } from "./inventory.js";
 import { json, weaponCard } from "./response.js";
 import { clientSupportsUi } from "./ui_capability.js";
@@ -115,23 +116,27 @@ export async function weaponCardSpec(
     intrinsic: sockets.intrinsic,
     columns: sockets.columns,
     instance: itemInstanceId !== undefined,
-    tips: usageTips(sockets),
+    tips: usageTips(meta?.type ?? "", sockets),
   };
 }
 
-// Collect curated usage tips for the perks on the card — the intrinsic first, then perks in column
-// order — keeping each perk once. The map only holds entries for perks where usage actually matters,
-// so a weapon with no such perk yields an empty list (and no "HOW TO USE" section).
-function usageTips(sockets: WeaponSockets): { perk: string; tip: string }[] {
-  const names = [
-    ...(sockets.intrinsic ? [sockets.intrinsic.name] : []),
-    ...sockets.columns.flatMap((column) => column.plugs.map((plug) => plug.name)),
-  ];
-
+// Collect curated usage tips for the card — the intrinsic frame first, then notable column perks, each
+// kept once. The intrinsic resolves through intrinsicTip (by weapon type × frame/exotic name), which
+// always returns at least a per-type baseline, so every weapon shows a "HOW TO USE" block; column perks
+// resolve through perkTip, which is sparse, so only perks whose sequencing actually matters add a row.
+function usageTips(type: string, sockets: WeaponSockets): { perk: string; tip: string }[] {
   const tips: { perk: string; tip: string }[] = [];
   const seen = new Set<string>();
 
-  for (const name of names) {
+  const intrinsic = sockets.intrinsic;
+  const intrinsicText = intrinsic ? intrinsicTip(type, intrinsic.name) : undefined;
+
+  if (intrinsic && intrinsicText) {
+    seen.add(intrinsic.name);
+    tips.push({ perk: intrinsic.name, tip: intrinsicText });
+  }
+
+  for (const name of sockets.columns.flatMap((column) => column.plugs.map((plug) => plug.name))) {
     const tip = perkTip(name);
 
     if (tip && !seen.has(name)) {
