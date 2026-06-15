@@ -31,7 +31,8 @@ export function renderWeaponTemplate(): string {
   header { display: flex; gap: 14px; align-items: center; padding: 16px; background: #1c1e26; border-bottom: 2px solid #2b2d36; }
   .thumb { position: relative; flex: none; line-height: 0; }
   .thumb .ic { width: 64px; height: 64px; border-radius: 6px; background: #24272f; display: block; }
-  .thumb .pip { position: absolute; right: -4px; bottom: -4px; width: 22px; height: 22px; filter: drop-shadow(0 0 2px #000) drop-shadow(0 0 2px #000); }
+  .thumb .pip { position: absolute; right: 3px; bottom: 3px; width: 22px; height: 22px; filter: drop-shadow(0 0 2px #000) drop-shadow(0 0 2px #000); }
+  .thumb .wm { position: absolute; left: 0; top: 0; width: 64px; height: 64px; border-radius: 6px; pointer-events: none; }
   .htext { min-width: 0; }
   a.nm, .nm { display: inline-block; font-size: 19px; font-weight: 700; letter-spacing: .01em; text-decoration: none; color: #e9eaf0; }
   a.nm:hover { text-decoration: underline; }
@@ -121,13 +122,14 @@ const CLIENT_SCRIPT = `
   function headerHtml(data) {
     var pipPath = data.element ? PIPS[data.element] : null;
     var pip = pipPath ? img(pipPath, "pip") : "";
+    var wm = data.watermark ? img(data.watermark, "wm") : "";
     var color = RARITY[data.rarity] || "#e9eaf0";
     var name = data.hash
       ? '<a class="nm" style="color:' + color + '" href="' + LIGHTGG + data.hash + '/" target="_blank" rel="noopener">' + esc(data.name) + "</a>"
       : '<span class="nm" style="color:' + color + '">' + esc(data.name) + "</span>";
     var parts = [data.type, data.element, data.ammoType, data.rarity].filter(Boolean).map(esc);
     var attrs = parts.join('<span class="dot">·</span>');
-    return '<header><span class="thumb">' + img(data.icon, "ic") + pip + "</span>" +
+    return '<header><span class="thumb">' + img(data.icon, "ic") + wm + pip + "</span>" +
       '<span class="htext">' + name + '<div class="attrs">' + attrs + "</div></span></header>";
   }
 

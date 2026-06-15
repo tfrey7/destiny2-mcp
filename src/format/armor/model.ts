@@ -35,6 +35,8 @@ export interface ArmorCard extends ArmorSockets {
   gearTier?: number;
   /** Relative Bungie CDN icon path for the piece's art (prepend https://www.bungie.net). */
   icon?: string;
+  /** Relative Bungie CDN path of the season/episode watermark, overlaid on the icon's top corner. */
+  watermark?: string;
   /** The armor's manifest hash, used to link the card name to its light.gg page. */
   hash: number;
   /**

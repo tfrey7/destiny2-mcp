@@ -20,6 +20,8 @@ export interface WeaponCard extends WeaponSockets {
   ammoType?: string;
   /** Relative Bungie CDN icon path for the weapon's art (prepend https://www.bungie.net). */
   icon?: string;
+  /** Relative Bungie CDN path of the season/episode watermark, overlaid on the icon's top corner. */
+  watermark?: string;
   /** The weapon's manifest hash, used to link the card name to its light.gg page. */
   hash: number;
   /** True when built from an owned instance — a column's `selected` perk is the actual roll. */

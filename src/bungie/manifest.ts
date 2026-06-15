@@ -25,6 +25,10 @@ export interface ItemMeta {
   // Relative path to the item's icon on Bungie's CDN (prepend https://www.bungie.net). The
   // manifest stores the path, not the bytes; renderers that show art fetch it from the CDN.
   icon?: string;
+  // The season/episode watermark — the small badge the game overlays on a gear icon to mark which
+  // release it's from. A CDN path like icon; absent for items with no watermark (base-game gear, some
+  // exotics). Cards overlay it in the icon's top corner the way element rides the bottom corner.
+  watermark?: string;
 }
 
 // A completed activity's manifest facts: its name, the activity-type and destination names resolved
@@ -268,6 +272,7 @@ export async function itemMeta(hash: number): Promise<ItemMeta | undefined> {
     bucketHash: item.inventory?.bucketTypeHash ?? 0,
     setHash: item.equippingBlock?.equipableItemSetHash || undefined,
     icon: item.displayProperties?.icon || undefined,
+    watermark: watermarkOf(item),
   };
 }
 
@@ -609,6 +614,11 @@ interface RawItem {
   inventory?: { tierTypeName?: string; bucketTypeHash?: number };
   classType?: number;
   index?: number;
+  // The season/version watermark badge — iconWatermark is the item's release-version badge; the quality
+  // block carries the same per-version paths, indexed by currentVersion, as a fallback for older items
+  // that predate the top-level field. (iconWatermarkFeatured is deliberately ignored — see watermarkOf.)
+  iconWatermark?: string;
+  quality?: { currentVersion?: number; displayVersionWatermarkIcons?: string[] };
 }
 
 interface CollectibleDefinition {
@@ -705,6 +715,19 @@ const TIER_RANK: Record<string, number> = {
 // Comparator: higher tier first. Returns 0 for equal tiers so callers can chain a tiebreaker with `||`.
 function compareByTier(a: { tier?: string }, b: { tier?: string }): number {
   return (TIER_RANK[b.tier ?? ""] ?? 0) - (TIER_RANK[a.tier ?? ""] ?? 0);
+}
+
+// The season/episode the item is from, as its watermark badge. iconWatermark is that badge directly
+// (for a reissue, the reissue's version); the quality block carries the same per-version paths indexed
+// by currentVersion as a fallback for older items that predate the top-level field. NOT
+// iconWatermarkFeatured — that's the "currently featured this Episode" highlight, shared across
+// unrelated items, so it answers "what's promoted now", not "where is this from". Empty when the
+// manifest gives no watermark (base-game gear, some exotics).
+function watermarkOf(item: RawItem): string | undefined {
+  const versioned = item.quality?.displayVersionWatermarkIcons;
+  const fromQuality = versioned?.[item.quality?.currentVersion ?? 0];
+
+  return item.iconWatermark || fromQuality || undefined;
 }
 
 // Weapons carry their element in defaultDamageType; subclasses leave it 0 and use talentGrid.hudDamageType.

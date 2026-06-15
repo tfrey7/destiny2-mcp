@@ -57,6 +57,10 @@ export async function iconMap(model: CardModel): Promise<Record<string, string>>
         paths.add(row.icon);
       }
 
+      if (row.watermark) {
+        paths.add(row.watermark);
+      }
+
       if (weapon && row.element && ELEMENT_PIP[row.element]) {
         paths.add(ELEMENT_PIP[row.element]);
       }

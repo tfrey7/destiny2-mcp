@@ -112,6 +112,7 @@ export async function weaponCardSpec(
     element: meta?.element,
     ammoType: ammoTypeLabel(definition.equippingBlock?.ammoType),
     icon: meta?.icon,
+    watermark: meta?.watermark,
     hash,
     intrinsic: sockets.intrinsic,
     columns: sockets.columns,

@@ -9,6 +9,8 @@ export interface LoadoutCardItem {
   bucketHash: number;
   /** Relative Bungie CDN icon path; present when the source surfaced it (see ItemMeta.icon). */
   icon?: string;
+  /** Relative Bungie CDN path of the season/episode watermark badge (see ItemMeta.watermark). */
+  watermark?: string;
   /** The item's manifest hash, used to link the card name to its light.gg page. */
   hash?: number;
   /** Socketed plugs to show under the name: weapon perks, armor mods, or aspects + fragments. */
@@ -37,6 +39,8 @@ export interface CardRow {
   element?: string;
   /** Relative Bungie CDN icon path, for renderers that show the item's art. */
   icon?: string;
+  /** Relative Bungie CDN path of the season/episode watermark, overlaid on the icon's top corner. */
+  watermark?: string;
   /** The item's manifest hash, for the light.gg link on the name. */
   hash?: number;
   /** Socketed plugs (perks / mods / aspects + fragments) shown as icons with tooltips. */
@@ -115,6 +119,7 @@ export function cardModel(card: LoadoutCard): CardModel {
         middle: item.type,
         element: item.element,
         icon: item.icon,
+        watermark: item.watermark,
         hash: item.hash,
         plugs: item.plugs,
         owned: item.owned,
@@ -129,6 +134,7 @@ export function cardModel(card: LoadoutCard): CardModel {
     rarity: item.rarity,
     middle: BUCKET[item.bucketHash].label,
     icon: item.icon,
+    watermark: item.watermark,
     hash: item.hash,
     plugs: item.plugs,
     owned: item.owned,

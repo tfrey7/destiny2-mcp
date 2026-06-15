@@ -32,6 +32,7 @@ export function renderArmorTemplate(): string {
   .thumb { position: relative; flex: none; line-height: 0; }
   .thumb .ic { width: 64px; height: 64px; border-radius: 6px; background: #24272f; display: block; }
   .thumb .tier { position: absolute; right: -5px; bottom: -5px; min-width: 20px; height: 20px; padding: 0 4px; border-radius: 10px; background: #c9a227; color: #1a1300; font-size: 11px; font-weight: 700; line-height: 20px; text-align: center; box-shadow: 0 0 0 2px #1c1e26; }
+  .thumb .wm { position: absolute; left: 0; top: 0; width: 64px; height: 64px; border-radius: 6px; pointer-events: none; }
   .htext { min-width: 0; }
   a.nm, .nm { display: inline-block; font-size: 19px; font-weight: 700; letter-spacing: .01em; text-decoration: none; color: #e9eaf0; }
   a.nm:hover { text-decoration: underline; }
@@ -117,10 +118,11 @@ const CLIENT_SCRIPT = `
       ? '<a class="nm" style="color:' + color + '" href="' + LIGHTGG + data.hash + '/" target="_blank" rel="noopener">' + esc(data.name) + "</a>"
       : '<span class="nm" style="color:' + color + '">' + esc(data.name) + "</span>";
     var tierBadge = data.gearTier != null ? '<span class="tier">T' + esc(data.gearTier) + "</span>" : "";
+    var wm = data.watermark ? img(data.watermark, "wm") : "";
     var tierAttr = data.gearTier != null ? ("Tier " + data.gearTier) : null;
     var parts = [data.className, data.slot, tierAttr, data.rarity].filter(Boolean).map(esc);
     var attrs = parts.join('<span class="dot">·</span>');
-    return '<header><span class="thumb">' + img(data.icon, "ic") + tierBadge + "</span>" +
+    return '<header><span class="thumb">' + img(data.icon, "ic") + wm + tierBadge + "</span>" +
       '<span class="htext">' + name + '<div class="attrs">' + attrs + "</div></span></header>";
   }
 

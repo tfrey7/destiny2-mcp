@@ -35,6 +35,10 @@ export async function weaponIconMap(card: WeaponCard): Promise<Record<string, st
     paths.add(ELEMENT_PIP[card.element]);
   }
 
+  if (card.watermark) {
+    paths.add(card.watermark);
+  }
+
   if (card.intrinsic?.icon) {
     paths.add(card.intrinsic.icon);
   }

@@ -30,6 +30,10 @@ export async function armorIconMap(card: ArmorCard): Promise<Record<string, stri
     paths.add(card.icon);
   }
 
+  if (card.watermark) {
+    paths.add(card.watermark);
+  }
+
   if (card.exoticPerk?.icon) {
     paths.add(card.exoticPerk.icon);
   }

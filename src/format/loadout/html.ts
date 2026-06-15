@@ -45,7 +45,8 @@ export function renderLoadoutTemplate(): string {
   .item { display: flex; gap: 11px; align-items: flex-start; padding: 6px 0; }
   .thumb { position: relative; flex: none; line-height: 0; }
   .thumb .ic { width: 50px; height: 50px; border-radius: 6px; background: #24272f; display: block; }
-  .thumb .pip { position: absolute; right: 3px; bottom: 3px; width: 17px; height: 17px; filter: drop-shadow(0 0 2px #000) drop-shadow(0 0 2px #000); }
+  .thumb .pip { position: absolute; right: 5px; bottom: 5px; width: 17px; height: 17px; filter: drop-shadow(0 0 2px #000) drop-shadow(0 0 2px #000); }
+  .thumb .wm { position: absolute; left: 0; top: 0; width: 50px; height: 50px; border-radius: 6px; pointer-events: none; }
   .meta { min-width: 0; }
   a.nm, .nm { display: block; line-height: 1.25; font-weight: 600; text-decoration: none; color: #e9eaf0; }
   a.nm:hover { text-decoration: underline; }
@@ -109,7 +110,8 @@ const CLIENT_SCRIPT = `
   function thumb(row, isWeapon) {
     var pipPath = isWeapon && row.element ? PIPS[row.element] : null;
     var pip = pipPath ? img(pipPath, "pip") : "";
-    return '<span class="thumb">' + img(row.icon, "ic") + pip + "</span>";
+    var wm = row.watermark ? img(row.watermark, "wm") : "";
+    return '<span class="thumb">' + img(row.icon, "ic") + wm + pip + "</span>";
   }
 
   function plugsHtml(plugs) {

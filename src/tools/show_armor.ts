@@ -144,6 +144,7 @@ export async function armorCardSpec(
     slot: armorSlot(meta?.bucketHash),
     gearTier,
     icon: meta?.icon,
+    watermark: meta?.watermark,
     hash,
     stats,
     exoticPerk: sockets.exoticPerk,
