@@ -93,7 +93,17 @@ Sourcing the parts: search_items to find candidate gear by element/type/class an
 god_roll for a weapon's recommended perks per column; inspect_sockets to get the plug hashes for the
 perks/mods you're naming; get_build_knowledge / import_build for the subclass aspect/fragment hashes;
 how_to_acquire for where a ⚒ piece drops. Respect the loadout rules (element/slot, the one-exotic-weapon
-+ one-exotic-armor limits — both a ceiling AND a floor: a finished build fills both exotic slots).`,
++ one-exotic-armor limits — both a ceiling AND a floor: a finished build fills both exotic slots).
+
+SHORTCUT — recommend_loadout does this whole assembly in one call when a curated build matches the seed.
+Give it the class + subclass (+ an optional theme) and it selects a community build, maps it onto the
+gear you own (instance ids for what you have, a to-farm list for what you don't), surfaces the subclass
+aspects/fragments as plug hashes, and lists the build's functional armor mods — returning the loadout
+card plus an equip-ready block (gear + subclass) for equip_build. Prefer it for "recommend me a loadout"
+/ "what should I run" over hand-orchestrating the tools above; reach for the from-scratch procedure only
+when it reports no match. Its mods are slot-specific armor mods (e.g. Siphon on the helmet, surges on the
+legs — the mod's type names its slot) against each piece's fixed 10-energy budget; relay them as part of
+the build (they are never optional), even though it doesn't yet auto-insert them per piece.`,
   },
   {
     id: "loadout",
@@ -225,6 +235,20 @@ A piece's mechanical identity is therefore: archetype (its stat spread) + gear t
 set bonus. Appearance is fully decoupled — universal ornaments (see cosmetics) let any legendary piece
 wear any unlocked look — so never pick armor for how it (or its set) looks, and never infer a piece's
 function from its model. The look travels independently of everything that matters.
+
+Armor mods — the combat/utility mods you slot, distinct from the archetype stats above. Two facts kill
+the most common mistake. (1) Mod-energy CAPACITY is a fixed 10 on every modern (tiered) piece. It is a
+legacy budget that has NOTHING to do with gear tier: gear tier sets the STAT budget; energy capacity is
+the separate MOD budget, and it does not vary — not by tier, not by anything. So "this piece is low gear
+tier, so it has low energy / caps out fast" is wrong twice over: every tiered piece has the same 10, and
+10 is the ceiling, not a small number. (2) Mods are SLOT-SPECIFIC — a Helmet mod fits only the helmet,
+an Arms mod only the gauntlets, likewise Chest / Leg / Class-Item; "General" mods fit any slot. Each mod
+costs energy (commonly 1-3), and the mods on one piece must total ≤ 10. A piece therefore "caps out"
+purely when its own mods sum past 10 — never because of its gear tier. Stat mods come in two grades that
+trade stat for energy: a full version (larger boost, higher cost) and a minor version (smaller boost,
+cheaper); when the full one won't fit the remaining energy, the minor is the fallback. Never explain a
+mod not fitting by gear tier — the only question is the total cost of that one piece's own mods against
+its fixed 10.
 
 Set bonuses are element-neutral UTILITY, not subclass synergy. No set bonus amplifies a subclass verb
 (Devour, Jolt, Ignition, Suspend, Shatter); they grant survivability, ammo economy, or weapon-archetype
