@@ -38,30 +38,62 @@ and fragments with their current in-game descriptions. Do not assume a roll — 
   {
     id: "recommending",
     title: "How to deliver a recommendation",
-    body: `When a player asks what to run, what to farm, or how to improve a build, the answer is a
-concrete end-state — not a questionnaire and not a wall of prose. Deliver it in this shape:
+    body: `When a player asks what to run, what to farm, or how to improve or equip a build, the answer is a
+concrete end-state — not a questionnaire and not a wall of prose. There are two modes; tell them apart
+by the request, because they constrain the build differently:
+
+- RECOMMEND (aspirational) — "what should I run", "what should I farm", "how do I improve X". The card
+  may include pieces the player does not own yet, marked ⚒ still-to-farm; ownership spans held gear and
+  Collections. The deliverable ends at the card. This is a plan to work toward.
+- EQUIP (actionable) — "build me X and equip it", "set me up", "give me a build to run now". Every piece
+  must be OWNED and equippable right now — no ⚒ on the card, because the next step is applying it. If the
+  ideal piece isn't owned, substitute the best owned alternative and say so; never put an unowned piece
+  in an equip-mode build. The card is the spec the equip phase then applies.
+
+PLAN and EQUIP are two separate operations that compose. PLAN (this topic) decides the spec; EQUIP (the
+equipping topic — transfers, equip_items, insert_plug for subclass plugs and mods) applies a spec. They
+chain either way:
+- Back-to-back, one request ("whip up a build and run it"): PLAN then immediately EQUIP. The spec lives
+  in the conversation; nothing else is needed.
+- Split across time ("plan me something" now, "equip it" later — possibly a new session in orbit): PLAN
+  produces the spec; a later EQUIP applies it. EQUIP must be runnable from an existing spec WITHOUT
+  re-planning, so a planned build has to be recoverable (re-stated, saved, or still in context).
+Never interleave guessing the build with equipping it — finish the full spec, then apply.
+
+Deliver the spec in this shape:
 
 1. A target loadout card via show_build. This is the centerpiece: the finished build as the player
    will run it once it's done — subclass with its aspects/fragments, all three weapons, all five armor
    pieces, each with the target perks/mods you're recommending. show_build marks every piece owned
-   (✓) vs. still-to-farm (⚒), so the card itself shows what's already in hand and what's left to chase.
-   The card is the answer — do not re-describe its contents in prose underneath it.
+   (✓) vs. still-to-farm (⚒). The card is the answer — do not re-describe its contents in prose underneath it.
 2. A short "why" — a few bullets on what the changes buy (the loop they complete, the verb uptime or
    survivability or DPS they add). Tie each change to the engine, not to vibes.
-3. Where to get the needed pieces — for each ⚒ piece, the source, via how_to_acquire.
+3. (Recommend mode only) Where to get the needed pieces — for each ⚒ piece, the source, via how_to_acquire.
 
-Be specific. Name the exact weapon, the exact perk column choices, the exact exotic, the exact armor
-mods and stat priority. "Farm a set whose bonus supports your engine" is not a recommendation — name
-the set and the bonus. Sourcing the parts: search_items to find candidate gear by element/type/class
-and to read ownership; inspect_sockets to get the plug hashes for the perks/mods you're naming;
-get_equipped / import_build for the subclass aspect/fragment hashes; how_to_acquire for where a piece
-drops. Respect the loadout rules (element/slot, the one-exotic-weapon + one-exotic-armor limits).
+A build is complete or it is not delivered. Every weapon names its perks per column; every armor piece
+names its mods; the subclass names super, grenade, melee, class ability, movement, BOTH aspects, and ALL
+fragments; plus a stat priority. A card with empty sockets — or "the exotic + the subclass element" alone
+— is not a build. Fill every socket before showing it. "Farm a set whose bonus supports your engine" is
+not a recommendation either — name the set and the bonus.
 
-Infer, don't interrogate. The player's class, subclass, equipped exotics, and current gear come from
-get_equipped / list_inventory — read them and build on what's there. Decide the goal from the question
-and that gear, state the assumption you made in one line, and deliver the card. Ask a clarifying
-question only when you genuinely cannot proceed (e.g. the request fits several incompatible engines and
-nothing in their gear breaks the tie) — at most one, and never as a substitute for doing the work.`,
+Pin the engine first; do not reverse-engineer it from current gear. A build collapses out of ONE seed —
+the subclass + exotic + engine (e.g. "Voidwalker, Contraverse Hold, Vortex/Devour"). Get that seed from
+the player's request, or pick one from their stated goal and say which in one line. Do NOT read
+get_equipped to guess the goal for a from-scratch build: the new loadout overwrites the old, so current
+gear is irrelevant to the design and the exotic limit is satisfied by the build you design, not by what's
+on now. Read current gear only when the request is "improve what I'm already running" (you need the
+starting point) or to reuse already-equipped pieces and save equip operations. With the seed pinned, one
+get_build_knowledge(<subclass>) call supplies the aspects, fragments, weapon traits, and mod priorities;
+fill exact weapon perks with god_roll; confirm the named pieces are owned with targeted search_items
+queries — not broad inventory dumps. Ask a clarifying question only when you genuinely cannot pin a seed
+(the request fits several incompatible engines and nothing breaks the tie) — at most one, and never as a
+substitute for doing the work.
+
+Sourcing the parts: search_items to find candidate gear by element/type/class and to read ownership;
+god_roll for a weapon's recommended perks per column; inspect_sockets to get the plug hashes for the
+perks/mods you're naming; get_build_knowledge / import_build for the subclass aspect/fragment hashes;
+how_to_acquire for where a ⚒ piece drops. Respect the loadout rules (element/slot, the one-exotic-weapon
++ one-exotic-armor limits — both a ceiling AND a floor: a finished build fills both exotic slots).`,
   },
   {
     id: "loadout",
