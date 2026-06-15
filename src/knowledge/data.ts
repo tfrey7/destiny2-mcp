@@ -361,6 +361,57 @@ work. Use get_triumphs to frame the nearest title and search_records to drill in
 objectives.`,
   },
   {
+    id: "agenda",
+    title: "Building a play-session agenda",
+    body: `An agenda answers "what should I do tonight?" — a prioritized, sequenced plan for one play
+session, rendered as a show_agenda timeline card. It is YOUR synthesis, not a tool lookup: gather the
+player's live state, decide what matters, and sequence it. Lead with the card; never reply in prose.
+
+The hard constraint: this server has NO weekly/seasonal rotation data — no milestone, vendor, Nightfall,
+Trials, or "this week's pinnacles" feed. Do NOT invent a rotation ("this week's Nightfall is X"). An
+agenda here is personalized from the player's OWN pursuits, which is the more useful answer anyway.
+
+Signals to gather (call these first, in roughly this order):
+- list_active_quests — in-flight quest steps and their live objectives. The backbone of "what am I
+  mid-way through".
+- suggest_triumphs — already ROI-ranked (closeness, expiry, feeds-an-unearned-seal, score) with a "why"
+  per item. Pass location/activity to scope to a stated objective. This is the richest agenda source.
+- get_triumphs — the nearest seal(s), to anchor a "chase a title" session.
+- get_artifact — seasonal artifact progress, if unlocking perks is a goal.
+- activity_recap — what they've been doing (or neglecting): surfaces "you haven't raided in two weeks".
+
+Sequencing into phases (the card groups items under phase labels you choose):
+- Warm-up — quick, low-stakes progress to start: bounties, a near-done daily, an easy objective.
+- Focus — the highest-leverage items: the closest Triumphs, the quest step that unlocks the reward, the
+  expiring goals. This is the heart of the session.
+- Stretch — longer or optional: a raid/dungeon clear, a grind that won't finish tonight but moves.
+For each item set: a time estimate (minutes), live progress (current/total, or a progressLabel like
+"step 3/5"), an expiring flag for time-limited goals, and an iconHash for a reward/quest/exotic icon when
+you have one (from a quest's reward, a suggest_triumphs reward, or search_items). Order items within a
+phase by leverage. Keep a session realistic — a few focused items beat an exhaustive checklist.
+
+When an item IS a weapon, an armor piece, or a Triumph, attach an embed (kind + hash, optional
+instanceId) so its name reveals the full card on hover — the same weapon/armor/triumph card show_weapon
+/ show_armor / suggest_triumphs render. hash is the itemHash (weapon/armor) or recordHash (Triumph);
+pass an owned copy's instanceId to show the player's real rolled perks/stats. So a catalyst-grind item
+reveals the exotic's weapon card, and a Triumph item reveals its objectives and progress — no extra
+tool calls.
+
+When the session's goal IS a title/seal (the common case — "earn Dredgen"), pass titleQuery (the title
+word, seal source, or seal hash) alongside the objective. The objective pill then reveals the whole seal
+card on hover — every remaining member Triumph and its live progress — so the player sees exactly what's
+left for the title without a separate show_title call.
+
+Objective-driven agendas: when the player names a goal ("chase Dredgen", "finish the seasonal quest",
+"farm Gambit"), make it the card's objective and build the whole plan around that spine — filter
+suggest_triumphs to the relevant activity/location, pull the matching active quest, and drop unrelated
+items. A raw "give me an agenda" with no goal: infer a theme from the strongest signal — the closest
+seal, the most expiring Triumphs, or the quest line they're furthest into — and say which you chose.
+
+After the card, add only a few short "why this order" bullets (e.g. "warm up on bounties while you settle
+in, then the expiring Triumph before reset"). Don't restate the card's items in prose.`,
+  },
+  {
     id: "verbs",
     title: "Keyword glossary (the verbs)",
     body: `Verbs are the buffs and debuffs that builds chain together. Grouped by element.

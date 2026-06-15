@@ -2,6 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { loadManifest } from "./bungie/manifest_db.js";
 import { registerKnowledgeResources, registerKnowledgeTools } from "./knowledge/index.js";
+import { registerAgendaUi } from "./tools/agenda_ui.js";
 import { registerArmorUi } from "./tools/armor_ui.js";
 import { registerTools } from "./tools/index.js";
 import { registerLoadoutUi } from "./tools/loadout_ui.js";
@@ -25,7 +26,9 @@ const instructions = `This server exposes the live Destiny 2 (Bungie.net) API ov
 
 - A recommendation is a COMPLETE target card, not a paragraph. When asked what to run / farm / change / equip, answer with a show_build card of the FINISHED build — subclass (super, abilities, BOTH aspects, ALL fragments), all three weapons, all five armor pieces, each with its target perks (god_roll) and mods, plus the seasonal artifact and the perks to choose on it — then a few "why" bullets, then how_to_acquire for any piece still to farm. Fill every slot: never leave a weapon slot as "bring whatever" or a socket empty. The artifact is read-only over the API, so name it for the player to set in-game (get_build_knowledge('artifact')). For "recommend me a loadout" / "what should I run", reach for recommend_loadout first: it assembles a complete, owned-aware build (gear + subclass + the build's mods) in ONE call from the curated community library, so you don't hand-orchestrate search_items/god_roll/show_build — fall back to building from scratch only when it finds no match. Read get_build_knowledge('recommending') for the full procedure, and get_build_knowledge('equipping') before applying a build.
 
-- Core loadout rules (get_build_knowledge('loadout')): a weapon's element comes from its damage type, never the slot name (the "Kinetic" slot also holds Stasis/Strand); at most one exotic weapon plus one exotic armor, and a finished build fills both.`;
+- Core loadout rules (get_build_knowledge('loadout')): a weapon's element comes from its damage type, never the slot name (the "Kinetic" slot also holds Stasis/Strand); at most one exotic weapon plus one exotic armor, and a finished build fills both.
+
+- "What should I do tonight" / "give me an agenda" / "what should I focus on (for <goal>)" → build a play-session plan and lead with a show_agenda timeline card. Gather the player's live pursuits first — list_active_quests, suggest_triumphs (already ROI-ranked; scope by location/activity for a stated goal), get_triumphs, get_artifact, activity_recap — then sequence them into phases. This server has no weekly/seasonal rotation data, so plan from the player's own state, not an invented "this week's Nightfall". Read get_build_knowledge('agenda') for the procedure.`;
 
 const server = new McpServer({ name: "destiny2-mcp", version: "1.0.0" }, { instructions });
 
@@ -39,6 +42,7 @@ registerTitleUi(server);
 registerWeaponUi(server);
 registerRecapUi(server);
 registerArmorUi(server);
+registerAgendaUi(server);
 
 try {
   await loadManifest();

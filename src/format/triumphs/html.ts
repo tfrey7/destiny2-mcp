@@ -1,3 +1,6 @@
+import { COMMON_CLIENT } from "../card_client.js";
+import { TRIUMPH_RENDER } from "./client.js";
+
 /** URI of the registered MCP Apps UI template show_triumphs links to via `_meta.ui.resourceUri`. */
 export const TRIUMPHS_UI_RESOURCE_URI = "ui://destiny2/triumphs";
 
@@ -96,125 +99,22 @@ export function renderTriumphTemplate(): string {
 // gives the iframe height. Renders on the host's ui/notifications/tool-result push.
 const CLIENT_SCRIPT = `
 (function () {
-  var BUNGIE = "https://www.bungie.net";
-  // Filled per render: ICONS maps a CDN path to its base64 data: URI (Claude Desktop's sandbox
-  // blocks remote image hosts but allows data:).
-  var ICONS = {};
+${COMMON_CLIENT}
+${TRIUMPH_RENDER}
   var INIT_ID = 1;
-  var nextId = 2;
-  function send(m) { parent.postMessage(m, "*"); }
-  function notify(method, params) { send({ jsonrpc: "2.0", method: method, params: params || {} }); }
-  function sizeChanged() { notify("ui/notifications/size-changed", { height: document.documentElement.scrollHeight }); }
-  function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
-  function clamp(n) { n = Number(n) || 0; return n < 0 ? 0 : n > 100 ? 100 : n; }
-
-  // Resolve a CDN path to its inlined data: URI, falling back to the remote URL (works outside the
-  // sandbox). A data: URI is used verbatim; only a bare path needs escaping into the attribute.
-  function imgSrc(path) { return ICONS[path] ? ICONS[path] : BUNGIE + esc(path); }
-
-  function thumb(tile) {
-    if (!tile.icon) return '<span class="thumb"><span class="glyph">◆</span></span>';
-    return '<span class="thumb"><img src="' + imgSrc(tile.icon) + '" alt="" /></span>';
-  }
-
-  function gem(score) {
-    if (!score) return "";
-    return '<span class="gem"><span class="d">◆</span>' + esc(score) + "</span>";
-  }
-
-  // Objective rows mirror the in-game tooltip: a checkbox (filled green when complete), the label,
-  // a count on the right (only when the objective tracks more than one), and a progress bar.
-  function objectivesHtml(objectives) {
-    if (!objectives || !objectives.length) return "";
-    var rows = objectives.map(function (o) {
-      var done = o.complete ? " done" : "";
-      var check = o.complete ? "✓" : "";
-      var count = o.total > 1 ? esc(o.progress) + " / " + esc(o.total) : "";
-      return '<div class="obj"><div class="ol">' +
-        '<span class="olabel"><span class="cbox' + done + '">' + check + "</span>" + esc(o.label) + "</span>" +
-        '<span class="oc' + done + '">' + count + "</span></div>" +
-        '<div class="obar' + done + '"><span style="width:' + clamp(o.percent) + '%"></span></div></div>';
-    }).join("");
-    return '<div class="sect">OBJECTIVES</div>' + rows;
-  }
-
-  function whyHtml(why) {
-    if (!why || !why.length) return "";
-    var items = why.map(function (w) { return "<li>" + esc(w) + "</li>"; }).join("");
-    return '<div class="sect">WHY CHASE THIS</div><ul class="why">' + items + "</ul>";
-  }
-
-  function chipsHtml(chips) {
-    if (!chips || !chips.length) return "";
-    var cells = chips.map(function (c) { return '<span class="chip">' + esc(c) + "</span>"; }).join("");
-    return '<div class="chips">' + cells + "</div>";
-  }
-
-  // Each reward as its manifest icon plus name — the icons inline from the same data: URI map.
-  function rewardsHtml(rewards) {
-    if (!rewards || !rewards.length) return "";
-    var cells = rewards.map(function (r) {
-      var ic = r.icon ? '<img src="' + imgSrc(r.icon) + '" alt="" />' : "";
-      return '<span class="reward">' + ic + "<span>" + esc(r.name) + "</span></span>";
-    }).join("");
-    return '<div class="sect">REWARDS</div><div class="rewards">' + cells + "</div>";
-  }
-
-  function panelHtml(tile) {
-    // The gold category line under the name — the seal this Triumph feeds, like the in-game
-    // "Gilded Title Triumph" subtitle. Omitted for Triumphs outside any seal.
-    var cat = tile.seal ? '<div class="pcat">' + esc(tile.seal) + " Seal</div>" : "";
-    var desc = tile.description ? '<div class="desc">' + esc(tile.description) + "</div>" : "";
-    return '<div class="panel"><div class="pname">' + esc(tile.name) + "</div>" + cat + desc +
-      objectivesHtml(tile.objectives) + whyHtml(tile.why) + chipsHtml(tile.chips) + rewardsHtml(tile.rewards) + "</div>";
-  }
-
-  function tileHtml(tile) {
-    var cls = "tile " + (tile.state || "not_started") + (tile.obscured ? " obscured" : "");
-    var pct = clamp(tile.percent);
-    return '<div class="' + cls + '">' +
-      '<div class="head">' + thumb(tile) +
-        '<div class="hmeta"><div class="nm">' + esc(tile.name) + "</div>" + gem(tile.score) + "</div></div>" +
-      '<div class="prog"><div class="fill" style="width:' + pct + '%"></div></div>' +
-      '<div class="pct">' + pct + '% complete</div>' +
-      panelHtml(tile) + "</div>";
-  }
 
   function render(data) {
     ICONS = data.icons || {};
     var tiles = data.tiles || [];
     var caveat = data.caveat ? '<div class="caveat">' + esc(data.caveat) + "</div>" : "";
     var body = tiles.length
-      ? '<div class="grid">' + tiles.map(tileHtml).join("") + "</div>"
+      ? '<div class="grid">' + tiles.map(Triumph.tile).join("") + "</div>"
       : '<div class="empty">No incomplete Triumphs matched.</div>';
 
     document.getElementById("card").innerHTML =
       "<header><h1>" + esc(data.title) + '</h1><div class="subtitle">' + esc(data.subtitle) + "</div></header>" +
       caveat + body;
     sizeChanged();
-  }
-
-  // A tooltip can't render outside the iframe, so a tile near an edge gets its hover panel clipped. On
-  // hover, measure the panel and re-anchor it (overriding the CSS anchor) to stay inside the viewport:
-  // centered over its tile and nudged in at either side, kept on its preferred vertical side (below,
-  // matching the panel's default) unless that side would clip — then flipped. Delegated from mouseover.
-  function clampTip(host, sel, preferBelow) {
-    var tip = host.querySelector(sel);
-    if (!tip) return;
-    var margin = 8;
-    tip.style.maxWidth = (window.innerWidth - margin * 2) + "px";
-    var h = host.getBoundingClientRect();
-    var t = tip.getBoundingClientRect();
-    var left = h.left + h.width / 2 - t.width / 2;
-    left = Math.max(margin, Math.min(left, window.innerWidth - margin - t.width));
-    tip.style.left = (left - h.left) + "px";
-    tip.style.right = "auto";
-    tip.style.transform = "none";
-    var roomAbove = t.height + margin <= h.top;
-    var roomBelow = h.bottom + t.height + margin <= window.innerHeight;
-    var below = preferBelow ? roomBelow || !roomAbove : !(roomAbove || !roomBelow);
-    tip.style.top = below ? "116%" : "auto";
-    tip.style.bottom = below ? "auto" : "116%";
   }
 
   document.addEventListener("mouseover", function (e) {

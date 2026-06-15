@@ -1,3 +1,6 @@
+import { COMMON_CLIENT } from "../card_client.js";
+import { WEAPON_RENDER } from "./client.js";
+
 /** URI of the registered MCP Apps UI template show_weapon links to via `_meta.ui.resourceUri`. */
 export const WEAPON_UI_RESOURCE_URI = "ui://destiny2/weapon";
 
@@ -75,116 +78,28 @@ export function renderWeaponTemplate(): string {
 }
 
 // Client-side bridge + renderer. Plain ES5-ish JS (no template literals) so it survives being embedded
-// in the outer template literal untouched. Implements the iframe (View) side of the MCP Apps handshake,
-// which the View INITIATES (per SEP-1865): send ui/initialize, await the host's result, send
+// in the outer template literal untouched. The shared utilities (esc/img/tip/clampTip/handshake) come
+// from COMMON_CLIENT and the model→DOM builders from WEAPON_RENDER (Weapon.full) — see card_client.ts;
+// only the per-template plumbing lives here. Implements the iframe (View) side of the MCP Apps
+// handshake, which the View INITIATES (per SEP-1865): send ui/initialize, await the host's result, send
 // ui/notifications/initialized, then report ui/notifications/size-changed so the host gives the iframe
-// height. Renders on the host's ui/notifications/tool-result push. Mirrors the loadout template's bridge.
+// height. Renders on the host's ui/notifications/tool-result push.
 const CLIENT_SCRIPT = `
 (function () {
-  var BUNGIE = "https://www.bungie.net";
-  var LIGHTGG = "https://www.light.gg/db/items/";
-  var RARITY = { Exotic: "#f5dc56", Legendary: "#b78fdb", Rare: "#4f87c4", Uncommon: "#4a9e5b", Common: "#cfd3d9", Basic: "#cfd3d9" };
-  var ELEMENT = { Arc: "#7aecf3", Solar: "#f2721b", Void: "#b185df", Stasis: "#4d88ff", Strand: "#35e366", Kinetic: "#d9d9d9" };
-  // Filled per render from the tool data: ICONS maps a CDN path to its base64 data: URI (Claude
-  // Desktop's sandbox blocks remote image hosts but allows data:), PIPS maps an element to its pip path.
-  var ICONS = {};
-  var PIPS = {};
+${COMMON_CLIENT}
+${WEAPON_RENDER}
   var INIT_ID = 1;
-  function send(m) { parent.postMessage(m, "*"); }
-  function notify(method, params) { send({ jsonrpc: "2.0", method: method, params: params || {} }); }
-  function sizeChanged() { notify("ui/notifications/size-changed", { height: document.documentElement.scrollHeight }); }
-  function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
-  // Resolve a CDN path to its inlined data: URI, falling back to the remote URL (works outside the
-  // sandbox). A data: URI is used verbatim; only a bare path needs escaping into the attribute.
-  function img(path, cls) {
-    if (!path) return "";
-    var data = ICONS[path];
-    var src = data ? data : BUNGIE + esc(path);
-    return '<img class="' + cls + '" src="' + src + '" alt="" />';
-  }
-
-  function tip(name, desc) {
-    return '<span class="tip"><b>' + esc(name) + '</b><span class="td">' + esc(desc) + "</span></span>";
-  }
-
-  function plugHtml(plug, selected) {
-    var sel = plug.hash === selected ? " sel" : "";
-    return '<div class="plug' + sel + '">' + img(plug.icon, "pic") +
-      '<span class="pn">' + esc(plug.name) + "</span>" + tip(plug.name, plug.description) + "</div>";
-  }
-
-  function columnHtml(col) {
-    var origin = col.kind === "origin" ? " origin" : "";
-    var plugs = (col.plugs || []).map(function (p) { return plugHtml(p, col.selected); }).join("");
-    return '<div class="col' + origin + '"><div class="colhead">' + esc(col.label) + "</div>" + plugs + "</div>";
-  }
-
-  function headerHtml(data) {
-    var pipPath = data.element ? PIPS[data.element] : null;
-    var pip = pipPath ? img(pipPath, "pip") : "";
-    var wm = data.watermark ? img(data.watermark, "wm") : "";
-    var color = RARITY[data.rarity] || "#e9eaf0";
-    var name = data.hash
-      ? '<a class="nm" style="color:' + color + '" href="' + LIGHTGG + data.hash + '/" target="_blank" rel="noopener">' + esc(data.name) + "</a>"
-      : '<span class="nm" style="color:' + color + '">' + esc(data.name) + "</span>";
-    var parts = [data.type, data.element, data.ammoType, data.rarity].filter(Boolean).map(esc);
-    var attrs = parts.join('<span class="dot">·</span>');
-    return '<header><span class="thumb">' + img(data.icon, "ic") + wm + pip + "</span>" +
-      '<span class="htext">' + name + '<div class="attrs">' + attrs + "</div></span></header>";
-  }
-
-  function intrinsicHtml(intr) {
-    if (!intr) return "";
-    return '<div class="intrinsic">' + img(intr.icon, "ico") +
-      '<span><div class="ititle">INTRINSIC</div><div class="iname">' + esc(intr.name) + "</div></span>" +
-      tip(intr.name, intr.description) + "</div>";
-  }
-
-  function usageHtml(tips) {
-    if (!tips || !tips.length) return "";
-    var rows = tips.map(function (t) {
-      return '<div class="urow"><b>' + esc(t.perk) + "</b> — " + esc(t.tip) + "</div>";
-    }).join("");
-    return '<div class="usage"><div class="seclabel">HOW TO USE</div>' + rows + "</div>";
-  }
 
   function render(data) {
     ICONS = data.icons || {};
     PIPS = data.elementPips || {};
+    document.getElementById("card").innerHTML = Weapon.full(data);
     var accent = ELEMENT[data.element];
-    var grid = (data.columns || []).map(columnHtml).join("");
-    document.getElementById("card").innerHTML =
-      headerHtml(data) +
-      '<div class="body">' + intrinsicHtml(data.intrinsic) + '<div class="grid">' + grid + "</div>" +
-      usageHtml(data.tips) + "</div>";
     if (accent) {
       var hdr = document.querySelector("header");
       if (hdr) hdr.style.borderBottomColor = accent;
     }
     sizeChanged();
-  }
-
-  // A tooltip can't render outside the iframe, so a host near an edge gets its tooltip clipped. On
-  // hover, measure the tip and re-anchor it (overriding the CSS anchor) to stay inside the viewport:
-  // centered over its host and nudged in at either side, kept on its preferred vertical side unless
-  // that side would clip — then flipped. Delegated from mouseover so it covers every tooltip host.
-  function clampTip(host, sel, preferBelow) {
-    var tip = host.querySelector(sel);
-    if (!tip) return;
-    var margin = 8;
-    tip.style.maxWidth = (window.innerWidth - margin * 2) + "px";
-    var h = host.getBoundingClientRect();
-    var t = tip.getBoundingClientRect();
-    var left = h.left + h.width / 2 - t.width / 2;
-    left = Math.max(margin, Math.min(left, window.innerWidth - margin - t.width));
-    tip.style.left = (left - h.left) + "px";
-    tip.style.right = "auto";
-    tip.style.transform = "none";
-    var roomAbove = t.height + margin <= h.top;
-    var roomBelow = h.bottom + t.height + margin <= window.innerHeight;
-    var below = preferBelow ? roomBelow || !roomAbove : !(roomAbove || !roomBelow);
-    tip.style.top = below ? "116%" : "auto";
-    tip.style.bottom = below ? "auto" : "116%";
   }
 
   document.addEventListener("mouseover", function (e) {

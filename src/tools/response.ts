@@ -1,3 +1,9 @@
+import {
+  agendaCardModel,
+  agendaIconMap,
+  renderAgendaCardText,
+  type AgendaCard,
+} from "../format/agenda/index.js";
 import { armorIconBlock, armorIconMap } from "../format/armor/images.js";
 import { type ArmorCard, renderArmorCardText } from "../format/armor/index.js";
 import { renderArtifactCardText, type ArtifactView } from "../format/artifact.js";
@@ -174,6 +180,36 @@ export async function titleDetailCard(spec: TitleDetailCard, opts?: { ui?: boole
   const structuredContent: Record<string, unknown> = {
     ...model,
     icons: await titleDetailIconMap(model),
+  };
+
+  return { content: [{ type: "text" as const, text: note }], structuredContent };
+}
+
+/**
+ * Wrap a session agenda as a tool response carrying its rendered timeline card.
+ *
+ * Mirrors `triumphCard()`: the text card is the universal, model-visible fallback. When `ui` is
+ * supplied (UI-capable hosts only; see clientSupportsUi), the AgendaCardModel rides along as
+ * structuredContent — the host forwards it to the iframe rendered from the `ui://destiny2/agenda`
+ * template (registered separately, linked via the tool's `_meta.ui.resourceUri`). On a UI host the
+ * model gets a terse note instead of the full text card, so it doesn't restate the agenda in prose;
+ * plain hosts and the CLI just get the text card. Item icons inline as data: URIs (Claude Desktop's
+ * sandbox blocks remote hosts but allows data:).
+ */
+export async function agendaCard(spec: AgendaCard, opts?: { ui?: boolean }) {
+  if (!opts?.ui) {
+    return { content: [{ type: "text" as const, text: renderAgendaCardText(spec) }] };
+  }
+
+  const model = agendaCardModel(spec);
+  const items = model.phases.reduce((sum, phase) => sum + phase.items.length, 0);
+  const note = `Agenda shown to the user — ${items} item${items === 1 ? "" : "s"} across ${model.phases.length} phase${model.phases.length === 1 ? "" : "s"}, each with its time estimate, progress, and reason. The card is the answer; don't restate its contents in prose.`;
+
+  const structuredContent: Record<string, unknown> = {
+    ...model,
+    icons: await agendaIconMap(model),
+    // An embedded weapon card maps its element to a pip icon by path, the way the weapon card does.
+    elementPips: ELEMENT_PIP,
   };
 
   return { content: [{ type: "text" as const, text: note }], structuredContent };

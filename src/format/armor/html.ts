@@ -1,3 +1,6 @@
+import { COMMON_CLIENT } from "../card_client.js";
+import { ARMOR_RENDER } from "./client.js";
+
 /** URI of the registered MCP Apps UI template show_armor links to via `_meta.ui.resourceUri`. */
 export const ARMOR_UI_RESOURCE_URI = "ui://destiny2/armor";
 
@@ -83,131 +86,22 @@ export function renderArmorTemplate(): string {
 // which the View INITIATES (per SEP-1865): send ui/initialize, await the host's result, send
 // ui/notifications/initialized, then report ui/notifications/size-changed so the host gives the iframe
 // height. Renders on the host's ui/notifications/tool-result push. Mirrors the weapon template's bridge.
+// Client-side bridge + renderer. Plain ES5-ish JS (no template literals) so it survives being embedded
+// in the outer template literal untouched. The shared utilities (esc/img/tip/clampTip/handshake) come
+// from COMMON_CLIENT and the model→DOM builders from ARMOR_RENDER (Armor.full) — see card_client.ts;
+// only the per-template plumbing lives here. Implements the iframe (View) side of the MCP Apps
+// handshake, which the View INITIATES (per SEP-1865): send ui/initialize, await the host's result, send
+// ui/notifications/initialized, then report ui/notifications/size-changed. Renders on tool-result.
 const CLIENT_SCRIPT = `
 (function () {
-  var BUNGIE = "https://www.bungie.net";
-  var LIGHTGG = "https://www.light.gg/db/items/";
-  var RARITY = { Exotic: "#f5dc56", Legendary: "#b78fdb", Rare: "#4f87c4", Uncommon: "#4a9e5b", Common: "#cfd3d9", Basic: "#cfd3d9" };
-  // Armor's per-piece stats top out in the low 40s; a floor of 45 keeps bars comparable across cards
-  // while an unusually high stat expands the cap rather than clipping.
-  var STAT_BAR_FLOOR = 45;
-  // Filled per render from the tool data: ICONS maps a CDN path to its base64 data: URI (Claude
-  // Desktop's sandbox blocks remote image hosts but allows data:).
-  var ICONS = {};
+${COMMON_CLIENT}
+${ARMOR_RENDER}
   var INIT_ID = 1;
-  function send(m) { parent.postMessage(m, "*"); }
-  function notify(method, params) { send({ jsonrpc: "2.0", method: method, params: params || {} }); }
-  function sizeChanged() { notify("ui/notifications/size-changed", { height: document.documentElement.scrollHeight }); }
-  function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
-  // Resolve a CDN path to its inlined data: URI, falling back to the remote URL (works outside the
-  // sandbox). A data: URI is used verbatim; only a bare path needs escaping into the attribute.
-  function img(path, cls) {
-    if (!path) return "";
-    var data = ICONS[path];
-    var src = data ? data : BUNGIE + esc(path);
-    return '<img class="' + cls + '" src="' + src + '" alt="" />';
-  }
-
-  function tip(name, desc) {
-    return '<span class="tip"><b>' + esc(name) + '</b><span class="td">' + esc(desc) + "</span></span>";
-  }
-
-  function headerHtml(data) {
-    var color = RARITY[data.rarity] || "#e9eaf0";
-    var name = data.hash
-      ? '<a class="nm" style="color:' + color + '" href="' + LIGHTGG + data.hash + '/" target="_blank" rel="noopener">' + esc(data.name) + "</a>"
-      : '<span class="nm" style="color:' + color + '">' + esc(data.name) + "</span>";
-    var tierBadge = data.gearTier != null ? '<span class="tier">T' + esc(data.gearTier) + "</span>" : "";
-    var wm = data.watermark ? img(data.watermark, "wm") : "";
-    var tierAttr = data.gearTier != null ? ("Tier " + data.gearTier) : null;
-    var parts = [data.className, data.slot, tierAttr, data.rarity].filter(Boolean).map(esc);
-    var attrs = parts.join('<span class="dot">·</span>');
-    return '<header><span class="thumb">' + img(data.icon, "ic") + wm + tierBadge + "</span>" +
-      '<span class="htext">' + name + '<div class="attrs">' + attrs + "</div></span></header>";
-  }
-
-  function statsHtml(stats) {
-    // Stats are per-copy: a manifest piece (no instance) has no real roll, so note that instead of
-    // showing a misleading row of empty bars.
-    if (!stats || !stats.length) return '<div class="statnote">Stats vary per copy — inspect an owned copy to see its roll.</div>';
-    var max = STAT_BAR_FLOOR;
-    stats.forEach(function (s) { if (s.value > max) max = s.value; });
-    var rows = stats.map(function (s) {
-      var pct = Math.max(0, Math.min(100, Math.round((s.value / max) * 100)));
-      return '<div class="sl">' + esc(s.name) + "</div>" +
-        '<div class="sv">' + esc(s.value) + "</div>" +
-        '<div class="track"><div class="fill" style="width:' + pct + '%"></div></div>';
-    }).join("");
-    return '<div class="stats">' + rows + "</div>";
-  }
-
-  function intrinsicHtml(perk) {
-    if (!perk) return "";
-    return '<div class="seclabel">ARMOR PERK</div>' +
-      '<div class="intrinsic">' + img(perk.icon, "ico") +
-      '<span><div class="iname">' + esc(perk.name) + "</div>" +
-      '<div class="idesc">' + esc(perk.description) + "</div></span>" +
-      tip(perk.name, perk.description) + "</div>";
-  }
-
-  function setHtml(set) {
-    if (!set || !set.bonuses || !set.bonuses.length) return "";
-    var rows = set.bonuses.map(function (b) {
-      return '<div class="brow"><span class="pill">' + esc(b.requiredCount) + "</span>" +
-        '<span><span class="bname">' + esc(b.name) + "</span> — " + esc(b.description) + "</span>" +
-        tip(b.name, b.description) + "</div>";
-    }).join("");
-    return '<div class="seclabel">SET BONUSES</div>' +
-      '<div class="set"><div class="sname">' + esc(set.name) + "</div>" + rows + "</div>";
-  }
-
-  function modsHtml(mods) {
-    if (!mods || !mods.length) return "";
-    var tiles = mods.map(function (m) {
-      return '<div class="mod" role="img" aria-label="' + esc(m.name) + '">' +
-        img(m.icon, "mic") + tip(m.name, m.description) + "</div>";
-    }).join("");
-    return '<div class="seclabel">MODS</div><div class="mods">' + tiles + "</div>";
-  }
-
-  function usageHtml(tips) {
-    if (!tips || !tips.length) return "";
-    var rows = tips.map(function (t) {
-      return '<div class="urow"><b>' + esc(t.perk) + "</b> — " + esc(t.tip) + "</div>";
-    }).join("");
-    return '<div class="usage"><div class="seclabel">HOW TO USE</div>' + rows + "</div>";
-  }
 
   function render(data) {
     ICONS = data.icons || {};
-    document.getElementById("card").innerHTML =
-      headerHtml(data) +
-      '<div class="body">' + statsHtml(data.stats) + intrinsicHtml(data.exoticPerk) +
-      setHtml(data.set) + modsHtml(data.mods) + usageHtml(data.tips) + "</div>";
+    document.getElementById("card").innerHTML = Armor.full(data);
     sizeChanged();
-  }
-
-  // A tooltip can't render outside the iframe, so a host near an edge gets its tooltip clipped. On
-  // hover, measure the tip and re-anchor it (overriding the CSS anchor) to stay inside the viewport:
-  // centered over its host and nudged in at either side, kept on its preferred vertical side unless
-  // that side would clip — then flipped. Delegated from mouseover so it covers every tooltip host.
-  function clampTip(host, sel, preferBelow) {
-    var tip = host.querySelector(sel);
-    if (!tip) return;
-    var margin = 8;
-    tip.style.maxWidth = (window.innerWidth - margin * 2) + "px";
-    var h = host.getBoundingClientRect();
-    var t = tip.getBoundingClientRect();
-    var left = h.left + h.width / 2 - t.width / 2;
-    left = Math.max(margin, Math.min(left, window.innerWidth - margin - t.width));
-    tip.style.left = (left - h.left) + "px";
-    tip.style.right = "auto";
-    tip.style.transform = "none";
-    var roomAbove = t.height + margin <= h.top;
-    var roomBelow = h.bottom + t.height + margin <= window.innerHeight;
-    var below = preferBelow ? roomBelow || !roomAbove : !(roomAbove || !roomBelow);
-    tip.style.top = below ? "116%" : "auto";
-    tip.style.bottom = below ? "auto" : "116%";
   }
 
   document.addEventListener("mouseover", function (e) {

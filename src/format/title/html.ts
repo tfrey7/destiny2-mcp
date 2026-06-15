@@ -1,3 +1,6 @@
+import { COMMON_CLIENT } from "../card_client.js";
+import { TITLE_RENDER } from "./client.js";
+
 /** URI of the registered MCP Apps UI template show_title links to via `_meta.ui.resourceUri`. */
 export const TITLE_UI_RESOURCE_URI = "ui://destiny2/title";
 
@@ -91,73 +94,13 @@ export function renderTitleTemplate(): string {
 // ui/notifications/initialized, then report size. Renders on the host's tool-result push.
 const CLIENT_SCRIPT = `
 (function () {
-  var BUNGIE = "https://www.bungie.net";
-  var ICONS = {};
+${COMMON_CLIENT}
+${TITLE_RENDER}
   var INIT_ID = 1;
-  function send(m) { parent.postMessage(m, "*"); }
-  function notify(method, params) { send({ jsonrpc: "2.0", method: method, params: params || {} }); }
-  function sizeChanged() { notify("ui/notifications/size-changed", { height: document.documentElement.scrollHeight }); }
-  function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
-  function clamp(n) { n = Number(n) || 0; return n < 0 ? 0 : n > 100 ? 100 : n; }
-  function imgSrc(path) { return ICONS[path] ? ICONS[path] : BUNGIE + esc(path); }
-
-  function crest(data) {
-    if (!data.icon) return '<div class="crest"><span class="glyph">\\u2756</span></div>';
-    return '<div class="crest"><img src="' + imgSrc(data.icon) + '" alt="" /></div>';
-  }
-
-  function badge(data) {
-    if (data.status === "earned") {
-      var g = data.gilded ? ' <span class="lr">\\u028a</span> Gilded ' + esc(data.gilded) : "";
-      return '<div class="badge earned">\\u2713 Title earned' + g + "</div>";
-    }
-    if (data.gildable) return '<div class="badge progress">Gildable title</div>';
-    return "";
-  }
-
-  function thumb(tr) {
-    if (!tr.icon) return '<span class="thumb"><span class="glyph">\\u25c6</span></span>';
-    return '<span class="thumb"><img src="' + imgSrc(tr.icon) + '" alt="" /></span>';
-  }
-
-  function objectivesHtml(tr) {
-    if (tr.state === "completed" || !tr.objectives || !tr.objectives.length) return "";
-    return tr.objectives.map(function (o) {
-      var count = o.total > 1 ? esc(o.progress) + " / " + esc(o.total) : "";
-      return '<div class="obj"><div class="ol"><span>' + esc(o.label) + '</span><span class="oc">' + count + "</span></div>" +
-        '<div class="obar"><span style="width:' + clamp(o.percent) + '%"></span></div></div>';
-    }).join("");
-  }
-
-  function right(tr) {
-    if (tr.state === "completed") return '<span class="check">\\u2713</span>';
-    if (tr.score) return '<span class="gem"><span class="d">\\u25c6</span>' + esc(tr.score) + "</span>";
-    return "";
-  }
-
-  function triumphHtml(tr) {
-    var cls = "tr " + (tr.state || "not_started") + (tr.obscured ? " obscured" : "");
-    var desc = tr.description ? '<div class="trdesc">' + esc(tr.description) + "</div>" : "";
-    return '<div class="' + cls + '">' + thumb(tr) +
-      '<div class="trmeta"><div class="trhead"><span class="trname">' + esc(tr.name) + "</span>" + right(tr) + "</div>" +
-      desc + objectivesHtml(tr) + "</div></div>";
-  }
 
   function render(data) {
     ICONS = data.icons || {};
-    var triumphs = data.triumphs || [];
-    var req = data.requirement ? '<div class="req">' + esc(data.requirement) + "</div>" : "";
-    var pct = data.status === "earned" ? 100 : clamp(data.percent);
-    var tally = (data.total ? esc(data.complete) + " / " + esc(data.total) + " Triumphs \\u00b7 " : "") + pct + "%";
-    var hero = '<div class="hero ' + (data.status || "not_started") + '">' + crest(data) +
-      '<div class="hmeta"><div class="ttl">' + esc(data.title) + '</div>' +
-      '<div class="src">' + esc(data.name) + ' Seal</div>' + req + badge(data) +
-      '<div class="ovr"><div class="bar"><div class="fill" style="width:' + pct + '%"></div></div>' +
-      '<div class="lbl">' + tally + "</div></div></div></div>";
-    var body = triumphs.length
-      ? '<div class="sectlabel">Triumphs</div><div class="grid">' + triumphs.map(triumphHtml).join("") + "</div>"
-      : '<div class="empty">No Triumphs found for this title.</div>';
-    document.getElementById("card").innerHTML = hero + body;
+    document.getElementById("card").innerHTML = Title.full(data);
     sizeChanged();
   }
 

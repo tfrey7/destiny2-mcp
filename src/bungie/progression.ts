@@ -563,6 +563,54 @@ function reasons(entry: RankedRecord): string[] {
   return why;
 }
 
+// Build a single Triumph's suggestion view from its record hash — the per-record counterpart to
+// suggestTriumphs, composing the same catalog/live-state/seal/tag joins and describeRecord. Returns
+// undefined for a hash outside the catalog. Used to embed one Triumph's card (its objectives, score,
+// and progress) inside another view, e.g. an agenda item that links to it.
+export async function recordSuggestion(
+  profile: TriumphsProfile,
+  recordHash: number,
+): Promise<TriumphSuggestion | undefined> {
+  const record = (await recordCatalog()).find((candidate) => candidate.hash === recordHash);
+
+  if (!record) {
+    return undefined;
+  }
+
+  const state = collectRecords(profile).get(recordHash);
+  const sealName = (await sealMembership(profile.profileRecords.recordSealsRootNodeHash)).get(
+    recordHash,
+  );
+  const tag = (await loadTriumphIndex()).get(recordHash);
+  const view = await describeRecord(record, state, sealName);
+
+  // A compact "why" without the seal-rollup lookup suggestTriumphs does: just the reasons derivable
+  // from this record — closeness, expiry, the seal it feeds (by name), effort, and score.
+  const why: string[] = [];
+
+  if (view.percent > 0 && view.percent < 100) {
+    why.push(`${view.percent}% complete`);
+  }
+
+  if (tag?.expires) {
+    why.push(tag.expires);
+  }
+
+  if (sealName) {
+    why.push(`feeds the ${sealName} title`);
+  }
+
+  if (tag?.effort) {
+    why.push(`${tag.effort} effort`);
+  }
+
+  if (record.score > 0) {
+    why.push(`${record.score} Triumph points`);
+  }
+
+  return { ...view, why };
+}
+
 // Live completion of a single Triumph from its profile objectives, without the manifest reads
 // describeRecord does — used to rank the whole incomplete set before describing just the top slice.
 function livePercent(state: RecordComponentState | undefined): number {
