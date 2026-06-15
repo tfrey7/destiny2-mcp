@@ -43,7 +43,7 @@ export function registerShowBuild(server: McpServer): void {
     "show_build",
     {
       description:
-        "Render ANY set of items as a loadout card — a proposed or target build, not necessarily owned or equipped. This is how you SHOW a build recommendation: pass the end-state weapons, armor, and subclass (each by manifest hash, with optional target perk/mod/aspect plug hashes), and the card draws them like a real loadout, marking each piece owned (✓) vs. still-to-farm (⚒). The card IS the answer — follow it with a short list of what the changes buy and where to acquire the needed pieces (how_to_acquire), and don't restate the card's contents in prose. Read-only; changes nothing.",
+        "Render ANY set of items as a loadout card — a proposed or target build, not necessarily owned or equipped. This is how you SHOW a build recommendation, and a recommendation should ALWAYS lead with this card, not prose. Pass the COMPLETE end-state: the subclass (with its aspects/fragments as plug hashes), all three weapons, and all five armor pieces — each with its target perk/mod plug hashes — so the card draws them like a real loadout, marking each piece owned (✓) vs. still-to-farm (⚒). Fill every slot: never leave a weapon slot out as \"bring whatever\" or a socket empty — a partial card is not a build. The card IS the answer — follow it only with a short list of what the changes buy and where to acquire the needed pieces (how_to_acquire), and don't restate the card's contents in prose. Read-only; changes nothing.",
       inputSchema: {
         title: z.string().describe("Build name, shown as the card heading."),
         subtitle: z

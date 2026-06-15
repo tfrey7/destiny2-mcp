@@ -1,8 +1,9 @@
 # CLAUDE.md
 
-Guidance for working on **destiny2-mcp** — an MCP server exposing the Destiny 2 (Bungie.net) API. The
-README covers setup and auth; this file covers how the code is laid out, the domain rules the tools must
-respect, and how to reason when helping a player.
+Guidance for **maintaining** destiny2-mcp — an MCP server exposing the Destiny 2 (Bungie.net) API. The
+README covers setup and auth; this file covers how the code is laid out and the conventions to follow when
+changing it. How to _use_ the server — game mechanics and player-facing behavior — is server-owned, not
+documented here; see "Where domain rules and usage guidance live" below.
 
 ## Architecture
 
@@ -64,50 +65,32 @@ respect, and how to reason when helping a player.
   model uses to _show_ a recommendation. Un-owned target perks resolve via `plugViewsFromHashes` in
   `plugs.ts` (the no-instance counterpart to `displayPlugs`); ownership comes from `ownedItemsByHash`.
 
-## Domain rules (the source of truth is `get_build_knowledge`)
+## Where domain rules and usage guidance live (NOT this file)
 
-Destiny game mechanics belong in `src/knowledge/data.ts`, served by `get_build_knowledge`, so every
-client gets them — not buried in a doc. The load-bearing ones, which recommendations must respect:
+This file is for **maintaining the codebase**. How to _use_ the server — Destiny game mechanics, and how a
+client should help a player (lead with a card, deliver a recommendation as a complete target card, ground
+answers in the tools, never web-search the manifest) — does **not** belong here. It must reach every
+client, including ones that never read a repo `CLAUDE.md` or a client's memory (Claude Desktop). So it
+lives in two server-owned places:
 
-- **Slot is set by damage type, and the top slot's name is not an element.** The "Kinetic" slot holds
-  Kinetic, Stasis, and Strand weapons; a Strand weapon there still deals Strand damage. Energy slot holds
-  Solar/Arc/Void. Always take element from the `element` field, never from the slot name.
-- **One exotic weapon + one exotic armor, max** — independent limits. Before recommending a weapon, check
-  whether an exotic weapon is already equipped in any slot; if so, the pick must be Legendary.
+- **Game mechanics** → `src/knowledge/data.ts`, served by `get_build_knowledge` (topics: `loadout`,
+  `recommending`, `equipping`, one per subclass, …). This is canonical for facts and procedure. When a
+  rule changes, edit the knowledge section, not a doc.
+- **Always-on behavior** → the `instructions` string in `src/index.ts`, surfaced to every client at
+  connect (the MCP `instructions` field). This is the nudge that makes a client actually reach for the
+  right tool — lead with `show_build`, fill every slot, read `get_build_knowledge` first. Keep it a short
+  pointer into the knowledge topics, not a second copy of them.
 
-See the `loadout` topic for the full statement. When changing these rules, edit the knowledge section —
-that is canonical — not just this file.
+Reinforcing tool descriptions (e.g. `show_build`'s) carry the same "lead with a complete card" rule so it
+shows up at the call site too. If you find yourself writing player-facing usage guidance here, put it in
+one of those instead.
 
-**Invariant:** the attribute fields the tools emit (`slot`, `element`, `tier`, `ammoType`, `classType`)
-must stay consistent with the `loadout` knowledge section. `get_equipped`, `list_inventory`,
-`search_items`, and `inspect_item` all surface `element` and `tier` precisely so element-matching and the
-exotic limit can be checked without guesswork. `search_items` also surfaces `classType` on results (and
-filters by `class`) so armor — exotic armor especially — can be narrowed to a single-class account the way
-element narrows weapons; class is to armor what element is to weapons. Don't add a tool that returns gear
-without them.
-
-## Helping a player
-
-- Ground every claim in the live tools. Read mechanics from `get_build_knowledge`, then verify the
-  player's actual gear and rolls with `inspect_item` / `list_inventory` — do not answer gear questions
-  from memory **or from web search**. The manifest is the source of truth and it is local.
-- Catalog questions — "list all exotic Void weapons", "what's the newest hand cannon", "every piece of
-  this set" — are `search_items` queries, not web searches. Recall and tier lists miss reissues, omit
-  brand-new items, and mislabel elements (element comes from damage type, not the slot). Pass
-  `sort:"newest"` for "the latest"/"the new" of a type. If the destiny2 tools aren't loaded yet, load
-  and use them — never substitute a web search for a question the manifest can answer.
-- "Show me the icon for X" / "what does X look like" is answerable: `show_item` returns the item's icon
-  as an image from the manifest. These are first-party assets the server ships to display (the loadout
-  card already does) — never decline on copyright grounds or fall back to a light.gg link.
-- Lead a build or loadout answer with the visual card (`show_equipped` / `show_loadout`); don't restate
-  it in prose.
-- **A recommendation is a target card, not prose.** When asked what to run / farm / change, answer with
-  a `show_build` card of the finished build (subclass, weapons, armor, with the target perks/mods you're
-  recommending — owned pieces marked ✓, ones to farm ⚒), then a few bullets on what the changes buy, then
-  `how_to_acquire` for each ⚒ piece. Name exact items/perks/mods/stat priority; infer the goal from the
-  player's gear rather than interrogating them. The full procedure is the `recommending` knowledge topic.
-- Recommending an energy weapon for a Strand/Stasis build means an off-element utility pick — those
-  subclasses can't element-match the energy slot.
+**Code invariant (this is a maintenance concern, so it stays here):** the attribute fields the tools emit
+(`slot`, `element`, `tier`, `ammoType`, `classType`) must stay consistent with the `loadout` knowledge
+section. `get_equipped`, `list_inventory`, `search_items`, and `inspect_item` all surface `element` and
+`tier` precisely so element-matching and the exotic limit can be checked without guesswork; `search_items`
+also surfaces `classType` (and filters by `class`) so armor can be narrowed to a single-class account the
+way element narrows weapons. Don't add a tool that returns gear without them.
 
 ## Working on the code
 
