@@ -24,7 +24,14 @@ interface TriumphTag {
   scope?: "solo" | "fireteam";
   effort?: "quick" | "moderate" | "grind";
   summary?: string;
-  source: "override" | "presentation-tree" | "activity-catalog" | "name-text" | "model";
+  source?: string;
+  provenance:
+    | "override"
+    | "presentation-tree"
+    | "activity-catalog"
+    | "name-text"
+    | "model"
+    | "weapon-pattern";
   confidence: "high" | "medium" | "low";
 }
 
@@ -58,7 +65,20 @@ interface RawNode {
   parentNodeHashes?: number[];
 }
 
+interface RawItem {
+  displayProperties?: { name?: string };
+  itemType?: number;
+  collectibleHash?: number;
+}
+
+interface RawCollectible {
+  sourceString?: string;
+}
+
 const SEASON_LABEL = /^(Season of|Episode:)/;
+
+// DestinyItemType.Weapon — the rolled, collectible-bearing weapon, not its crafting recipe or pattern.
+const WEAPON_ITEM_TYPE = 3;
 
 function manifestDatabasePath(): { path: string; version: string } {
   if (!existsSync(MANIFEST_DIR)) {
@@ -119,7 +139,8 @@ function compose(
     ...(model?.scope ? { scope: model.scope } : {}),
     ...(model?.effort ? { effort: model.effort } : {}),
     ...(model?.summary ? { summary: model.summary } : {}),
-    source: manifest?.source ?? "model",
+    ...(manifest?.source ? { source: manifest.source } : {}),
+    provenance: manifest?.provenance ?? "model",
     confidence: manifest?.confidence ?? "low",
   };
 
@@ -130,7 +151,8 @@ function compose(
     tag.expires ||
     tag.scope ||
     tag.effort ||
-    tag.summary;
+    tag.summary ||
+    tag.source;
 
   return hasContent ? tag : undefined;
 }
@@ -175,7 +197,7 @@ async function main(): Promise<void> {
 
   const { activityWorldByName, matchActivityType, matchWorld, validateWorlds } =
     await import("../../src/bungie/locations.js");
-  const { allDefinitions } = await import("../../src/bungie/manifest_db.js");
+  const { allDefinitions, findDefinition } = await import("../../src/bungie/manifest_db.js");
 
   const missing = await validateWorlds();
 
@@ -208,18 +230,65 @@ async function main(): Promise<void> {
     nodes.set(hash, def);
   }
 
-  const index: Record<string, TriumphTag> = {};
-  const stats = { location: 0, activity: 0, season: 0, expires: 0, model: 0, summary: 0 };
+  // Weapon-pattern records (recordTypeName "Weapon Pattern") sit in the tree by weapon archetype, so
+  // the presentation walk carries no raid/season signal. Their source instead comes from the weapon
+  // they unlock — keyed by name, since the pattern record shares the weapon's display name. The
+  // cleaned collectible sourceString ("Source: \"Root of Nightmares\" Raid" → "Root of Nightmares
+  // Raid") is the bridge; first weapon of a given name wins.
+  const weaponSource = new Map<string, string>();
 
-  for await (const { hash, def } of allDefinitions<RawRecord>("DestinyRecordDefinition")) {
-    if (def.redacted || def.recordTypeName !== "Triumphs") {
+  for await (const { def } of allDefinitions<RawItem>("DestinyInventoryItemDefinition")) {
+    const name = def.displayProperties?.name;
+
+    if (
+      !name ||
+      def.itemType !== WEAPON_ITEM_TYPE ||
+      !def.collectibleHash ||
+      weaponSource.has(name)
+    ) {
       continue;
     }
 
-    const manifestTag = tagRecord(hash, def, nodes, overrides, activityWorlds, namedActivities, {
-      matchActivityType,
-      matchWorld,
-    });
+    const collectible = await findDefinition<RawCollectible>(
+      "DestinyCollectibleDefinition",
+      def.collectibleHash,
+    );
+    const source = collectible?.sourceString ? cleanSource(collectible.sourceString) : undefined;
+
+    if (source) {
+      weaponSource.set(name, source);
+    }
+  }
+
+  const index: Record<string, TriumphTag> = {};
+  const stats = {
+    location: 0,
+    activity: 0,
+    season: 0,
+    expires: 0,
+    model: 0,
+    summary: 0,
+    source: 0,
+  };
+
+  for await (const { hash, def } of allDefinitions<RawRecord>("DestinyRecordDefinition")) {
+    if (def.redacted) {
+      continue;
+    }
+
+    let manifestTag: TriumphTag | undefined;
+
+    if (def.recordTypeName === "Triumphs") {
+      manifestTag = tagRecord(hash, def, nodes, overrides, activityWorlds, namedActivities, {
+        matchActivityType,
+        matchWorld,
+      });
+    } else if (def.recordTypeName === "Weapon Pattern") {
+      manifestTag = tagPattern(def, weaponSource, namedActivities, { matchActivityType });
+    } else {
+      continue;
+    }
+
     const tag = compose(manifestTag, model.get(hash));
 
     if (!tag) {
@@ -248,7 +317,11 @@ async function main(): Promise<void> {
       stats.summary += 1;
     }
 
-    if (tag.source === "model") {
+    if (tag.source) {
+      stats.source += 1;
+    }
+
+    if (tag.provenance === "model") {
       stats.model += 1;
     }
   }
@@ -281,11 +354,11 @@ function tagRecord(
   const override = overrides.get(hash);
 
   const locations = new Set<string>();
-  let source: TriumphTag["source"] | undefined;
+  let provenance: TriumphTag["provenance"] | undefined;
   let confidence: TriumphTag["confidence"] | undefined;
 
-  const record_ = (next: TriumphTag["source"], level: TriumphTag["confidence"]) => {
-    source ??= next;
+  const record_ = (next: TriumphTag["provenance"], level: TriumphTag["confidence"]) => {
+    provenance ??= next;
     confidence ??= level;
   };
 
@@ -356,9 +429,49 @@ function tagRecord(
     ...(activityType ? { activityType } : {}),
     ...(season ? { season } : {}),
     ...(expires ? { expires } : {}),
-    source: source ?? "presentation-tree",
+    provenance: provenance ?? "presentation-tree",
     confidence: confidence ?? "medium",
   };
+}
+
+// Tag a weapon-pattern record from the source of the weapon it unlocks. Location reuses the activity
+// catalog (a raid/dungeon name in the source string resolves to its world — long names only, so most
+// raids place but short-named dungeons don't), activityType reads the "Raid"/"Dungeon" kind out of
+// the same string, and the cleaned source rides along as the human label and substring filter key.
+function tagPattern(
+  record: RawRecord,
+  weaponSource: Map<string, string>,
+  namedActivities: [string, string][],
+  match: { matchActivityType: (term: string) => string | undefined },
+): TriumphTag | undefined {
+  const source = weaponSource.get(record.displayProperties?.name ?? "");
+
+  if (!source) {
+    return undefined;
+  }
+
+  const haystack = source.toLowerCase();
+  const activityHit = namedActivities.find(([activity]) => haystack.includes(activity));
+  const activityType = match.matchActivityType(source);
+
+  return {
+    ...(activityHit ? { location: [activityHit[1]] } : {}),
+    ...(activityType ? { activityType } : {}),
+    source,
+    provenance: "weapon-pattern",
+    confidence: "high",
+  };
+}
+
+// Strip the manifest's boilerplate from a collectible source string so it reads as a bare origin:
+// "Source: \"Root of Nightmares\" Raid" → "Root of Nightmares Raid"; "Source: Last Wish raid." →
+// "Last Wish raid". Quotes and the trailing period go; the activity name and kind stay intact.
+function cleanSource(raw: string): string {
+  return raw
+    .replace(/^source:\s*/i, "")
+    .replace(/["“”]/g, "")
+    .replace(/\.\s*$/, "")
+    .trim();
 }
 
 await main();

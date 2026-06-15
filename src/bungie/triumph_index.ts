@@ -3,7 +3,7 @@ import { TRIUMPHS_FILE } from "../setup/config.js";
 
 // The offline location/activity tag for one Triumph, joined onto live record state by the read tools.
 // Built by scripts/triumphs/build_index.ts from the manifest's presentation tree (authoritative) plus
-// a model enrichment layer for the residue; `source`/`confidence` record which layer placed it.
+// a model enrichment layer for the residue; `provenance`/`confidence` record which layer placed it.
 export interface TriumphTag {
   location?: string[];
   activityType?: string;
@@ -12,7 +12,17 @@ export interface TriumphTag {
   scope?: "solo" | "fireteam";
   effort?: "quick" | "moderate" | "grind";
   summary?: string;
-  source: "override" | "presentation-tree" | "activity-catalog" | "name-text" | "model";
+  // The acquisition source of the weapon a "Weapon Pattern" record unlocks ("Root of Nightmares
+  // Raid", "Dungeon Duality", "Season of the Witch"), derived from the weapon's collectible. Only
+  // weapon-pattern records carry it, so it doubles as the "show me the patterns from X" filter key.
+  source?: string;
+  provenance:
+    | "override"
+    | "presentation-tree"
+    | "activity-catalog"
+    | "name-text"
+    | "model"
+    | "weapon-pattern";
   confidence: "high" | "medium" | "low";
 }
 

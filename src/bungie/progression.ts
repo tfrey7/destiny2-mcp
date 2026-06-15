@@ -44,6 +44,9 @@ interface TriumphView {
   effort?: "quick" | "moderate" | "grind";
   expires?: string;
   summary?: string;
+  // Where the weapon a "Weapon Pattern" record unlocks comes from ("Root of Nightmares Raid"). Only
+  // weapon-pattern records carry it; it's the answer to "which patterns have I unlocked from X".
+  source?: string;
   redeemed?: boolean;
   obscured?: boolean;
   objectives: ObjectiveView[];
@@ -56,6 +59,7 @@ interface RecordFilters {
   seal?: string;
   location?: string;
   activity?: string;
+  source?: string;
   limit?: number;
   offset?: number;
 }
@@ -167,6 +171,7 @@ async function describeRecord(
     ...(tag?.effort ? { effort: tag.effort } : {}),
     ...(tag?.expires ? { expires: tag.expires } : {}),
     ...(tag?.summary ? { summary: tag.summary } : {}),
+    ...(tag?.source ? { source: tag.source } : {}),
     ...(status.completed ? { redeemed: status.redeemed } : {}),
     ...(status.obscured ? { obscured: true } : {}),
     objectives,
@@ -184,7 +189,8 @@ export async function searchRecords(
   const catalog = await recordCatalog();
   const live = collectRecords(profile);
   const seals = await sealMembership(profile.profileRecords.recordSealsRootNodeHash);
-  const tags = filters.location || filters.activity ? await loadTriumphIndex() : undefined;
+  const tags =
+    filters.location || filters.activity || filters.source ? await loadTriumphIndex() : undefined;
 
   const name = filters.name?.toLowerCase();
   const seal = filters.seal?.toLowerCase();
@@ -220,6 +226,16 @@ export async function searchRecords(
       !matchesPlace(tags?.get(record.hash), filters, location, activity)
     ) {
       return false;
+    }
+
+    // source scopes to a weapon's origin ("Root of Nightmares") — set only on weapon-pattern records,
+    // so this narrows to the patterns from that raid/dungeon/season. Case-insensitive substring.
+    if (filters.source) {
+      const origin = tags?.get(record.hash)?.source;
+
+      if (!origin || !origin.toLowerCase().includes(filters.source.toLowerCase())) {
+        return false;
+      }
     }
 
     return true;
