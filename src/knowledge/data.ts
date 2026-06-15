@@ -152,7 +152,19 @@ say so. Set bonuses are armor-only; weapons have no set. Legacy armor belongs to
     body: `Putting a loadout on a character is one batched operation, not a pile of single equips and
 manual transfers. Done right it is one tool call; the thrash people hit comes from going piece-by-piece.
 
-Use the cheapest tier that applies, in order:
+Applying a COMPLETE designed build — weapons, armor WITH mods, AND a subclass WITH its abilities,
+aspects, and fragments — is one equip_build call. equip_build is the actuator counterpart to show_build:
+you hand it the character and the build's items by INSTANCE id (each armor piece with its mod plug
+hashes, the subclass with its super/grenade/melee/class ability/movement/aspect/fragment plug hashes),
+and it moves every piece onto the character, equips them (exotics last), equips the subclass, then
+inserts every subclass plug and armor mod — the dozen-plus transfer/equip/insert_plug calls a build
+used to take, collapsed into one. It is owned-only: this is the EQUIP step that applies an already-
+decided spec (see the recommending topic's PLAN→EQUIP), so resolve each piece to an owned instance id
+first (search_items / inspect_item) — never hand it a still-to-farm piece. It applies piece-by-piece and
+reports each gear and plug outcome, so one failure (a locked fragment, a piece that won't equip) never
+sinks the rest; read the result rather than assuming success.
+
+To equip or change only GEAR (no mods/subclass to set), use the cheapest tier that applies, in order:
 1. A matching saved in-game loadout → equip_loadout(characterId, loadoutIndex). Check list_loadouts
    first. This hands the whole swap to Bungie, which resolves transfers, equip order, and bucket space
    server-side — the most reliable path by far. Prefer it whenever the player already has the loadout
@@ -180,8 +192,11 @@ things up front "to be safe" — it just adds operations.
 Equipping is a LIVE action: it only succeeds while the player is signed into Destiny 2 (Bungie returns
 error 1623 / DestinyCannotPerformActionAtThisLocation otherwise). Transfers between character and vault
 work offline, but the equip at the end does not — if equips fail with 1623, the player needs to be in
-the game, it is not a tool bug. The one-exotic rule itself lives in the loadout section; this topic is
-only about carrying it out without stepping on the tools.`,
+the game, it is not a tool bug. equip_build leans on this split: out of the game it still lands the
+transfers and every plug insert (mods, subclass abilities/aspects/fragments) and reports liveActionRequired
+with the equips left to finish — so the player can set a build up in orbit and the equip completes on the
+next in-game run. The one-exotic rule itself lives in the loadout section; this topic is only about
+carrying it out without stepping on the tools.`,
   },
   {
     id: "armor",

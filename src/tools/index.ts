@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { registerActivityHistory } from "./activity_history.js";
 import { registerActivityRecap } from "./activity_recap.js";
 import { registerBuildTools } from "./builds/index.js";
+import { registerEquipBuild } from "./equip_build.js";
 import { registerEquipItem } from "./equip_item.js";
 import { registerEquipItems } from "./equip_items.js";
 import { registerEquipLoadout } from "./equip_loadout.js";
@@ -77,6 +78,7 @@ export function registerTools(server: McpServer): void {
   registerUpdateLoadoutIdentifiers(server);
   registerEquipItem(server);
   registerEquipItems(server);
+  registerEquipBuild(server);
   registerInsertPlug(server);
   registerApplyOrnament(server);
   registerApplyOrnamentSet(server);

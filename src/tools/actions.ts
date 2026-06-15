@@ -4,7 +4,7 @@ import { getPrimaryMembership, type DestinyItem, type GearProfile } from "../bun
 
 // The slice of a profile needed to find an item by instance id: the equipment, inventory, and vault
 // buckets. Any profile that carries these (e.g. getGearProfile, or inspect_item's richer fetch) fits.
-type LocatableProfile = Pick<
+export type LocatableProfile = Pick<
   GearProfile,
   "characterEquipment" | "characterInventories" | "profileInventory"
 >;
