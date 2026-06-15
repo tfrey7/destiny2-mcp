@@ -194,6 +194,34 @@ const CLIENT_SCRIPT = `
     sizeChanged();
   }
 
+  // A tooltip can't render outside the iframe, so a tile near an edge gets its hover panel clipped. On
+  // hover, measure the panel and re-anchor it (overriding the CSS anchor) to stay inside the viewport:
+  // centered over its tile and nudged in at either side, kept on its preferred vertical side (below,
+  // matching the panel's default) unless that side would clip — then flipped. Delegated from mouseover.
+  function clampTip(host, sel, preferBelow) {
+    var tip = host.querySelector(sel);
+    if (!tip) return;
+    var margin = 8;
+    tip.style.maxWidth = (window.innerWidth - margin * 2) + "px";
+    var h = host.getBoundingClientRect();
+    var t = tip.getBoundingClientRect();
+    var left = h.left + h.width / 2 - t.width / 2;
+    left = Math.max(margin, Math.min(left, window.innerWidth - margin - t.width));
+    tip.style.left = (left - h.left) + "px";
+    tip.style.right = "auto";
+    tip.style.transform = "none";
+    var roomAbove = t.height + margin <= h.top;
+    var roomBelow = h.bottom + t.height + margin <= window.innerHeight;
+    var below = preferBelow ? roomBelow || !roomAbove : !(roomAbove || !roomBelow);
+    tip.style.top = below ? "116%" : "auto";
+    tip.style.bottom = below ? "auto" : "116%";
+  }
+
+  document.addEventListener("mouseover", function (e) {
+    var host = e.target.closest && e.target.closest(".tile");
+    if (host) clampTip(host, ".panel", true);
+  });
+
   window.addEventListener("message", function (e) {
     var m = e.data;
     if (!m || typeof m !== "object") return;

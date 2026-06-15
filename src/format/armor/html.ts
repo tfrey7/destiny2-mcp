@@ -162,7 +162,8 @@ const CLIENT_SCRIPT = `
   function modsHtml(mods) {
     if (!mods || !mods.length) return "";
     var tiles = mods.map(function (m) {
-      return '<div class="mod">' + img(m.icon, "mic") + tip(m.name, m.description) + "</div>";
+      return '<div class="mod" role="img" aria-label="' + esc(m.name) + '">' +
+        img(m.icon, "mic") + tip(m.name, m.description) + "</div>";
     }).join("");
     return '<div class="seclabel">MODS</div><div class="mods">' + tiles + "</div>";
   }
@@ -183,6 +184,34 @@ const CLIENT_SCRIPT = `
       setHtml(data.set) + modsHtml(data.mods) + usageHtml(data.tips) + "</div>";
     sizeChanged();
   }
+
+  // A tooltip can't render outside the iframe, so a host near an edge gets its tooltip clipped. On
+  // hover, measure the tip and re-anchor it (overriding the CSS anchor) to stay inside the viewport:
+  // centered over its host and nudged in at either side, kept on its preferred vertical side unless
+  // that side would clip — then flipped. Delegated from mouseover so it covers every tooltip host.
+  function clampTip(host, sel, preferBelow) {
+    var tip = host.querySelector(sel);
+    if (!tip) return;
+    var margin = 8;
+    tip.style.maxWidth = (window.innerWidth - margin * 2) + "px";
+    var h = host.getBoundingClientRect();
+    var t = tip.getBoundingClientRect();
+    var left = h.left + h.width / 2 - t.width / 2;
+    left = Math.max(margin, Math.min(left, window.innerWidth - margin - t.width));
+    tip.style.left = (left - h.left) + "px";
+    tip.style.right = "auto";
+    tip.style.transform = "none";
+    var roomAbove = t.height + margin <= h.top;
+    var roomBelow = h.bottom + t.height + margin <= window.innerHeight;
+    var below = preferBelow ? roomBelow || !roomAbove : !(roomAbove || !roomBelow);
+    tip.style.top = below ? "116%" : "auto";
+    tip.style.bottom = below ? "auto" : "116%";
+  }
+
+  document.addEventListener("mouseover", function (e) {
+    var host = e.target.closest && e.target.closest(".plug, .intrinsic, .mod, .brow");
+    if (host) clampTip(host, ".tip", false);
+  });
 
   window.addEventListener("message", function (e) {
     var m = e.data;
