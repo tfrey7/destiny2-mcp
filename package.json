@@ -21,6 +21,8 @@
     "scrape:builds": "tsx scripts/scrape_builds.ts",
     "preview:weapon": "tsx scripts/weapon/preview.ts",
     "preview:armor": "tsx scripts/armor/preview.ts",
+    "preview:titles": "tsx scripts/titles/preview.ts",
+    "preview:title": "tsx scripts/title/preview.ts",
     "build:triumphs": "tsx scripts/triumphs/build_index.ts",
     "build:godrolls": "tsx scripts/godrolls/build_index.ts",
     "extract:test_manifest": "tsx scripts/extract_test_manifest.ts",

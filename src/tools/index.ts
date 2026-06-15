@@ -32,6 +32,8 @@ import { registerShowBuild } from "./show_build.js";
 import { registerShowEquipped } from "./show_equipped.js";
 import { registerShowItem } from "./show_item.js";
 import { registerShowLoadout } from "./show_loadout.js";
+import { registerShowTitle } from "./show_title.js";
+import { registerShowTitles } from "./show_titles.js";
 import { registerShowTriumphs } from "./show_triumphs.js";
 import { registerShowWeapon } from "./show_weapon.js";
 import { registerSnapshotLoadout } from "./snapshot_loadout.js";
@@ -68,6 +70,8 @@ export function registerTools(server: McpServer): void {
   registerSearchRecords(server);
   registerSuggestTriumphs(server);
   registerShowTriumphs(server);
+  registerShowTitles(server);
+  registerShowTitle(server);
   registerActivityHistory(server);
   registerActivityRecap(server);
   registerWeaponKills(server);

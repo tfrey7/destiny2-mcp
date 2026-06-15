@@ -107,6 +107,9 @@ export interface RecordComponentState {
   state: number;
   objectives?: ObjectiveProgress[];
   intervalsRedeemedCount?: number;
+  // How many times a repeatable record has been completed — the gilding count for a seal's
+  // gilding-tracking record (how many seasons a gildable title has been re-earned).
+  completedCount?: number;
 }
 
 // A records component, whether account-wide (profileRecords) or per-character (characterRecords).

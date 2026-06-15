@@ -6,6 +6,8 @@ import { registerArmorUi } from "./tools/armor_ui.js";
 import { registerTools } from "./tools/index.js";
 import { registerLoadoutUi } from "./tools/loadout_ui.js";
 import { registerRecapUi } from "./tools/recap_ui.js";
+import { registerTitleUi } from "./tools/title_ui.js";
+import { registerTitlesUi } from "./tools/titles_ui.js";
 import { registerTriumphsUi } from "./tools/triumphs_ui.js";
 import { registerWeaponUi } from "./tools/weapon_ui.js";
 
@@ -32,6 +34,8 @@ registerKnowledgeTools(server);
 registerKnowledgeResources(server);
 registerLoadoutUi(server);
 registerTriumphsUi(server);
+registerTitlesUi(server);
+registerTitleUi(server);
 registerWeaponUi(server);
 registerRecapUi(server);
 registerArmorUi(server);

@@ -30,7 +30,7 @@ export interface ObjectiveView {
 
 // The narrow projection of a Triumph the read tools surface — enough to filter, sort by how close
 // it is, and explain what's left, without the raw record/objective payloads.
-interface TriumphView {
+export interface TriumphView {
   recordHash: number;
   name: string;
   description?: string;
@@ -310,6 +310,125 @@ export async function triumphSummary(profile: TriumphsProfile): Promise<TriumphS
   };
 }
 
+// One still-incomplete Triumph inside a seal, named with its live closeness — the gallery hover lists
+// these so "what's left for this title" is the actual missing Triumphs, not just an X-of-Y tally.
+export interface RemainingTriumph {
+  name: string;
+  percent: number;
+}
+
+// One title (Seal) enriched for the gallery card: the gold seal emblem, the title word the player
+// earns the right to display, live completion across the seal's Triumphs, whether it's earned, and —
+// for gildable seals — how many times it's been gilded. Richer than SealView (which the text advisor
+// uses): it carries the art and the unlock requirement the card shows.
+export interface TitleView {
+  sealHash: number;
+  // The seal's source — the activity or theme it's named for ("Last Wish", "Iron Banner").
+  name: string;
+  // The title word itself, shown under the player's name in-game ("Rivensbane", "Iron Lord").
+  title: string;
+  // The completion record's description — the unlock requirement ("Complete all Last Wish Triumphs.").
+  requirement?: string;
+  complete: number;
+  total: number;
+  percent: number;
+  earned: boolean;
+  // Whether the title can be gilded (re-earned each season for a running count).
+  gildable: boolean;
+  // How many times the player has gilded the title; 0 if never (or not gildable).
+  gilded: number;
+  // Relative Bungie CDN path to the seal emblem; resolved to a data: URI on the card path.
+  icon?: string;
+  // The seal's still-incomplete Triumphs (closest-to-done first) — the hover's "what's left" list.
+  remaining: RemainingTriumph[];
+}
+
+export interface TitleGallery {
+  score: { total: number; active: number; legacy: number; lifetime: number };
+  earned: number;
+  total: number;
+  titles: TitleView[];
+}
+
+// The full set of currently-available titles, each with its art, live completion, and unlock
+// requirement — the source for the Seals gallery card. Walks the same seals-root the triumph summary
+// uses (the active "Titles" node), so it reflects exactly the titles the account can still chase.
+// Earned titles sort to the front (the trophy shelf), then closest-to-done, then the rest.
+export async function titleGallery(profile: TriumphsProfile): Promise<TitleGallery> {
+  const records = profile.profileRecords;
+  const nodes = collectNodes(profile);
+  const live = collectRecords(profile);
+  const sealHashes = await sealNodeHashes(records.recordSealsRootNodeHash);
+  // The member-Triumph names ride off the cached catalog, so listing each seal's remaining Triumphs
+  // is a live-state filter — no per-record manifest read across the whole gallery.
+  const names = await recordNameIndex();
+
+  const titles = await Promise.all(
+    sealHashes.map((sealHash) => describeTitle(sealHash, nodes.get(sealHash), live, names)),
+  );
+
+  titles.sort(
+    (a, b) =>
+      Number(b.earned) - Number(a.earned) || b.percent - a.percent || a.name.localeCompare(b.name),
+  );
+
+  return {
+    score: {
+      total: records.score ?? 0,
+      active: records.activeScore ?? 0,
+      legacy: records.legacyScore ?? 0,
+      lifetime: records.lifetimeScore ?? 0,
+    },
+    earned: titles.filter((title) => title.earned).length,
+    total: titles.length,
+    titles,
+  };
+}
+
+// One title resolved in full: the seal's header (art, requirement, completion, gilding) plus every
+// member Triumph described — the source for the single-title detail card, which lays the Triumphs
+// out inline rather than behind a hover. `undefined` when the query matches no available seal.
+export interface TitleDetail {
+  title: TitleView;
+  triumphs: TriumphView[];
+}
+
+// Resolve one title by query — the title word ("Dredgen"), the seal's source name ("Gambit"), or a
+// seal hash — and describe every Triumph under it (incomplete-closest first, completed last). Matches
+// case-insensitively, preferring an exact name/title hit over a substring so "Gambit" doesn't get
+// shadowed by a seal that merely contains the word.
+export async function titleDetail(
+  profile: TriumphsProfile,
+  query: string,
+): Promise<TitleDetail | undefined> {
+  const sealHashes = await sealNodeHashes(profile.profileRecords.recordSealsRootNodeHash);
+  const nodes = collectNodes(profile);
+  const live = collectRecords(profile);
+  const names = await recordNameIndex();
+
+  const sealHash = await matchSeal(sealHashes, query);
+
+  if (sealHash === undefined) {
+    return undefined;
+  }
+
+  const title = await describeTitle(sealHash, nodes.get(sealHash), live, names);
+  const metas = await Promise.all((await recordsUnder(sealHash)).map(recordMeta));
+  const triumphs = await Promise.all(
+    metas
+      .filter((meta): meta is RecordMeta => meta !== undefined)
+      .map((meta) => describeRecord(meta, live.get(meta.hash), title.name)),
+  );
+
+  // Show what's left first (closest-to-done), then the cleared Triumphs as a checked-off tail.
+  triumphs.sort(
+    (a, b) =>
+      Number(a.state === "completed") - Number(b.state === "completed") || b.percent - a.percent,
+  );
+
+  return { title, triumphs };
+}
+
 export interface SuggestFilters {
   location?: string;
   activity?: string;
@@ -562,14 +681,19 @@ interface RawRecord {
   displayProperties?: { name?: string; description?: string; icon?: string };
   completionInfo?: { ScoreValue?: number };
   stateInfo?: { obscuredName?: string; obscuredDescription?: string };
-  titleInfo?: { hasTitle?: boolean; titlesByGender?: Record<string, string> };
+  titleInfo?: {
+    hasTitle?: boolean;
+    titlesByGender?: Record<string, string>;
+    // Set only on a gildable seal's completion record; points at the record that counts gildings.
+    gildingTrackingRecordHash?: number;
+  };
   objectiveHashes?: number[];
   rewardItems?: { itemHash: number }[];
   redacted?: boolean;
 }
 
 interface RawNode {
-  displayProperties?: { name?: string };
+  displayProperties?: { name?: string; description?: string; icon?: string };
   completionRecordHash?: number;
   children?: {
     presentationNodes?: { presentationNodeHash: number }[];
@@ -719,6 +843,125 @@ async function describeSeal(
     percent: total > 0 ? Math.round((complete / total) * 100) : 0,
     earned: recordStatus(titleRecord?.state ?? OBJECTIVE_NOT_COMPLETED).completed,
   };
+}
+
+// Enrich one seal into a gallery title: read its emblem and completion record from the manifest,
+// then join the live presentation-node rollup (how many Triumphs are done) and the completion
+// record's state (earned) and gilding-tracking count. The node-state progress mirrors describeSeal;
+// the extra reads here (icon, requirement, gilding, remaining) are what the card needs and the
+// advisor doesn't. `names` resolves the seal's still-incomplete member Triumphs without per-record
+// reads (see recordNameIndex).
+async function describeTitle(
+  sealHash: number,
+  node: PresentationNodeState | undefined,
+  live: Map<number, RecordComponentState>,
+  names: Map<number, string>,
+): Promise<TitleView> {
+  const def = await getDefinition<RawNode>(NODE_TABLE, sealHash);
+  const completion = def.completionRecordHash
+    ? await findDefinition<RawRecord>(RECORD_TABLE, def.completionRecordHash)
+    : undefined;
+  const titles = completion?.titleInfo?.titlesByGender;
+  const gildingHash = completion?.titleInfo?.gildingTrackingRecordHash;
+  const completionState = def.completionRecordHash
+    ? live.get(def.completionRecordHash >>> 0)
+    : undefined;
+  const total = node?.completionValue ?? 0;
+  const complete = Math.min(node?.progressValue ?? 0, total);
+  const name = def.displayProperties?.name ?? `Seal ${sealHash >>> 0}`;
+
+  return {
+    sealHash,
+    name,
+    // Fall back to the seal's own name if the record carries no gendered title (every real seal does).
+    title: titles ? Object.values(titles)[0] : name,
+    requirement: completion?.displayProperties?.description || undefined,
+    complete,
+    total,
+    percent: total > 0 ? Math.round((complete / total) * 100) : 0,
+    earned: recordStatus(completionState?.state ?? OBJECTIVE_NOT_COMPLETED).completed,
+    gildable: Boolean(gildingHash),
+    gilded: (gildingHash ? live.get(gildingHash >>> 0)?.completedCount : 0) ?? 0,
+    icon: def.displayProperties?.icon || undefined,
+    remaining: await sealRemaining(sealHash, live, names),
+  };
+}
+
+// The seal's still-incomplete member Triumphs, named and sorted closest-to-done — the "what's left"
+// list. Names come from the cached index, completion from live state, so this is read-free past the
+// records-under walk (itself cached point queries).
+async function sealRemaining(
+  sealHash: number,
+  live: Map<number, RecordComponentState>,
+  names: Map<number, string>,
+): Promise<RemainingTriumph[]> {
+  const remaining: RemainingTriumph[] = [];
+
+  for (const hash of await recordsUnder(sealHash)) {
+    const state = live.get(hash);
+
+    if (recordStatus(state?.state ?? OBJECTIVE_NOT_COMPLETED).completed) {
+      continue;
+    }
+
+    remaining.push({ name: names.get(hash) ?? `Triumph ${hash}`, percent: livePercent(state) });
+  }
+
+  return remaining.sort((a, b) => b.percent - a.percent);
+}
+
+// Match a seal by the title word, its source name, or a hash string, case-insensitively. An exact
+// name/title hit wins over a substring so a precise query lands on the right seal.
+async function matchSeal(sealHashes: number[], query: string): Promise<number | undefined> {
+  const needle = query.trim().toLowerCase();
+
+  if (!needle) {
+    return undefined;
+  }
+
+  const candidates = await Promise.all(
+    sealHashes.map(async (sealHash) => {
+      const def = await getDefinition<RawNode>(NODE_TABLE, sealHash);
+      const completion = def.completionRecordHash
+        ? await findDefinition<RawRecord>(RECORD_TABLE, def.completionRecordHash)
+        : undefined;
+      const titles = completion?.titleInfo?.titlesByGender;
+      const name = def.displayProperties?.name ?? "";
+
+      return { sealHash, name, title: titles ? Object.values(titles)[0] : name };
+    }),
+  );
+
+  const matches = (value: string, exact: boolean) =>
+    exact ? value.toLowerCase() === needle : value.toLowerCase().includes(needle);
+
+  return (
+    candidates.find(
+      (c) => String(c.sealHash) === needle || matches(c.title, true) || matches(c.name, true),
+    ) ?? candidates.find((c) => matches(c.title, false) || matches(c.name, false))
+  )?.sealHash;
+}
+
+let recordNameIndexPromise: Promise<Map<number, string>> | null = null;
+
+// recordHash → name over the whole Triumph catalog, cached for the process lifetime. Lets the seal
+// tools name member Triumphs (the gallery's remaining list, the detail card) without a manifest read
+// per record. Built from the same cached catalog the record search uses.
+function recordNameIndex(): Promise<Map<number, string>> {
+  if (!recordNameIndexPromise) {
+    recordNameIndexPromise = (async () => {
+      try {
+        const catalog = await recordCatalog();
+
+        return new Map(catalog.map((record) => [record.hash, record.name]));
+      } catch (error) {
+        recordNameIndexPromise = null;
+        throw error;
+      }
+    })();
+  }
+
+  return recordNameIndexPromise;
 }
 
 async function describeObjective(objective: ObjectiveProgress): Promise<ObjectiveView> {

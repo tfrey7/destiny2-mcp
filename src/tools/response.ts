@@ -12,6 +12,18 @@ import {
   type RecapCard,
 } from "../format/recap/index.js";
 import {
+  renderTitleDetailText,
+  titleDetailIconMap,
+  titleDetailModel,
+  type TitleDetailCard,
+} from "../format/title/index.js";
+import {
+  renderTitleCardText,
+  titleCardModel,
+  titleIconMap,
+  type TitleCard,
+} from "../format/titles/index.js";
+import {
   renderTriumphCardText,
   triumphCardModel,
   triumphIconMap,
@@ -106,6 +118,62 @@ export async function triumphCard(spec: TriumphCard, opts?: { ui?: boolean }) {
   const structuredContent: Record<string, unknown> = {
     ...model,
     icons: await triumphIconMap(model),
+  };
+
+  return { content: [{ type: "text" as const, text: note }], structuredContent };
+}
+
+/**
+ * Wrap the Titles gallery as a tool response carrying the rendered Seals card.
+ *
+ * Mirrors `triumphCard()`: the text card is the universal, model-visible fallback. When `ui` is
+ * supplied (UI-capable hosts only; see clientSupportsUi), the TitleCardModel rides along as
+ * structuredContent — the host forwards it to the iframe rendered from the `ui://destiny2/titles`
+ * template (registered separately, linked via the tool's `_meta.ui.resourceUri`). On a UI host the
+ * model gets a terse note instead of the full text card, so it doesn't restate the gallery in prose;
+ * plain hosts and the CLI just get the text card. The seal emblems inline as data: URIs (Claude
+ * Desktop's sandbox blocks remote hosts but allows data:).
+ */
+export async function titleCard(spec: TitleCard, opts?: { ui?: boolean }) {
+  if (!opts?.ui) {
+    return { content: [{ type: "text" as const, text: renderTitleCardText(spec) }] };
+  }
+
+  const model = titleCardModel(spec);
+  const earned = model.tiles.filter((tile) => tile.status === "earned").length;
+  const note = `Titles gallery shown to the user — ${model.tiles.length} seal${model.tiles.length === 1 ? "" : "s"}, ${earned} earned, each with its title, the seal's source, completion, and unlock requirement. The card is the answer; don't restate its contents in prose.`;
+
+  const structuredContent: Record<string, unknown> = {
+    ...model,
+    icons: await titleIconMap(model),
+  };
+
+  return { content: [{ type: "text" as const, text: note }], structuredContent };
+}
+
+/**
+ * Wrap one resolved title as a tool response carrying the single-title detail card.
+ *
+ * Mirrors `titleCard()`: the text card is the universal, model-visible fallback. When `ui` is
+ * supplied (UI-capable hosts only; see clientSupportsUi), the TitleDetailModel rides along as
+ * structuredContent — the host forwards it to the iframe rendered from the `ui://destiny2/title`
+ * template. On a UI host the model gets a terse note instead of the full text card; plain hosts and
+ * the CLI just get the text card. The seal emblem and member-Triumph icons inline as data: URIs.
+ */
+export async function titleDetailCard(spec: TitleDetailCard, opts?: { ui?: boolean }) {
+  if (!opts?.ui) {
+    return { content: [{ type: "text" as const, text: renderTitleDetailText(spec) }] };
+  }
+
+  const model = titleDetailModel(spec);
+  const standing = model.earned
+    ? "earned" + (model.gilded ? ` (gilded ×${model.gilded})` : "")
+    : `${model.complete}/${model.total} Triumphs · ${model.percent}%`;
+  const note = `Title detail card for "${model.title}" (${model.name} Seal) shown to the user — ${standing}, with every member Triumph laid out and its progress. The card is the answer; don't restate its Triumphs in prose.`;
+
+  const structuredContent: Record<string, unknown> = {
+    ...model,
+    icons: await titleDetailIconMap(model),
   };
 
   return { content: [{ type: "text" as const, text: note }], structuredContent };
