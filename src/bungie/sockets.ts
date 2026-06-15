@@ -120,30 +120,63 @@ export async function availablePlugHashes(
   entry: SocketEntry | undefined,
   plugSets: Map<number, ReusablePlug[]>,
 ): Promise<number[]> {
+  const states = await plugStates(socketIndex, livePlugs, entry, plugSets);
+
+  return states.filter((state) => state.unlocked).map((state) => state.plugItemHash);
+}
+
+export interface PlugState {
+  plugItemHash: number;
+  unlocked: boolean;
+}
+
+// The full plug pool for a socket WITH unlock state — the same resolution as availablePlugHashes, but
+// keeping the locked entries instead of dropping them, so a caller can show which plugs a player has
+// not earned yet. `unlocked` mirrors the live plug-set / instance canInsert flag.
+export async function plugStates(
+  socketIndex: number,
+  livePlugs: Record<string, ReusablePlug[]>,
+  entry: SocketEntry | undefined,
+  plugSets: Map<number, ReusablePlug[]>,
+): Promise<PlugState[]> {
   const live = livePlugs[String(socketIndex)];
 
   if (entry?.randomizedPlugSetHash !== undefined && live?.length) {
-    return live.filter((plug) => plug.canInsert !== false).map((plug) => plug.plugItemHash);
+    return live.map((plug) => ({
+      plugItemHash: plug.plugItemHash,
+      unlocked: plug.canInsert !== false,
+    }));
   }
 
   if (entry?.reusablePlugSetHash !== undefined) {
     const set = plugSets.get(entry.reusablePlugSetHash);
 
     if (set?.length) {
-      return set.filter((plug) => plug.canInsert).map((plug) => plug.plugItemHash);
+      return set.map((plug) => ({
+        plugItemHash: plug.plugItemHash,
+        unlocked: plug.canInsert === true,
+      }));
     }
   }
 
   if (live?.length) {
-    return live.filter((plug) => plug.canInsert !== false).map((plug) => plug.plugItemHash);
+    return live.map((plug) => ({
+      plugItemHash: plug.plugItemHash,
+      unlocked: plug.canInsert !== false,
+    }));
   }
 
   if (entry?.reusablePlugItems?.length) {
-    return entry.reusablePlugItems.map((plug) => plug.plugItemHash);
+    return entry.reusablePlugItems.map((plug) => ({
+      plugItemHash: plug.plugItemHash,
+      unlocked: true,
+    }));
   }
 
   if (entry?.reusablePlugSetHash !== undefined) {
-    return plugSetItemHashes(entry.reusablePlugSetHash);
+    const hashes = await plugSetItemHashes(entry.reusablePlugSetHash);
+
+    return hashes.map((plugItemHash) => ({ plugItemHash, unlocked: true }));
   }
 
   return [];

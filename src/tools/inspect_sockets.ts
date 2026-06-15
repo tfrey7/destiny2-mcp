@@ -7,7 +7,7 @@ import {
   type SocketCategoryEntry,
 } from "../bungie/manifest.js";
 import { Component, getProfile } from "../bungie/profile.js";
-import { availablePlugHashes, mergedPlugSets } from "../bungie/sockets.js";
+import { mergedPlugSets, plugStates } from "../bungie/sockets.js";
 import { recommendedPlugHashes } from "./godrolls/logic.js";
 import { instanceMap } from "./inventory.js";
 import { json } from "./response.js";
@@ -21,14 +21,19 @@ export function registerInspectSockets(server: McpServer): void {
         "ornament, weapon perk, mod, …), the plug currently inserted, and the plugs the player can " +
         "insert into it. This is how you find the socketIndex and plugItemHash to pass to insert_plug " +
         "when applying a shader or ornament. Pass an itemInstanceId from get_equipped / list_inventory; " +
-        "pass a socketIndex to inspect just that socket and get its full (uncapped) list of options.",
+        "pass a socketIndex to inspect just that socket and get its full (uncapped) list of options. " +
+        "Pass includeLocked:true to also return a `locked` array per socket — the plugs the socket's " +
+        "full pool contains that the player has NOT unlocked yet. This is the way to answer 'which mods " +
+        "am I still missing on this item': the default `available` list is filtered to insertable plugs, " +
+        "so locked options are invisible without this flag.",
       inputSchema: {
         itemInstanceId: z.string(),
         socketIndex: z.number().int().min(0).optional(),
+        includeLocked: z.boolean().optional(),
       },
       annotations: { readOnlyHint: true },
     },
-    async ({ itemInstanceId, socketIndex }) => {
+    async ({ itemInstanceId, socketIndex, includeLocked }) => {
       const profile = await getProfile([
         Component.Characters,
         Component.CharacterEquipment,
@@ -67,12 +72,17 @@ export function registerInspectSockets(server: McpServer): void {
             // aspects grant, or a mod socket lacking energy. Nothing can go in until it's enabled, so
             // report no insertable plugs; offering them invites a rejected insert_plug.
             const enabled = live.isEnabled !== false;
-            const allHashes = enabled
-              ? await availablePlugHashes(index, livePlugs, entry, plugSets)
-              : [];
-            const cap = socketIndex === undefined ? PLUGS_PER_SOCKET : allHashes.length;
+            const states = enabled ? await plugStates(index, livePlugs, entry, plugSets) : [];
+            const cap = socketIndex === undefined ? PLUGS_PER_SOCKET : states.length;
+
+            const unlocked = states.filter((state) => state.unlocked);
             const available = await Promise.all(
-              allHashes.slice(0, cap).map((plugHash) => plugView(plugHash, recommended)),
+              unlocked.slice(0, cap).map((state) => plugView(state.plugItemHash, recommended)),
+            );
+
+            const lockedStates = includeLocked ? states.filter((state) => !state.unlocked) : [];
+            const locked = await Promise.all(
+              lockedStates.slice(0, cap).map((state) => plugView(state.plugItemHash, recommended)),
             );
 
             return {
@@ -81,8 +91,12 @@ export function registerInspectSockets(server: McpServer): void {
               current: currentHash ? await plugView(currentHash, recommended) : undefined,
               ...(enabled ? {} : { enabled: false }),
               ...(available.length ? { available } : {}),
-              ...(allHashes.length > available.length
-                ? { moreAvailable: allHashes.length - available.length }
+              ...(unlocked.length > available.length
+                ? { moreAvailable: unlocked.length - available.length }
+                : {}),
+              ...(locked.length ? { locked } : {}),
+              ...(lockedStates.length > locked.length
+                ? { moreLocked: lockedStates.length - locked.length }
                 : {}),
             };
           }),
