@@ -59,6 +59,9 @@ interface ItemDefinition {
   displayProperties?: { name?: string; description?: string; icon?: string };
   itemTypeDisplayName?: string;
   flavorText?: string;
+  // In-game tooltip notes — the info banner under an item that names where it's acquired (e.g. "Acquired
+  // from the Exotic mission "Fire and Ice.""). The only place a plug's unlock source lives.
+  tooltipNotifications?: { displayString?: string }[];
   inventory?: { tierTypeName?: string; bucketTypeHash?: number };
   defaultDamageType?: number;
   equippingBlock?: { ammoType?: number; equipableItemSetHash?: number };

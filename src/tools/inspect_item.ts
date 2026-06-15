@@ -20,7 +20,7 @@ export function registerInspectItem(server: McpServer): void {
     "inspect_item",
     {
       description:
-        "Inspect a single item's mechanics: its perks and mods with current in-game descriptions, named stats, element, rarity tier, power, gear tier (the 1-5 Edge of Fate quality scale, armor only — only resolved for an owned instance), and armor set with its set-bonus perks. Pass an itemInstanceId (from list_inventory / get_equipped) to read the actual rolled perks on that copy — including a subclass's equipped aspects and fragments. Pass an itemHash for an item you don't own (its intrinsic and default perks). For a perk, trait, or mod itemHash (resolve one by name with search_items category:perk), this returns that plug's own description — what the perk actually does. This is the source of truth for reasoning about builds and synergies.",
+        "Inspect a single item's mechanics: its perks and mods with current in-game descriptions, named stats, element, rarity tier, power, gear tier (the 1-5 Edge of Fate quality scale, armor only — only resolved for an owned instance), and armor set with its set-bonus perks. Pass an itemInstanceId (from list_inventory / get_equipped) to read the actual rolled perks on that copy — including a subclass's equipped aspects and fragments. Pass an itemHash for an item you don't own (its intrinsic and default perks). For a perk, trait, or mod itemHash (resolve one by name with search_items category:perk), this returns that plug's own description — what the perk actually does — and a `source` field with the in-game acquisition note (e.g. which Exotic mission or vendor a locked mod comes from), the way to answer 'how do I unlock this'. This is the source of truth for reasoning about builds and synergies.",
       inputSchema: {
         itemInstanceId: z.string().optional(),
         itemHash: z.number().int().optional(),
@@ -137,8 +137,21 @@ async function describeItem(
     // following the sandbox-perk link for aspects/fragments, whose own description is blank. Gear has
     // only flavor text here, which the per-socket `perks` already cover, so leave it off.
     description: definition.plug ? await plugDescription(definition) : undefined,
+    // The in-game acquisition note — where a locked plug or piece of gear comes from. For a locked
+    // mod this is the only field that says how to unlock it.
+    source: acquisitionSource(definition.tooltipNotifications),
     set,
     perks,
     stats: namedStats,
   };
+}
+
+function acquisitionSource(
+  tooltipNotifications: { displayString?: string }[] | undefined,
+): string | undefined {
+  const notes = (tooltipNotifications ?? [])
+    .map((note) => note.displayString)
+    .filter((text): text is string => Boolean(text));
+
+  return notes.length ? notes.join(" ") : undefined;
 }
